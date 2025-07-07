@@ -2,14 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@layer utilities {
+  .animate-blink {
+    animation: blink 1s steps(1) infinite;
+  }
+}
+
 @layer base {
   :root {
-    --primary: #008C6E;
-    --background: #F7F9FA;
-    --secondary: #E0F2F1;
+    --primary: #00abbf;
+    --background: #FAF9F6;
+    --secondary: #ffc13128;
     --textHeader: #2C3E50;
     --textBody: #4F4F4F;
-    --panel: #FFFFFF;
+    --panel: #f1f1f1;
     --uBlack: #2C3E50;
     --uGray: #7F8C8D;
     --uGrayLight: #dfdfdfc9;
@@ -17,15 +28,17 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --primary: #f57d20;
-      --background: #0E1621;
-      --secondary: #1C2B36;
+      --primary: #ffc131;
+      --background: #202020;
+      --secondary: #00abbf28;
       --textHeader: #FFFFFF;
       --textBody: #D1D1D1;
-      --panel: #112A3E;
+      --panel: #393939;
       --uBlack: #0A0F18;
       --uGray: #B0D0D3;
       --uGrayLight: #334756;
     }
   }
 }
+
+

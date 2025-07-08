@@ -24,6 +24,19 @@
     --uBlack: #2C3E50;
     --uGray: #7F8C8D;
     --uGrayLight: #dfdfdfc9;
+    --uRed: #dc2626;
+    --uBlue: #2563eb;
+    /* Scores */
+    --score-1: #ff4d4d;
+    --score-2: #ff6b4d;
+    --score-3: #ff884d;
+    --score-4: #ffaa4d;
+    --score-5: #ffca4d;
+    --score-6: #e6d44d;
+    --score-7: #c7e64d;
+    --score-8: #a3e64d;
+    --score-9: #6ce64d;
+    --score-10: #34d159;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -37,6 +50,19 @@
       --uBlack: #0A0F18;
       --uGray: #B0D0D3;
       --uGrayLight: #334756;
+      --uRed: #ef4444;
+      --uBlue: #60a5fa;
+      /* Scores */
+      --score-1: #ff5c5c;
+      --score-2: #ff765c;
+      --score-3: #ff956c;
+      --score-4: #ffb66c;
+      --score-5: #ffd26c;
+      --score-6: #e6dd6c;
+      --score-7: #c1e66c;
+      --score-8: #9ee66c;
+      --score-9: #6be66c;
+      --score-10: #34d17c;
     }
   }
 }

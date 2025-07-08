@@ -18,13 +18,37 @@ export default {
         uBlack: "var(--uBlack)",
         uGray: "var(--uGray)",
         uGrayLight: "var(--uGrayLight)",
+        uRed: "var(--uRed)",
+        uBlue: "var(--uBlue)",
+        score: {
+          1: "var(--score-1)",
+          2: "var(--score-2)",
+          3: "var(--score-3)",
+          4: "var(--score-4)",
+          5: "var(--score-5)",
+          6: "var(--score-6)",
+          7: "var(--score-7)",
+          8: "var(--score-8)",
+          9: "var(--score-9)",
+          10: "var(--score-10)",
+        },
       },
     },
   },
   safelist: [
     {
+      pattern: /^bg-score-(1|2|3|4|5|6|7|8|9|10)$/,
+    },
+    {
+      pattern: /^text-score-(1|2|3|4|5|6|7|8|9|10)$/,
+    },
+    {
+      pattern: /^border-score-(1|2|3|4|5|6|7|8|9|10)$/,
+    },
+    {
       pattern: /^lg:col-span-(1|2|3)$/,
     },
   ],
+
   plugins: [],
 };

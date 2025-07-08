@@ -8,6 +8,7 @@ import {
   MessageSquareText,
   ClipboardCheck,
 } from "lucide-react";
+import { useScreenSize } from "../hooks/useScreenSIze";
 
 const tabs = [
   { name: "Home", path: "/home", icon: Home },
@@ -17,6 +18,7 @@ const tabs = [
 ];
 
 export default function Sidebar() {
+  const screenSize = useScreenSize();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
 
@@ -24,7 +26,7 @@ export default function Sidebar() {
     <aside
       className={clsx(
         "h-full transition-all duration-300 ease-in-out bg-panel p-4 flex flex-col",
-        expanded ? "w-60" : "w-20"
+        expanded || screenSize === "extralarge" ? "w-60" : "w-20"
       )}
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
@@ -35,7 +37,7 @@ export default function Sidebar() {
         <h1
           className={clsx(
             "text-xl font-bold text-primary whitespace-nowrap",
-            expanded ? "visible" : "hidden"
+            expanded || screenSize === "extralarge" ? "visible" : "hidden"
           )}
         >
           Open2E
@@ -52,7 +54,9 @@ export default function Sidebar() {
               className={clsx(
                 "flex items-center gap-3 rounded transition group hover:bg-secondary",
                 active && "font-semibold border border-primary",
-                expanded ? "px-2 py-2" : "justify-center py-2"
+                expanded || screenSize === "extralarge"
+                  ? "px-2 py-2"
+                  : "justify-center py-2"
               )}
             >
               <Icon
@@ -64,7 +68,9 @@ export default function Sidebar() {
               <span
                 className={clsx(
                   "transition-all duration-300 overflow-hidden",
-                  expanded ? "visible ml-1 w-auto" : "hidden w-0 ml-0"
+                  expanded || screenSize === "extralarge"
+                    ? "visible ml-1 w-auto"
+                    : "hidden w-0 ml-0"
                 )}
               >
                 {name}

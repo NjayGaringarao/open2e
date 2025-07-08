@@ -16,10 +16,10 @@ export default function App() {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-[var(--background)] text-[var(--textBody)]">
+    <div className="flex h-screen bg-background text-textBody">
       <Sidebar />
 
-      <main className="flex-1 overflow-auto p-6 relative">
+      <main className="flex-1 overflow-auto relative">
         {Object.entries(pageComponents).map(([path, element]) => (
           <div
             key={path}

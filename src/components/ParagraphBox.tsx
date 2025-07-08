@@ -10,6 +10,8 @@ interface IParagraphBox {
   containerClassname?: string;
   titleClassName?: string;
   placeHolder?: string;
+  disabled?: boolean;
+  handleClear?: () => void;
 }
 
 const ParagraphBox = ({
@@ -20,6 +22,8 @@ const ParagraphBox = ({
   inputClassName,
   containerClassname,
   placeHolder,
+  disabled = false,
+  handleClear = () => {},
 }: IParagraphBox) => {
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
@@ -44,11 +48,20 @@ const ParagraphBox = ({
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeHolder}
+        disabled={disabled}
       />
-      <div className="absolute bottom-0 top-0 right-4 flex flex-col justify-center gap-2">
+      <div
+        className={clsx(
+          "absolute bottom-0 top-0 right-4 flex flex-col justify-center gap-2",
+          disabled ? "hidden" : "visible"
+        )}
+      >
         <button
           className={value.length ? "visible" : "hidden"}
-          onClick={() => setValue("")}
+          onClick={() => {
+            setValue("");
+            handleClear();
+          }}
         >
           <X className="text-textBody hover:text-primary h-6 w-6" />
         </button>

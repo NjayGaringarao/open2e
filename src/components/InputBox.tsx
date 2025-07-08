@@ -10,6 +10,8 @@ interface IInputBox {
   containerClassname?: string;
   titleClassName?: string;
   placeHolder?: string;
+  disabled?: boolean;
+  withVoiceInput?: boolean;
 }
 
 const InputBox = ({
@@ -20,6 +22,8 @@ const InputBox = ({
   inputClassName,
   containerClassname,
   placeHolder,
+  disabled = false,
+  withVoiceInput = false,
 }: IInputBox) => {
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
@@ -37,22 +41,31 @@ const InputBox = ({
       <input
         type="text"
         className={clsx(
-          "bg-background border border-textBody w-full rounded-md pl-4 pr-12 py-2 resize-none",
+          "bg-background border border-textBody w-full rounded-md px-4 py-2 resize-none",
           "text-base lg:text-lg text-textBody font-mono",
           "hover:border hover:border-primary",
           "focus:border-2 focus:border-primary focus:outline-none",
           "placeholder:italic",
-          inputClassName
+          inputClassName,
+          withVoiceInput ? "pr-12" : ""
         )}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeHolder}
+        disabled={disabled}
       />
-      <div className="absolute bottom-2 right-4 flex flex-col justify-center gap-2">
-        <button>
-          <Mic className="text-textBody hover:text-primary h-6 w-6" />
-        </button>
-      </div>
+      {withVoiceInput && (
+        <div
+          className={clsx(
+            "absolute bottom-2 right-4 flex flex-col justify-center gap-2",
+            disabled ? "hidden" : "visible"
+          )}
+        >
+          <button>
+            <Mic className="text-textBody hover:text-primary h-6 w-6" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

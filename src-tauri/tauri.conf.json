@@ -12,9 +12,16 @@
   "app": {
     "windows": [
       {
-        "title": "Open 2E: Open Ended Evaluation",
-        "minWidth": 800,
-        "minHeight": 600
+        "label": "index",
+        "url": "windows/index.html",
+        "transparent": false,
+        "decorations": false,
+        "resizable": false,
+        "fullscreen": false,
+        "width": 800,
+        "height": 400,
+        "alwaysOnTop": true,
+        "center": true
       }
     ],
     "security": {

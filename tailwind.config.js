@@ -45,9 +45,6 @@ export default {
     {
       pattern: /^border-score-(1|2|3|4|5|6|7|8|9|10)$/,
     },
-    {
-      pattern: /^lg:col-span-(1|2|3)$/,
-    },
   ],
 
   plugins: [],

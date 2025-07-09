@@ -1,6 +1,6 @@
 import { useState } from "react";
-import InputBox from "../components/InputBox";
-import AnswerSheet from "../components/evaluate/AnswerSheet";
+import InputBox from "@/components/InputBox";
+import AnswerSheet from "@/components/evaluate/AnswerSheet";
 
 export default function Evaluate() {
   const [question, setQuestion] = useState("");

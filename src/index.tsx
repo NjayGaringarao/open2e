@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router";
-import icon from "../constant/icon";
+import icon from "@/constant/icon";
 import "../global.css";
 
 const Index = () => {

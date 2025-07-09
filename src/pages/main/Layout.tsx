@@ -1,9 +1,9 @@
 import { useLocation } from "react-router";
-import Sidebar from "./components/Sidebar";
-import Home from "./pages/home";
-import Evaluate from "./pages/evaluate";
-import Settings from "./pages/settings";
-import Chat from "./pages/chat";
+import Sidebar from "@/components/Sidebar";
+import Home from "./home";
+import Evaluate from "./evaluate";
+import Settings from "./settings";
+import Chat from "./chat";
 
 const pageComponents = {
   "/home": <Home />,
@@ -12,7 +12,7 @@ const pageComponents = {
   "/chat": <Chat />,
 };
 
-export default function App() {
+export default function Layout() {
   const location = useLocation();
 
   return (
@@ -28,6 +28,7 @@ export default function App() {
             {element}
           </div>
         ))}
+        {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
       </main>
     </div>
   );

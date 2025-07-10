@@ -1,4 +1,4 @@
 export type Respondent = {
-  id: string;
+  respondent_id: string;
   name: string;
 };

@@ -4,7 +4,7 @@ interface IButton {
   title?: string;
   onClick?: () => void;
   className?: string;
-  disable?: boolean;
+  disabled?: boolean;
   type?: "button" | "submit" | "reset";
   formAction?: (formData: FormData) => void | never;
   secondary?: boolean;
@@ -14,7 +14,7 @@ const Button = ({
   title,
   className,
   onClick,
-  disable,
+  disabled,
   type = "button",
   secondary = false,
   children,
@@ -24,7 +24,7 @@ const Button = ({
       className={clsx(
         "p-1 px-4 text-base font-semibold rounded-md shadow-base",
         "transition-all transform hover:brightness-110 hover:shadow-textBody",
-        disable ? "opacity-50" : "opacity-100",
+        disabled ? "opacity-50" : "opacity-100",
         secondary
           ? "bg-transparent border border-primary text-primary"
           : "bg-primary text-background",
@@ -32,7 +32,7 @@ const Button = ({
         className
       )}
       onClick={onClick}
-      disabled={disable}
+      disabled={disabled}
       type={type}
     >
       {children && children}

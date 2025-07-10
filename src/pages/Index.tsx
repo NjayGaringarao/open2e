@@ -6,10 +6,14 @@ import { invoke } from "@tauri-apps/api/core";
 import Loading from "@/components/Loading";
 
 const rotatingNames = [
-  <p className="text-textBody animate-fadeIn">Research by Alyssa Marquez</p>,
-  <p className="text-textBody animate-fadeIn">Research by John Paul Marquez</p>,
   <p className="text-textBody animate-fadeIn">
-    Developed by Nino Jr Garingarao
+    Alyssa Jane P. Marquez [Principal Investigator]
+  </p>,
+  <p className="text-textBody animate-fadeIn">
+    Niño Jr V. Garingarao [Software Engineer]
+  </p>,
+  <p className="text-textBody animate-fadeIn">
+    John Paul C. Marquez [Research & Development Support]
   </p>,
 ];
 
@@ -43,7 +47,7 @@ const Index = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       invoke("load_window");
-    }, 5000);
+    }, 6000);
     return () => clearTimeout(timeout);
   }, []);
 

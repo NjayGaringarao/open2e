@@ -19,6 +19,7 @@ export default {
         uGray: "var(--uGray)",
         uGrayLight: "var(--uGrayLight)",
         uRed: "var(--uRed)",
+        uGreen: "var(--uGreen)",
         uBlue: "var(--uBlue)",
         score: {
           1: "var(--score-1)",

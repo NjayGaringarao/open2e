@@ -7,13 +7,17 @@ import {
   Settings,
   MessageSquareText,
   ClipboardCheck,
+  User,
+  List,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
 
 const tabs = [
   { name: "Home", path: "/home", icon: Home },
   { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
+  { name: "Enumerate", path: "/enumerate", icon: List },
   { name: "Chat", path: "/chat", icon: MessageSquareText },
+  { name: "Respondent", path: "/respondent", icon: User },
   { name: "Settings", path: "/settings", icon: Settings },
 ];
 

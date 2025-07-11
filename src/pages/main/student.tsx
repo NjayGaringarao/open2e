@@ -1,6 +1,6 @@
-import Table from "@/components/respondent/Table";
+import Table from "@/components/student/Table";
 
-const Respondent = () => {
+const Student = () => {
   return (
     <div className="flex h-screen flex-row gap-6">
       <div className="flex flex-col p-6 flex-1 items-center">
@@ -16,4 +16,4 @@ const Respondent = () => {
   );
 };
 
-export default Respondent;
+export default Student;

@@ -1,4 +1,4 @@
-import { Respondent } from "@/types/models";
+import { Student } from "@/types/models";
 import { Box } from "@chakra-ui/react";
 import {
   ColumnDef,
@@ -9,13 +9,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditableString from "./cell/EditableString";
 import { FilterProp } from "./types";
 import SearchBox from "./SearchBox";
-import { getAll } from "@/utils/respondent";
+import * as student from "@/utils/student";
 import { useDialog } from "@/hooks/useDialog";
-import * as respondent from "@/utils/respondent";
+
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
@@ -23,7 +23,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-const columns: ColumnDef<Respondent, any>[] = [
+const columns: ColumnDef<Student, any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -46,7 +46,7 @@ const columns: ColumnDef<Respondent, any>[] = [
     enableResizing: false,
   },
   {
-    accessorKey: "respondent_id",
+    accessorKey: "id",
     header: "ID",
     cell: (props) => (
       <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
@@ -62,7 +62,7 @@ const columns: ColumnDef<Respondent, any>[] = [
   },
   {
     accessorKey: "note",
-    header: "Note",
+    header: "Short Note",
     cell: EditableString,
 
     minSize: 150,
@@ -70,13 +70,13 @@ const columns: ColumnDef<Respondent, any>[] = [
 ];
 
 const Table = () => {
-  const [data, setData] = useState<Respondent[]>([]);
+  const [data, setData] = useState<Student[]>([]);
   const { alert, confirm } = useDialog();
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
 
   const initialize = async () => {
-    const { error, respondents } = await getAll();
+    const { error, students } = await student.getAll();
 
     if (error) {
       alert({
@@ -85,30 +85,30 @@ const Table = () => {
         mode: "ERROR",
       });
     }
-    setData(respondents ?? []);
+    setData(students ?? []);
   };
 
   const handleDelete = async () => {
     const selectedIds = table
       .getSelectedRowModel()
-      .rows.map((r) => r.original.respondent_id);
+      .rows.map((r) => r.original.id);
 
     if (
       !confirm({
         title: "Confirm Delete",
-        description: "Are you sure you want to delete this respondent?",
+        description: "Are you sure you want to delete this student?",
         mode: "CRITICAL",
       })
     )
       return;
 
-    Promise.all(selectedIds.map((id) => respondent.remove(id))).then(() => {
+    Promise.all(selectedIds.map((id) => student.remove(id))).then(() => {
       setRowSelection({});
       initialize(); // reload from DB
     });
   };
 
-  const table = useReactTable<Respondent>({
+  const table = useReactTable<Student>({
     data,
     columns,
     state: {
@@ -138,6 +138,36 @@ const Table = () => {
     }>,
   });
 
+  //#region sync head and body
+  const headerRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    const body = bodyRef.current;
+
+    if (!header || !body) return;
+
+    const syncScroll = (source: HTMLElement, target: HTMLElement) => {
+      return () => {
+        target.scrollLeft = source.scrollLeft;
+      };
+    };
+
+    const onBodyScroll = syncScroll(body, header);
+    const onHeaderScroll = syncScroll(header, body);
+
+    body.addEventListener("scroll", onBodyScroll);
+    header.addEventListener("scroll", onHeaderScroll);
+
+    return () => {
+      body.removeEventListener("scroll", onBodyScroll);
+      header.removeEventListener("scroll", onHeaderScroll);
+    };
+  }, []);
+
+  //#endregion
+
   useEffect(() => {
     initialize();
   }, []);
@@ -150,7 +180,7 @@ const Table = () => {
           setColumnFilters={setColumnFilters}
         />
         {/** TABLE */}
-        <div className="overflow-x-auto rounded-md">
+        <div ref={headerRef} className="overflow-x-auto">
           <table className="w-full table-fixed">
             <thead className="bg-primary sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -160,7 +190,7 @@ const Table = () => {
                       key={header.id}
                       className={clsx(
                         "p-2 text-left align-middle font-bold text-base text-background uppercase border",
-                        "relative bg-primary"
+                        "relative bg-primary group"
                       )}
                       style={{ width: header.getSize() }}
                       colSpan={header.colSpan}
@@ -180,7 +210,7 @@ const Table = () => {
                             header.column.getIsResizing()
                               ? "bg-secondary"
                               : "bg-textBody",
-                            "hover:opacity-100"
+                            "group-hover:opacity-100"
                           )}
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
@@ -194,7 +224,7 @@ const Table = () => {
           </table>
         </div>
         {/** ROW */}
-        <div className="overflow-auto flex-1">
+        <div ref={bodyRef} className="overflow-auto flex-1">
           <table className="w-full table-fixed">
             <tbody>
               {table.getRowModel().rows.map((row) => (

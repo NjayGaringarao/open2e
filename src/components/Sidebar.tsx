@@ -17,7 +17,7 @@ const tabs = [
   { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
   { name: "Enumerate", path: "/enumerate", icon: List },
   { name: "Chat", path: "/chat", icon: MessageSquareText },
-  { name: "Respondent", path: "/respondent", icon: User },
+  { name: "Student", path: "/student", icon: User },
   { name: "Settings", path: "/settings", icon: Settings },
 ];
 
@@ -69,16 +69,9 @@ export default function Sidebar() {
                   active ? "text-primary" : "text-textBody"
                 )}
               />
-              <span
-                className={clsx(
-                  "transition-all duration-300 overflow-hidden",
-                  expanded || screenSize === "extralarge"
-                    ? "visible ml-1 w-auto"
-                    : "hidden w-0 ml-0"
-                )}
-              >
-                {name}
-              </span>
+              {(expanded || screenSize === "extralarge") && (
+                <p className="overflow-hidden ease-in-out ml-1">{name}</p>
+              )}
             </Link>
           );
         })}

@@ -1,13 +1,14 @@
 import clsx from "clsx";
 import { ChevronDown, User } from "lucide-react";
-import { Respondent } from "@/types/models";
+import { Student } from "@/types/models";
 
-interface IRespondentPicker {
-  respondent?: Respondent;
-  setRespondent: (respondent?: Respondent) => void;
+interface IStudentPicker {
+  student?: Student;
+  setStudent: (student?: Student) => void;
 }
 
-const RespondentPicker = ({ respondent, setRespondent }: IRespondentPicker) => {
+const StudentPicker = ({ student, setStudent }: IStudentPicker) => {
+  setStudent();
   return (
     <div
       className={clsx(
@@ -18,10 +19,10 @@ const RespondentPicker = ({ respondent, setRespondent }: IRespondentPicker) => {
       )}
     >
       <User className="text-textBody w-4 h-4 group-hover:text-primary -mr-3" />
-      {respondent ? respondent.name : "Anonymous"}
+      {student ? student.name : "Anonymous"}
       <ChevronDown className="text-textBody w-4 h-4 group-hover:text-primary" />
     </div>
   );
 };
 
-export default RespondentPicker;
+export default StudentPicker;

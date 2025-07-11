@@ -4,15 +4,15 @@ import Home from "./home";
 import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
-import Respondent from "./respondent";
 import { DialogProvider } from "@/provider/DialogProvider";
+import Student from "./student";
 
 const pageComponents = {
   "/home": <Home />,
   "/evaluate": <Evaluate />,
   "/settings": <Settings />,
   "/chat": <Chat />,
-  "/respondent": <Respondent />,
+  "/student": <Student />,
 };
 
 export default function Layout() {

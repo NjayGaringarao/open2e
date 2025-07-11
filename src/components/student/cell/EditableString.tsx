@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import InputBox from "@/components/InputBox";
-import { Respondent } from "@/types/models";
+import { Student } from "@/types/models";
 import { Column, Row } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { Toaster, toaster } from "@/components/ui/toaster";
-import * as respondent from "@/utils/respondent";
+import * as student from "@/utils/student";
+import clsx from "clsx";
 interface IEditableCell {
   getValue: () => string;
-  row: Row<Respondent>;
-  column: Column<Respondent>;
+  row: Row<Student>;
+  column: Column<Student>;
   table: any;
 }
 
@@ -16,8 +17,8 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
   const initialValue = getValue();
   const [input, setInput] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(false);
-
-  const isSubmittingRef = useRef(false); // Track if check button was clicked
+  const [columnName, setColumnName] = useState<string | undefined>();
+  const isSubmittingRef = useRef(false);
 
   const onBlur = () => {
     // If check button is clicked, skip reset
@@ -37,27 +38,17 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
   const handleUpdate = async () => {
     isSubmittingRef.current = true;
 
-    const accessorKey = (column.columnDef as { accessorKey?: string })
-      .accessorKey;
-
-    if (!accessorKey) {
+    if (!columnName) {
       console.warn("No accessorKey found for editable column.");
       return;
     }
 
-    // Map frontend accessor key to backend prop if needed
-    const prop = accessorKey === "label" ? "note" : accessorKey;
-
-    if (prop !== "name" && prop !== "note") {
-      console.warn(`Unsupported column update attempted: ${accessorKey}`);
+    if (columnName !== "name" && columnName !== "note") {
+      console.warn(`Unsupported column update attempted: ${columnName}`);
       return;
     }
 
-    const { error } = await respondent.update(
-      row.original.respondent_id,
-      prop,
-      input
-    );
+    const { error } = await student.update(row.original.id, columnName, input);
 
     if (error) {
       toaster.create({
@@ -68,7 +59,7 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
       isSubmittingRef.current = false;
       onBlur();
     } else {
-      table.options.meta?.updateData(row.index, accessorKey, input);
+      table.options.meta?.updateData(row.index, columnName, input);
 
       setIsEditing(false);
       toaster.create({
@@ -82,11 +73,18 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
     setInput(initialValue);
   }, [initialValue]);
 
+  useEffect(() => {
+    setColumnName((column.columnDef as { accessorKey?: string }).accessorKey);
+  }, []);
+
   return (
     <div className="flex w-full flex-row gap-2" onFocus={onFocus}>
       <InputBox
         containerClassname="flex flex-1 overflow-hidden ellipsis nowrap"
-        inputClassName="px-0 border-transparent focus:border-2 focus:border"
+        inputClassName={clsx(
+          "px-0 border-transparent focus:border-2 focus:border",
+          columnName === "note" ? "opacity-50" : ""
+        )}
         value={input}
         setValue={setInput}
         onBlur={onBlur}

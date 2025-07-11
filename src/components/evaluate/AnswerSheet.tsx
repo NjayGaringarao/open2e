@@ -4,8 +4,8 @@ import Loading from "../Loading";
 import ModalResult from "./ModalResult";
 import { Save, Trash } from "lucide-react";
 import clsx from "clsx";
-import RespondentPicker from "./RespondentPicker";
-import { Respondent } from "@/types/models";
+import { Student } from "@/types/models";
+import StudentPicker from "./StudentPicker";
 
 interface IAnswerSheet {
   question?: string;
@@ -23,7 +23,7 @@ const AnswerSheet = ({ question }: IAnswerSheet) => {
   const [score, setScore] = useState<number | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [color, setColor] = useState("bg-textBody");
-  const [respondent, setRespondent] = useState<Respondent>();
+  const [student, setStudent] = useState<Student>();
 
   const evaluate = async () => {
     // Simulate an API call or evaluation process
@@ -90,10 +90,7 @@ const AnswerSheet = ({ question }: IAnswerSheet) => {
           handleClear={handleClear}
         />
         <div className="absolute flex flex-row items-center left-4 max-w-96">
-          <RespondentPicker
-            respondent={respondent}
-            setRespondent={setRespondent}
-          />
+          <StudentPicker student={student} setStudent={setStudent} />
         </div>
       </div>
       <div className="flex flex-col w-40 gap-2">

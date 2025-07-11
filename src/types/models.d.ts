@@ -1,5 +1,5 @@
-export type Respondent = {
-  respondent_id: string;
+export type Student = {
+  id: string;
   name: string;
   note: string;
 };

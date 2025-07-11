@@ -4,7 +4,7 @@ import { Respondent } from "@/types/models";
 import { Column, Row } from "@tanstack/table-core";
 import { Check } from "lucide-react";
 import { Toaster, toaster } from "@/components/ui/toaster";
-
+import * as respondent from "@/utils/respondent";
 interface IEditableCell {
   getValue: () => string;
   row: Row<Respondent>;
@@ -34,14 +34,48 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
     setIsEditing(true);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     isSubmittingRef.current = true;
-    table.options.meta?.updateData(row.index, column.id, input);
-    setIsEditing(false);
-    toaster.create({
-      title: "Updated Successfully",
-      type: "info",
-    });
+
+    const accessorKey = (column.columnDef as { accessorKey?: string })
+      .accessorKey;
+
+    if (!accessorKey) {
+      console.warn("No accessorKey found for editable column.");
+      return;
+    }
+
+    // Map frontend accessor key to backend prop if needed
+    const prop = accessorKey === "label" ? "note" : accessorKey;
+
+    if (prop !== "name" && prop !== "note") {
+      console.warn(`Unsupported column update attempted: ${accessorKey}`);
+      return;
+    }
+
+    const { error } = await respondent.update(
+      row.original.respondent_id,
+      prop,
+      input
+    );
+
+    if (error) {
+      toaster.create({
+        title: "Update Failed",
+        type: "error",
+      });
+
+      isSubmittingRef.current = false;
+      onBlur();
+    } else {
+      table.options.meta?.updateData(row.index, accessorKey, input);
+
+      setIsEditing(false);
+      toaster.create({
+        title: "Updated Successfully",
+        type: "info",
+      });
+    }
   };
 
   useEffect(() => {
@@ -61,7 +95,6 @@ const EditableString = ({ getValue, row, column, table }: IEditableCell) => {
         <button
           className="text-textBody"
           onMouseDown={() => {
-            // This ensures blur doesn't reset value when button is clicked
             isSubmittingRef.current = true;
           }}
           onClick={handleUpdate}

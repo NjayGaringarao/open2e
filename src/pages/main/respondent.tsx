@@ -1,4 +1,4 @@
-import Table from "@/components/respondent/table";
+import Table from "@/components/respondent/Table";
 
 const Respondent = () => {
   return (

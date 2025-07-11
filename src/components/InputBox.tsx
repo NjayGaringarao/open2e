@@ -12,6 +12,7 @@ interface IInputBox {
   placeHolder?: string;
   disabled?: boolean;
   withVoiceInput?: boolean;
+  onBlur?: () => void;
 }
 
 const InputBox = ({
@@ -24,13 +25,14 @@ const InputBox = ({
   placeHolder,
   disabled = false,
   withVoiceInput = false,
+  onBlur = () => {},
 }: IInputBox) => {
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
       {title && (
         <div
           className={clsx(
-            "text-sm lg:text-base text-textBody flex flex-row gap-2",
+            "text-sm text-textBody flex flex-row gap-2",
             titleClassName
           )}
         >
@@ -41,7 +43,7 @@ const InputBox = ({
       <input
         type="text"
         className={clsx(
-          "bg-background border border-textBody w-full rounded-md px-4 py-2 resize-none",
+          "bg-background border border-textBody w-full rounded-md px-4 resize-none",
           "text-base lg:text-lg text-textBody font-mono",
           "hover:border hover:border-primary",
           "focus:border-2 focus:border-primary focus:outline-none",
@@ -53,6 +55,7 @@ const InputBox = ({
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeHolder}
         disabled={disabled}
+        onBlur={onBlur}
       />
       {withVoiceInput && (
         <div

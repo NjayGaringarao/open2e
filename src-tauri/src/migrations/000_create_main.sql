@@ -1,7 +1,8 @@
 -- Create respondent table
 CREATE TABLE IF NOT EXISTS respondent (
   respondent_id TEXT PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL
+  name TEXT UNIQUE NOT NULL,
+  note TEXT
 );
 
 -- Create question table

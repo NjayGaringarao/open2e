@@ -11,9 +11,9 @@ export const getAll = async (): Promise<{
   let db: Database | null = null;
   try {
     db = await openDB();
-    const result = await db.select<{ respondent_id: string; name: string }[]>(
-      "SELECT respondent_id, name FROM respondent"
-    );
+    const result = await db.select<
+      { respondent_id: string; name: string; note: string }[]
+    >("SELECT respondent_id, name FROM respondent");
     return { respondents: result };
   } catch (error) {
     return { error: `${error}` };
@@ -24,14 +24,15 @@ export const getAll = async (): Promise<{
 
 export const add = async (
   respondent_id: string,
-  name: string
+  name: string,
+  note: string
 ): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
     db = await openDB();
     await db.execute(
-      "INSERT INTO respondent (respondent_id, name) VALUES ($1, $2)",
-      [respondent_id, name]
+      "INSERT INTO respondent (respondent_id, name, note) VALUES ($1, $2, $3)",
+      [respondent_id, name, note]
     );
     return {};
   } catch (error) {
@@ -52,14 +53,15 @@ export const add = async (
 
 export const update = async (
   respondent_id: string,
-  newName: string
+  prop: "name" | "note",
+  newValue: string
 ): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
     db = await openDB();
     await db.execute(
-      "UPDATE respondent SET name = $1 WHERE respondent_id = $2",
-      [newName, respondent_id]
+      `UPDATE respondent SET ${prop} = $1 WHERE respondent_id = $2`,
+      [newValue, respondent_id]
     );
     return {};
   } catch (error) {

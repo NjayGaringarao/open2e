@@ -43,7 +43,7 @@ const InputBox = ({
       <input
         type="text"
         className={clsx(
-          "bg-background border border-textBody w-full rounded-md px-4 resize-none",
+          "bg-transparent border border-textBody w-full rounded-md resize-none",
           "text-base lg:text-lg text-textBody font-mono",
           "hover:border hover:border-primary",
           "focus:border-2 focus:border-primary focus:outline-none",

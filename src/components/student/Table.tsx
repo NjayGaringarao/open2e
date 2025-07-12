@@ -15,6 +15,7 @@ import { FilterProp } from "./types";
 import SearchBox from "./SearchBox";
 import * as student from "@/utils/student";
 import { useDialog } from "@/hooks/useDialog";
+import Add from "./Add";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
@@ -75,7 +76,7 @@ const Table = () => {
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
 
-  const initialize = async () => {
+  const loadData = async () => {
     const { error, students } = await student.getAll();
 
     if (error) {
@@ -104,7 +105,7 @@ const Table = () => {
 
     Promise.all(selectedIds.map((id) => student.remove(id))).then(() => {
       setRowSelection({});
-      initialize(); // reload from DB
+      loadData(); // reload from DB
     });
   };
 
@@ -169,16 +170,19 @@ const Table = () => {
   //#endregion
 
   useEffect(() => {
-    initialize();
+    loadData();
   }, []);
 
   return (
     <>
       <div className="flex flex-col gap-4 max-h-full overflow-hidden select-none">
-        <SearchBox
-          columnFilters={columnFilters}
-          setColumnFilters={setColumnFilters}
-        />
+        <div className="flex flex-row items-center justify-between">
+          <SearchBox
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
+          />
+          <Add refreshHandler={loadData} />
+        </div>
         {/** TABLE */}
         <div ref={headerRef} className="overflow-x-auto">
           <table className="w-full table-fixed">

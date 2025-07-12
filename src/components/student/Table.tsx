@@ -1,5 +1,4 @@
 import { Student } from "@/types/models";
-import { Box } from "@chakra-ui/react";
 import {
   ColumnDef,
   flexRender,
@@ -24,57 +23,41 @@ declare module "@tanstack/react-table" {
   }
 }
 
-const columns: ColumnDef<Student, any>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        checked={table.getIsAllPageRowsSelected()}
-        onChange={table.getToggleAllPageRowsSelectedHandler()}
-        className="w-5 h-5 accent-primary"
-      />
-    ),
-    cell: ({ row }) => (
-      <input
-        type="checkbox"
-        checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
-        className="w-5 h-5 accent-primary"
-      />
-    ),
-    size: 40,
-    enableResizing: false,
-  },
-  {
-    accessorKey: "id",
-    header: "ID",
-    cell: (props) => (
-      <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
-    ),
-    minSize: 150,
-  },
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: EditableString,
-
-    minSize: 250,
-  },
-  {
-    accessorKey: "note",
-    header: "Short Note",
-    cell: EditableString,
-
-    minSize: 150,
-  },
-];
-
 const Table = () => {
   const [data, setData] = useState<Student[]>([]);
   const { alert, confirm } = useDialog();
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
+
+  //#region sync head and body
+  const headerRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    const body = bodyRef.current;
+
+    if (!header || !body) return;
+
+    const syncScroll = (source: HTMLElement, target: HTMLElement) => {
+      return () => {
+        target.scrollLeft = source.scrollLeft;
+      };
+    };
+
+    const onBodyScroll = syncScroll(body, header);
+    const onHeaderScroll = syncScroll(header, body);
+
+    body.addEventListener("scroll", onBodyScroll);
+    header.addEventListener("scroll", onHeaderScroll);
+
+    return () => {
+      body.removeEventListener("scroll", onBodyScroll);
+      header.removeEventListener("scroll", onHeaderScroll);
+    };
+  }, []);
 
   const loadData = async () => {
     const { error, students } = await student.getAll();
@@ -109,6 +92,54 @@ const Table = () => {
     });
   };
 
+  const columns: ColumnDef<Student, any>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllPageRowsSelected()}
+          onChange={table.getToggleAllPageRowsSelectedHandler()}
+          className="w-5 h-5 accent-primary"
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+          className="w-5 h-5 accent-primary"
+        />
+      ),
+      size: 40,
+      enableResizing: false,
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: (props) => (
+        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
+      ),
+      minSize: 150,
+      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: EditableString,
+
+      minSize: 250,
+      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
+    },
+    {
+      accessorKey: "note",
+      header: "Short Note",
+      cell: EditableString,
+      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
+      minSize: 150,
+    },
+  ];
+
   const table = useReactTable<Student>({
     data,
     columns,
@@ -125,6 +156,7 @@ const Table = () => {
     columnResizeMode: "onChange",
     debugTable: true,
     debugHeaders: true,
+    columnResizeDirection: "rtl",
     debugColumns: true,
     meta: {
       updateData: (rowIndex: number, columnId: string, value: any) => {
@@ -139,32 +171,16 @@ const Table = () => {
     }>,
   });
 
-  //#region sync head and body
-  const headerRef = useRef<HTMLDivElement>(null);
-  const bodyRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const header = headerRef.current;
-    const body = bodyRef.current;
-
-    if (!header || !body) return;
-
-    const syncScroll = (source: HTMLElement, target: HTMLElement) => {
-      return () => {
-        target.scrollLeft = source.scrollLeft;
-      };
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
     };
 
-    const onBodyScroll = syncScroll(body, header);
-    const onHeaderScroll = syncScroll(header, body);
-
-    body.addEventListener("scroll", onBodyScroll);
-    header.addEventListener("scroll", onHeaderScroll);
-
-    return () => {
-      body.removeEventListener("scroll", onBodyScroll);
-      header.removeEventListener("scroll", onHeaderScroll);
-    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
   //#endregion
@@ -175,7 +191,10 @@ const Table = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 max-h-full overflow-hidden select-none">
+      <div
+        ref={containerRef}
+        className="flex flex-col gap-4 overflow-hidden max-w-full w-full select-none"
+      >
         <div className="flex flex-row items-center justify-between">
           <SearchBox
             columnFilters={columnFilters}
@@ -208,9 +227,9 @@ const Table = () => {
                         </div>
                       )}
                       {header.column.getCanResize() && (
-                        <Box
+                        <div
                           className={clsx(
-                            "absolute opacity-0 top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none",
+                            "absolute opacity-0 top-0 left-0 h-full w-2 cursor-col-resize select-none touch-none",
                             header.column.getIsResizing()
                               ? "bg-secondary"
                               : "bg-textBody",
@@ -255,7 +274,7 @@ const Table = () => {
         </div>
       </div>
       {Object.keys(rowSelection).length > 0 && (
-        <Box
+        <div
           className={clsx(
             "mt-4 bg-panel p-4 w-full",
             "flex justify-between items-center shadow-md z-50",
@@ -271,7 +290,7 @@ const Table = () => {
           >
             Delete Selected
           </button>
-        </Box>
+        </div>
       )}
     </>
   );

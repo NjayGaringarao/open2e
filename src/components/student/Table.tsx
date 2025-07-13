@@ -4,16 +4,16 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  TableMeta,
   useReactTable,
 } from "@tanstack/react-table";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FilterProp } from "./types";
 import SearchBox from "./SearchBox";
 import * as student from "@/utils/student";
 import { useDialog } from "@/hooks/useDialog";
 import CreateStudent from "./CreateStudent";
+import ModalEditStudent from "./ModalEditStudent";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
@@ -27,39 +27,10 @@ const Table = () => {
   const { alert, confirm } = useDialog();
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
-  //#region sync head and body
-  const headerRef = useRef<HTMLDivElement>(null);
-  const bodyRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState<number>(0);
-
-  useEffect(() => {
-    const header = headerRef.current;
-    const body = bodyRef.current;
-
-    if (!header || !body) return;
-
-    const syncScroll = (source: HTMLElement, target: HTMLElement) => {
-      return () => {
-        target.scrollLeft = source.scrollLeft;
-      };
-    };
-
-    const onBodyScroll = syncScroll(body, header);
-    const onHeaderScroll = syncScroll(header, body);
-
-    body.addEventListener("scroll", onBodyScroll);
-    header.addEventListener("scroll", onHeaderScroll);
-
-    return () => {
-      body.removeEventListener("scroll", onBodyScroll);
-      header.removeEventListener("scroll", onHeaderScroll);
-    };
-  }, []);
+  const [onEditStudent, setOnEditStudent] = useState<Student | null>(null);
 
   const loadData = async () => {
     const { error, students } = await student.getAll();
-
     if (error) {
       alert({
         title: "Failed to Initialize",
@@ -99,6 +70,7 @@ const Table = () => {
           checked={table.getIsAllPageRowsSelected()}
           onChange={table.getToggleAllPageRowsSelectedHandler()}
           className="w-5 h-5 accent-primary"
+          onClick={(e) => e.stopPropagation()}
         />
       ),
       cell: ({ row }) => (
@@ -107,6 +79,7 @@ const Table = () => {
           checked={row.getIsSelected()}
           onChange={row.getToggleSelectedHandler()}
           className="w-5 h-5 accent-primary"
+          onClick={(e) => e.stopPropagation()}
         />
       ),
       size: 40,
@@ -116,28 +89,81 @@ const Table = () => {
       accessorKey: "id",
       header: "ID",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
       ),
-      minSize: 150,
-      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
+      enableResizing: true,
     },
     {
-      accessorKey: "name",
       header: "Name",
-      cell: (props) => (
-        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
-      ),
-      minSize: 250,
-      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: "last_name",
+          header: "Last",
+          cell: (props) => (
+            <p
+              className={clsx(
+                "text-textBody font-mono text-base w-auto",
+                "truncate overflow-hidden whitespace-nowrap"
+              )}
+            >
+              {props.getValue()}
+            </p>
+          ),
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorKey: "first_name",
+          header: "First",
+          cell: (props) => (
+            <p
+              className={clsx(
+                "text-textBody font-mono text-base w-auto",
+                "truncate overflow-hidden whitespace-nowrap"
+              )}
+            >
+              {props.getValue()}
+            </p>
+          ),
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorKey: "middle_name",
+          header: "Middle",
+          cell: (props) => (
+            <p
+              className={clsx(
+                "text-textBody font-mono text-base w-auto",
+                "truncate overflow-hidden whitespace-nowrap"
+              )}
+            >
+              {props.getValue()}
+            </p>
+          ),
+          footer: (props) => props.column.id,
+        },
+      ],
     },
     {
-      accessorKey: "note",
-      header: "Short Note",
+      accessorKey: "tag.label",
+      header: "Tag",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
       ),
-      maxSize: containerWidth ? containerWidth * 0.5 : undefined,
-      minSize: 150,
     },
   ];
 
@@ -157,109 +183,78 @@ const Table = () => {
     columnResizeMode: "onChange",
     debugTable: true,
     debugHeaders: true,
-    columnResizeDirection: "rtl",
     debugColumns: true,
-    meta: {
-      updateData: (rowIndex: number, columnId: string, value: any) => {
-        setData((prev) =>
-          prev.map((row, index) =>
-            index === rowIndex ? { ...row, [columnId]: value } : row
-          )
-        );
-      },
-    } as TableMeta<{
-      updateData: (rowIndex: number, columnId: string, value: any) => void;
-    }>,
   });
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-    };
-
-    updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
-
-  //#endregion
 
   useEffect(() => {
     loadData();
   }, []);
 
   return (
-    <>
-      <div
-        ref={containerRef}
-        className="flex flex-col gap-4 overflow-hidden max-w-full w-full select-none"
-      >
-        <div className="flex flex-row items-center justify-between">
-          <SearchBox
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
-          />
-          <CreateStudent refreshHandler={loadData} />
-        </div>
-        {/** TABLE */}
-        <div ref={headerRef} className="overflow-x-auto">
-          <table className="w-full table-fixed">
-            <thead className="bg-primary sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      key={header.id}
-                      className={clsx(
-                        "p-2 text-left align-middle font-bold text-base text-background uppercase border",
-                        "relative bg-primary group"
-                      )}
-                      style={{ width: header.getSize() }}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </div>
-                      )}
-                      {header.column.getCanResize() && (
-                        <div
-                          className={clsx(
-                            "absolute opacity-0 top-0 left-0 h-full w-2 cursor-col-resize select-none touch-none",
-                            header.column.getIsResizing()
-                              ? "bg-secondary"
-                              : "bg-textBody",
-                            "group-hover:opacity-100"
-                          )}
-                          onMouseDown={header.getResizeHandler()}
-                          onTouchStart={header.getResizeHandler()}
-                        />
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-          </table>
-        </div>
-        {/** ROW */}
-        <div ref={bodyRef} className="overflow-auto flex-1">
-          <table className="w-full table-fixed">
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-textBody border-opacity-50"
-                >
-                  {row.getVisibleCells().map((cell) => (
+    <div className="relative flex flex-col gap-4 max-w-full overflow-y-hidden">
+      <div className="flex flex-row items-center justify-between">
+        <SearchBox
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+        />
+        <CreateStudent refreshHandler={loadData} />
+      </div>
+      {/** Changing this DIV into TABLE will result in full width occupation.
+       *   HOWEVER, Sticky thead and y-scrolling tbody will become a single unscrolled one.
+       */}
+      <div className="w-full overflow-y-auto">
+        <thead className="bg-panel select-none w-full">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className={clsx(
+                      "p-1 text-center align-middle font-bold text-base text-textBody uppercase border border-textBody sticky top-0 z-10",
+                      "relative bg-panel group"
+                    )}
+                    style={{ width: header.getSize() }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    {header.column.getCanResize() && (
+                      <div
+                        className={clsx(
+                          "absolute opacity-0 top-0 left-0 h-full w-2 cursor-col-resize select-none touch-none",
+                          header.column.getIsResizing()
+                            ? "bg-secondary"
+                            : "bg-textBody",
+                          "group-hover:opacity-100"
+                        )}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                      />
+                    )}
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody className="flex-1">
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr
+                key={row.id}
+                className="hover:bg-secondary"
+                onClick={() => setOnEditStudent(row.original)}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  return (
                     <td
                       key={cell.id}
-                      className="p-2 align-middle"
+                      className="p-2 align-middle border-b border-panel"
                       style={{ width: cell.column.getSize() }}
                     >
                       {flexRender(
@@ -267,17 +262,18 @@ const Table = () => {
                         cell.getContext()
                       )}
                     </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+        <div className="h-20"></div>
       </div>
       {Object.keys(rowSelection).length > 0 && (
         <div
           className={clsx(
-            "mt-4 bg-panel p-4 w-full",
+            "absolute bottom-0 bg-panel p-4 w-full",
             "flex justify-between items-center shadow-md z-50",
             "rounded-md border border-primary"
           )}
@@ -293,7 +289,12 @@ const Table = () => {
           </button>
         </div>
       )}
-    </>
+      <ModalEditStudent
+        onEditStudent={onEditStudent}
+        setOnEditStudent={setOnEditStudent}
+        refreshHandler={loadData}
+      />
+    </div>
   );
 };
 

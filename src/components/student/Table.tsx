@@ -9,12 +9,11 @@ import {
 } from "@tanstack/react-table";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-import EditableString from "./cell/EditableString";
 import { FilterProp } from "./types";
 import SearchBox from "./SearchBox";
 import * as student from "@/utils/student";
 import { useDialog } from "@/hooks/useDialog";
-import Add from "./Add";
+import CreateStudent from "./CreateStudent";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
@@ -28,7 +27,6 @@ const Table = () => {
   const { alert, confirm } = useDialog();
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
-
   //#region sync head and body
   const headerRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -126,15 +124,18 @@ const Table = () => {
     {
       accessorKey: "name",
       header: "Name",
-      cell: EditableString,
-
+      cell: (props) => (
+        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
+      ),
       minSize: 250,
       maxSize: containerWidth ? containerWidth * 0.5 : undefined,
     },
     {
       accessorKey: "note",
       header: "Short Note",
-      cell: EditableString,
+      cell: (props) => (
+        <p className="text-textBody font-mono text-base ">{props.getValue()}</p>
+      ),
       maxSize: containerWidth ? containerWidth * 0.5 : undefined,
       minSize: 150,
     },
@@ -200,7 +201,7 @@ const Table = () => {
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
           />
-          <Add refreshHandler={loadData} />
+          <CreateStudent refreshHandler={loadData} />
         </div>
         {/** TABLE */}
         <div ref={headerRef} className="overflow-x-auto">

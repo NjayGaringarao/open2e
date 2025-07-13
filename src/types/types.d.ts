@@ -1,3 +1,5 @@
+import { Student } from "./models";
+
 //#region Dialog
 
 type AlertMode = "INFO" | "SUCCESS" | "ERROR";
@@ -23,4 +25,8 @@ type ConfirmOptions = {
 export type DialogContextType = {
   alert: (options: AlertOptions) => Promise<void>;
   confirm: (options: ConfirmOptions) => Promise<boolean>;
+};
+
+export type StudentData = Omit<Student, "tag_id"> & {
+  tag: string | null; // tag.content as `tag`
 };

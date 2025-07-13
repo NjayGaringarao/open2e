@@ -1,8 +1,9 @@
 "use client";
 import clsx from "clsx";
 import { Mic, X } from "lucide-react";
+import { InputHTMLAttributes } from "react";
 
-interface IParagraphBox {
+interface IParagraphBox extends InputHTMLAttributes<HTMLTextAreaElement> {
   title?: string;
   value: string;
   setValue: (param: string) => void;
@@ -12,6 +13,8 @@ interface IParagraphBox {
   placeHolder?: string;
   disabled?: boolean;
   handleClear?: () => void;
+  rows?: number;
+  withVoiceInput?: boolean;
 }
 
 const ParagraphBox = ({
@@ -21,9 +24,11 @@ const ParagraphBox = ({
   titleClassName,
   inputClassName,
   containerClassname,
-  placeHolder,
   disabled = false,
+  rows = 5,
+  withVoiceInput = false,
   handleClear = () => {},
+  ...textAreaProp
 }: IParagraphBox) => {
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
@@ -44,11 +49,10 @@ const ParagraphBox = ({
           "placeholder:italic",
           inputClassName
         )}
-        rows={5}
+        rows={rows}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeHolder}
-        disabled={disabled}
+        {...textAreaProp}
       />
       <div
         className={clsx(
@@ -65,9 +69,11 @@ const ParagraphBox = ({
         >
           <X className="text-textBody hover:text-primary h-6 w-6" />
         </button>
-        <button>
-          <Mic className="text-textBody hover:text-primary h-6 w-6" />
-        </button>
+        {withVoiceInput && (
+          <button>
+            <Mic className="text-textBody hover:text-primary h-6 w-6" />
+          </button>
+        )}
       </div>
     </div>
   );

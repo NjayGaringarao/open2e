@@ -1,16 +1,15 @@
 "use client";
 import clsx from "clsx";
 import { Mic } from "lucide-react";
+import { InputHTMLAttributes } from "react";
 
-interface IInputBox {
+interface IInputBox extends InputHTMLAttributes<HTMLInputElement> {
   title?: string;
   value: string;
   setValue: (param: string) => void;
   inputClassName?: string;
   containerClassname?: string;
   titleClassName?: string;
-  placeHolder?: string;
-  disabled?: boolean;
   withVoiceInput?: boolean;
   onBlur?: () => void;
 }
@@ -22,10 +21,8 @@ const InputBox = ({
   titleClassName,
   inputClassName,
   containerClassname,
-  placeHolder,
-  disabled = false,
   withVoiceInput = false,
-  onBlur = () => {},
+  ...inputProp
 }: IInputBox) => {
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
@@ -53,15 +50,13 @@ const InputBox = ({
         )}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeHolder}
-        disabled={disabled}
-        onBlur={onBlur}
+        {...inputProp}
       />
       {withVoiceInput && (
         <div
           className={clsx(
             "absolute bottom-2 right-4 flex flex-col justify-center gap-2",
-            disabled ? "hidden" : "visible"
+            inputProp.disabled ? "hidden" : "visible"
           )}
         >
           <button>

@@ -1,8 +1,6 @@
 import { Student } from "@/types/models";
+import { openMainDatabase } from "./sqlite";
 import Database from "@tauri-apps/plugin-sql";
-
-// Utility to safely open DB
-const openDB = () => Database.load("sqlite:main.db");
 
 export const getAll = async (): Promise<{
   students?: Student[];
@@ -10,11 +8,43 @@ export const getAll = async (): Promise<{
 }> => {
   let db: Database | null = null;
   try {
-    db = await openDB();
+    db = await openMainDatabase();
+
     const result = await db.select<
-      { id: string; name: string; note: string }[]
-    >("SELECT id, name, note FROM student");
-    return { students: result };
+      {
+        id: string;
+        first_name: string;
+        middle_name?: string;
+        last_name: string;
+        remarks?: string;
+        tag_id: number;
+        tag_label: string | null;
+      }[]
+    >(`
+  SELECT student.id,
+         student.first_name,
+         student.middle_name,
+         student.last_name,
+         student.remarks,
+         tag.id AS tag_id,
+         tag.label AS tag_label
+  FROM student
+  LEFT JOIN tag ON student.tag_id = tag.id
+`);
+
+    const students: Student[] = result.map((r) => ({
+      id: r.id,
+      first_name: r.first_name,
+      middle_name: r.middle_name,
+      last_name: r.last_name,
+      remarks: r.remarks ?? undefined,
+      tag:
+        r.tag_id && r.tag_label
+          ? { id: r.tag_id, label: r.tag_label }
+          : undefined,
+    }));
+
+    return { students };
   } catch (error) {
     return { error: `${error}` };
   } finally {
@@ -22,26 +52,36 @@ export const getAll = async (): Promise<{
   }
 };
 
-export const add = async (
-  id: string,
-  name: string,
-  note: string
-): Promise<{ error?: string }> => {
+interface IAdd {
+  id: string;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  remarks?: string;
+  tag_id?: number;
+}
+
+export const add = async ({
+  id,
+  first_name,
+  middle_name,
+  last_name,
+  remarks,
+  tag_id,
+}: IAdd): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openDB();
+    db = await openMainDatabase();
     await db.execute(
-      "INSERT INTO student (id, name, note) VALUES ($1, $2, $3)",
-      [id, name, note]
+      `INSERT INTO student (id, first_name, middle_name, last_name, remarks, tag_id)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [id, first_name, middle_name, last_name, remarks, tag_id]
     );
     return {};
   } catch (error) {
-    if (
-      error ===
-      "error returned from database: (code: 1555) UNIQUE constraint failed: student.id"
-    ) {
+    if (`${error}`.includes("UNIQUE constraint failed: student.id")) {
       return {
-        error: `❌ ERROR: ${id} already exist in the database. Please use another ID.`,
+        error: `❌ ERROR: ID "${id}" already exists in the database.`,
       };
     } else {
       return { error: `${error}` };
@@ -51,18 +91,29 @@ export const add = async (
   }
 };
 
-export const update = async (
-  id: string,
-  prop: "name" | "note",
-  newValue: string
-): Promise<{ error?: string }> => {
+export const update = async (student: Student): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openDB();
-    await db.execute(`UPDATE student SET ${prop} = $1 WHERE id = $2`, [
-      newValue,
-      id,
-    ]);
+    db = await openMainDatabase();
+
+    await db.execute(
+      `UPDATE student
+       SET first_name = $1,
+           middle_name = $2,
+           last_name = $3,
+           remarks = $4,
+           tag_id = $5
+       WHERE id = $6`,
+      [
+        student.first_name,
+        student.middle_name ?? "",
+        student.last_name,
+        student.remarks ?? "",
+        student.tag?.id ?? null,
+        student.id,
+      ]
+    );
+
     return {};
   } catch (error) {
     return { error: `${error}` };
@@ -74,7 +125,7 @@ export const update = async (
 export const remove = async (id: string): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openDB();
+    db = await openMainDatabase();
     await db.execute("DELETE FROM student WHERE id = $1", [id]);
     return {};
   } catch (error) {

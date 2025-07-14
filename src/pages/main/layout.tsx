@@ -19,11 +19,11 @@ export default function Layout() {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen bg-background text-textBody">
-      <Sidebar />
+    <MainProvider>
+      <div className="flex h-screen bg-background text-textBody">
+        <Sidebar />
 
-      <main className="flex-1 overflow-auto relative">
-        <MainProvider>
+        <main className="flex-1 overflow-auto relative">
           {Object.entries(pageComponents).map(([path, element]) => (
             <div
               key={path}
@@ -33,8 +33,8 @@ export default function Layout() {
             </div>
           ))}
           {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
-        </MainProvider>
-      </main>
-    </div>
+        </main>
+      </div>
+    </MainProvider>
   );
 }

@@ -1,10 +1,8 @@
-import { createContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Student } from "@/types/models";
 import * as student from "@/utils/student";
 import { useDialog } from "@/context/dialog/useDialog";
-import { StudentContextType } from "./studentContext";
-
-const StudentContext = createContext<StudentContextType | undefined>(undefined);
+import { StudentContext } from "./studentContext";
 
 export const StudentProvider = ({
   children,

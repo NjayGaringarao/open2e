@@ -19,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { Tag, Student } from "@/types/models";
 import InputBox from "../InputBox";
+import Button from "../Button";
 
 interface StudentSelectorModalProps {
   isVisible: boolean;
@@ -49,58 +50,103 @@ const ModalStudentSelector = ({
     return students.filter((s) => s.tag?.label === tagFilter);
   }, [tagFilter, students]);
 
-  const columns = useMemo<ColumnDef<Student>[]>(
-    () => [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <input
-            type="checkbox"
-            checked={table.getIsAllPageRowsSelected()}
-            onChange={table.getToggleAllPageRowsSelectedHandler()}
-            className="w-4 h-4 accent-primary"
-          />
-        ),
-        cell: ({ row }) => (
-          <input
-            type="checkbox"
-            checked={row.getIsSelected()}
-            onChange={row.getToggleSelectedHandler()}
-            className="w-4 h-4 accent-primary"
-            onClick={(e) => e.stopPropagation()}
-          />
-        ),
-        enableSorting: false,
-        size: 40,
-      },
-      {
-        accessorKey: "id",
-        header: "ID",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "first_name",
-        header: "First Name",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "middle_name",
-        header: "Middle Name",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "last_name",
-        header: "Last Name",
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: "tag.label",
-        header: "Tag",
-        cell: ({ row }) => row.original.tag?.label ?? "—",
-      },
-    ],
-    []
-  );
+  const columns: ColumnDef<Student, any>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllPageRowsSelected()}
+          onChange={table.getToggleAllPageRowsSelectedHandler()}
+          className="w-4 h-4 accent-primary"
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+          className="w-4 h-4 accent-primary"
+          onClick={(e) => e.stopPropagation()}
+        />
+      ),
+      enableSorting: false,
+      size: 40,
+    },
+    {
+      accessorKey: "id",
+      header: "ID",
+      cell: (props) => (
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
+      ),
+      footer: (props) => props.column.id,
+    },
+
+    {
+      accessorKey: "first_name",
+      header: "First Name",
+      cell: (props) => (
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
+      ),
+    },
+    {
+      accessorKey: "middle_name",
+      header: "Middle Name",
+      cell: (props) => (
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
+      ),
+    },
+    {
+      accessorKey: "last_name",
+      header: "Last Name",
+      cell: (props) => (
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {props.getValue()}
+        </p>
+      ),
+    },
+
+    {
+      accessorKey: "tag.label",
+      header: "Tag",
+      cell: ({ row }) => (
+        <p
+          className={clsx(
+            "text-textBody font-mono text-base w-auto",
+            "truncate overflow-hidden whitespace-nowrap"
+          )}
+        >
+          {row.original.tag?.label ?? "—"}
+        </p>
+      ),
+    },
+  ];
 
   const table = useReactTable({
     data: filteredStudents,
@@ -116,6 +162,11 @@ const ModalStudentSelector = ({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getRowId: (row) => row.id,
+    enableColumnResizing: true,
+    columnResizeMode: "onChange",
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   });
 
   const handleSubmit = () => {
@@ -164,7 +215,7 @@ const ModalStudentSelector = ({
             <DialogPanel
               className={clsx(
                 "rounded-lg bg-background transform transition-all overflow-hidden",
-                "flex flex-col w-[52rem] max-h-[85vh]"
+                "flex flex-col w-[56rem] max-h-[85vh]"
               )}
             >
               <div className="p-6 flex flex-col gap-4 overflow-hidden">
@@ -172,16 +223,16 @@ const ModalStudentSelector = ({
                   Select Student{selectionMode === "multiple" ? "s" : ""}
                 </DialogTitle>
 
-                <div className="flex flex-row justify-between gap-2">
+                <div className="grid grid-cols-3 justify-between gap-2">
                   <InputBox
                     placeholder="Search by name or tag..."
                     value={globalFilter}
                     setValue={setGlobalFilter}
                     inputClassName="py-1 px-2"
-                    containerClassname="w-full"
+                    containerClassname="col-span-2"
                   />
                   <select
-                    className="text-textBody px-3 py-1 border border-textBody rounded-md"
+                    className="text-textBody px-3 py-1 border border-textBody rounded-md outline-none focus:border-primary"
                     value={tagFilter}
                     onChange={(e) => setTagFilter(e.target.value)}
                   >
@@ -194,16 +245,21 @@ const ModalStudentSelector = ({
                   </select>
                 </div>
 
-                <div className="overflow-y-auto border rounded-md max-h-[45vh]">
-                  <table className="w-full table-fixed text-sm">
-                    <thead className="sticky top-0 bg-primary text-background">
+                <div className="overflow-y-auto rounded-md max-h-[45vh]">
+                  <table className="w-full table-fixed select-none">
+                    <thead className="sticky top-0 text-textBody text-sm uppercase">
                       {table.getHeaderGroups().map((hg) => (
                         <tr key={hg.id}>
                           {hg.headers.map((header) => (
                             <th
                               key={header.id}
-                              className="p-2 text-left font-semibold"
+                              className="p-2 text-left font-semibold bg-panel border border-textBody"
                               onClick={header.column.getToggleSortingHandler()}
+                              colSpan={header.colSpan}
+                              style={{
+                                position: "relative",
+                                width: header.getSize(),
+                              }}
                             >
                               {flexRender(
                                 header.column.columnDef.header,
@@ -213,6 +269,17 @@ const ModalStudentSelector = ({
                                 asc: " ↑",
                                 desc: " ↓",
                               }[header.column.getIsSorted() as string] ?? null}
+                              {header.column.getCanResize() && (
+                                <div
+                                  onMouseDown={header.getResizeHandler()}
+                                  onTouchStart={header.getResizeHandler()}
+                                  className={`resizer ${
+                                    header.column.getIsResizing()
+                                      ? "isResizing"
+                                      : ""
+                                  }`}
+                                ></div>
+                              )}
                             </th>
                           ))}
                         </tr>
@@ -223,10 +290,11 @@ const ModalStudentSelector = ({
                         <tr
                           key={row.id}
                           className={clsx(
-                            row.getIsSelected() && "bg-primary/10",
+                            row.getIsSelected() && "bg-secondary",
                             disabledStudentIds?.includes(row.original.id)
                               ? "opacity-40 cursor-not-allowed"
-                              : "cursor-pointer hover:bg-primary/10"
+                              : "cursor-pointer hover:bg-secondary",
+                            "border-b border-panel"
                           )}
                           onClick={() => {
                             if (
@@ -237,7 +305,11 @@ const ModalStudentSelector = ({
                           }}
                         >
                           {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id} className="p-2">
+                            <td
+                              key={cell.id}
+                              className="p-2"
+                              style={{ width: cell.column.getSize() }}
+                            >
                               {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
@@ -251,18 +323,12 @@ const ModalStudentSelector = ({
                 </div>
 
                 <div className="flex flex-row justify-end gap-3 pt-2">
-                  <button
-                    className="text-sm px-4 py-2 border rounded-md hover:brightness-110"
+                  <Button title="Confirm" onClick={handleSubmit} />
+                  <Button
+                    title="Cancel"
+                    secondary
                     onClick={() => setIsVisible(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="text-sm px-4 py-2 bg-primary text-background rounded-md hover:brightness-110"
-                    onClick={handleSubmit}
-                  >
-                    Confirm
-                  </button>
+                  />
                 </div>
               </div>
             </DialogPanel>

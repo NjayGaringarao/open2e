@@ -45,11 +45,11 @@ export const create = async (label: string): Promise<{ error?: string }> => {
   }
 };
 
-export const remove = async (id: string): Promise<{ error?: string }> => {
+export const remove = async (id: number): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
     db = await openMainDatabase();
-    await db.execute("DELETE FROM student WHERE id = $1", [id]);
+    await db.execute("DELETE FROM tag WHERE id = $1", [id]);
     return {};
   } catch (error) {
     return { error: `${error}` };

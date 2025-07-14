@@ -1,6 +1,5 @@
-import { useDialog } from "@/hooks/useDialog";
 import { Tag } from "@/types/models";
-import { getAll } from "@/utils/tag";
+import { remove } from "@/utils/tag";
 import {
   Transition,
   Dialog,
@@ -10,9 +9,12 @@ import {
 } from "@headlessui/react";
 import clsx from "clsx";
 import { ChevronDown, X } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import Button from "../Button";
 import ModalCreateTag from "./ModalCreateTag";
+import { useDialog } from "@/context/dialog/useDialog";
+import { useTag } from "@/context/tag";
+import { useStudent } from "@/context/student";
 
 interface ITagPicker {
   tag?: Tag;
@@ -23,21 +25,31 @@ interface ITagPicker {
 const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isCreateVisible, setIsCreateVisible] = useState(false);
-  const [tagList, setTagList] = useState<Tag[]>([]);
-  const { alert } = useDialog();
+  const { tagList, fetchTagList } = useTag();
+  const { fetchStudentList } = useStudent();
+  const { alert, confirm } = useDialog();
 
-  const loadTagList = async () => {
-    const { error, tags } = await getAll();
+  const deleteTag = async (tag_id: number) => {
+    const confirmation = await confirm({
+      title: "Confirm Delete",
+      description:
+        "This tag will be removed from the student(s) who uses this.",
+      mode: "CRITICAL",
+    });
+
+    if (!confirmation) return;
+
+    const { error } = await remove(tag_id);
 
     if (error) {
       alert({
-        title: "Failed to Initialize",
+        title: "Failed to Delete",
         description: error,
         mode: "ERROR",
       });
     }
-
-    setTagList(tags ?? []);
+    await fetchTagList();
+    await fetchStudentList();
   };
 
   const handleSelect = (_tag?: Tag) => {
@@ -45,9 +57,6 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
     setIsModalVisible(false);
   };
 
-  useEffect(() => {
-    if (isModalVisible) loadTagList();
-  }, [isModalVisible]);
   return (
     <>
       <button
@@ -133,7 +142,7 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
                           id="no tag"
                           onClick={() => handleSelect(undefined)}
                           className={clsx(
-                            "w-full flex flex-col p-2 text-lg items-center rounded-md mb-4",
+                            "w-full flex flex-col py-1 px-4 text-lg items-center rounded-md mb-4",
                             "border focus:border-2 focus:border-primary focus:outline-none",
                             !tag ? "border-primary" : "border-textBody"
                           )}
@@ -142,17 +151,28 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
                         </button>
 
                         {tagList.map((_tag) => (
-                          <button
-                            id={_tag.id.toString()}
-                            onClick={() => handleSelect(_tag)}
-                            className={clsx(
-                              "w-full flex flex-col p-2 text-lg items-center bg-panel rounded-md",
-                              "focus:border-2 focus:border-primary focus:outline-none",
-                              tag?.id === _tag.id && "border border-primary"
-                            )}
+                          <div
+                            className={clsx("w-full flex flex-row gap-2 pr-2")}
                           >
-                            {_tag.label}
-                          </button>
+                            <button
+                              id={_tag.id.toString()}
+                              onClick={() => handleSelect(_tag)}
+                              className={clsx(
+                                "py-1 px-4 text-lg flex-1 bg-panel rounded-md",
+                                "focus:border-2 focus:border-primary focus:outline-none",
+                                tag?.id === _tag.id && "border border-primary",
+                                "flex flex-row justify-between"
+                              )}
+                            >
+                              <p>{_tag.label}</p>
+                            </button>
+                            <button
+                              className="text-textBody hover:text-uRed"
+                              onClick={() => deleteTag(_tag.id)}
+                            >
+                              <X />
+                            </button>
+                          </div>
                         ))}
                       </div>
                       <div className="flex flex-row justify-between items-center">
@@ -187,7 +207,7 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
       <ModalCreateTag
         isVisible={isCreateVisible}
         setIsVisible={setIsCreateVisible}
-        refreshHandle={loadTagList}
+        refreshHandle={fetchTagList}
       />
     </>
   );

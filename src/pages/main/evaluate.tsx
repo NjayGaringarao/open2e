@@ -3,37 +3,18 @@ import InputBox from "@/components/InputBox";
 import AnswerSheet from "@/components/evaluate/AnswerSheet";
 import Button from "@/components/Button";
 import { AnswerSheetProp } from "@/types/types";
-import { Student, Tag } from "@/types/models";
+import { Student } from "@/types/models";
 import ModalStudentSelector from "@/components/evaluate/ModalStudentSelector";
 import { nanoid } from "nanoid";
-
-const mockTags: Tag[] = [
-  { id: 1, label: "STEM" },
-  { id: 2, label: "HUMSS" },
-];
-
-const mockStudents: Student[] = [
-  {
-    id: "S001",
-    first_name: "Juan",
-    middle_name: "Dela",
-    last_name: "Cruz",
-    tag: { id: 1, label: "STEM" },
-    remarks: "Top Performer",
-  },
-  {
-    id: "S002",
-    first_name: "Maria",
-    last_name: "Reyes",
-    tag: { id: 2, label: "HUMSS" },
-  },
-];
+import { useStudent } from "@/context/student";
+import { useTag } from "@/context/tag/useTag";
 
 export default function Evaluate() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [question, setQuestion] = useState("");
   const [answerList, setAnswerList] = useState<AnswerSheetProp[]>([]);
-
+  const { studentList } = useStudent();
+  const { tagList } = useTag();
   const handleUpdate = (updated: AnswerSheetProp) => {
     setAnswerList((prev) =>
       prev.map((item) => (item.id === updated.id ? updated : item))
@@ -93,11 +74,25 @@ export default function Evaluate() {
                   onDelete={handleDelete}
                 />
               ))}
-              <Button
-                onClick={handleAddClick}
-                title="Add Answer Sheet"
-                className="py-2"
-              />
+              {answerList.length ? (
+                <Button
+                  onClick={handleAddClick}
+                  title="Add Answer Sheet"
+                  className="py-2"
+                />
+              ) : (
+                <div className="h-24 2-full bg-panel rounded-lg flex flex-row gap-2 items-center justify-center">
+                  <p className="text-textBody text-lg">
+                    No answer to evaluate.
+                  </p>
+                  <button
+                    onClick={handleAddClick}
+                    className="text-primary text-lg hover:underline underline-offset-2"
+                  >
+                    Add Answer Sheet
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -105,8 +100,8 @@ export default function Evaluate() {
         <ModalStudentSelector
           isVisible={isModalVisible}
           setIsVisible={setIsModalVisible}
-          students={mockStudents}
-          tags={mockTags}
+          students={studentList}
+          tags={tagList}
           selectionMode="multiple"
           onSubmit={handleStudentsSubmit}
           disabledStudentIds={answerList.map((a) => a.student.id)}

@@ -17,6 +17,7 @@ import { Tag } from "@/types/models";
 import ParagraphBox from "../ParagraphBox";
 import { nanoid } from "nanoid";
 import TagPicker from "./TagPicker";
+import { useStudent } from "@/context/student";
 
 interface IAdd {
   refreshHandler: () => void;
@@ -25,6 +26,7 @@ interface IAdd {
 const CreateStudent = ({ refreshHandler }: IAdd) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { fetchStudentList } = useStudent();
   const { alert } = useDialog();
   const [form, setForm] = useState({
     id: "",
@@ -57,6 +59,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
       refreshHandler();
       setIsModalVisible(false);
     }
+    await fetchStudentList();
     setIsLoading(false);
   };
 
@@ -139,6 +142,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       value={form.id}
                       setValue={(e) => setForm((prev) => ({ ...prev, id: e }))}
                       inputClassName="px-2 py-1"
+                      containerClassname="col-span-2"
                       maxLength={21}
                     />
 

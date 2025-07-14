@@ -187,6 +187,10 @@ const ModalStudentSelector = ({
     }
   }, [rowSelection, selectionMode]);
 
+  useEffect(() => {
+    setRowSelection({});
+  }, [isVisible]);
+
   return (
     <Transition appear show={isVisible} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={() => {}}>
@@ -292,7 +296,7 @@ const ModalStudentSelector = ({
                           className={clsx(
                             row.getIsSelected() && "bg-secondary",
                             disabledStudentIds?.includes(row.original.id)
-                              ? "opacity-40 cursor-not-allowed"
+                              ? "opacity-40 cursor-not-allowed bg-secondary"
                               : "cursor-pointer hover:bg-secondary",
                             "border-b border-panel"
                           )}

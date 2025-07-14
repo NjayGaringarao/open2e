@@ -9,12 +9,13 @@ import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import InputBox from "../InputBox";
 import Button from "../Button";
-import { useDialog } from "@/hooks/useDialog";
 import * as student from "@/utils/student";
 import { Student, Tag } from "@/types/models";
 import Loading from "../Loading";
 import ParagraphBox from "../ParagraphBox";
 import TagPicker from "./TagPicker";
+import { useDialog } from "@/context/dialog/useDialog";
+import { useStudent } from "@/context/student";
 
 interface IEditStudent {
   onEditStudent: Student | null;
@@ -30,6 +31,7 @@ const ModalEditStudent = ({
   const [isLoading, setIsLoading] = useState(false);
   const { alert } = useDialog();
   const [tag, setTag] = useState<Tag | undefined>();
+  const { fetchStudentList } = useStudent();
   const [form, setForm] = useState({
     id: "",
     fName: "",
@@ -61,6 +63,7 @@ const ModalEditStudent = ({
       refreshHandler();
       setOnEditStudent(null);
     }
+    await fetchStudentList();
     setIsLoading(false);
   };
 
@@ -152,7 +155,7 @@ const ModalEditStudent = ({
             >
               <div
                 className={clsx(
-                  "w-[34rem] p-6 ",
+                  "w-[56rem] p-6 ",
                   "text-left align-middle shadow-xl",
                   "flex flex-col gap-4"
                 )}
@@ -161,8 +164,8 @@ const ModalEditStudent = ({
                   Modify Student Details
                 </DialogTitle>
 
-                <div className="grid grid-cols-2 gap-2 w-full items-center">
-                  <p className="col-span-2 text-textBody -mb-1">
+                <div className="grid grid-cols-3 gap-2 w-full items-center">
+                  <p className="col-span-3 text-textBody -mb-1">
                     STUDENT NUMBER
                   </p>
                   <InputBox
@@ -170,19 +173,19 @@ const ModalEditStudent = ({
                     value={form.id}
                     setValue={(e) => setForm((prev) => ({ ...prev, id: e }))}
                     inputClassName="px-2 py-1"
+                    containerClassname="col-span-2"
                     disabled
                   />
 
                   <TagPicker tag={tag} setTag={setTag} />
 
-                  <p className="col-span-2 text-textBody mt-4 -mb-1">NAME</p>
+                  <p className="col-span-3 text-textBody mt-4 -mb-1">NAME</p>
                   <InputBox
                     value={form.fName}
                     setValue={(e) => setForm((prev) => ({ ...prev, fName: e }))}
                     placeholder="First"
                     maxLength={30}
                     inputClassName="px-2 py-1"
-                    containerClassname="col-span-2"
                   />
                   <InputBox
                     value={form.mName}
@@ -190,7 +193,6 @@ const ModalEditStudent = ({
                     placeholder="Middle (Optional)"
                     maxLength={30}
                     inputClassName="px-2 py-1"
-                    containerClassname="col-span-2"
                   />
                   <InputBox
                     value={form.lName}
@@ -198,15 +200,14 @@ const ModalEditStudent = ({
                     placeholder="Last"
                     maxLength={40}
                     inputClassName="px-2 py-1"
-                    containerClassname="col-span-2"
                   />
-                  <p className="col-span-2 text-textBody mt-4 -mb-1">REMARKS</p>
+                  <p className="col-span-3 text-textBody mt-4 -mb-1">REMARKS</p>
                   <ParagraphBox
                     value={form.remarks}
                     setValue={(e) =>
                       setForm((prev) => ({ ...prev, remarks: e }))
                     }
-                    containerClassname="col-span-2"
+                    containerClassname="col-span-3"
                     rows={2}
                     placeholder="Maximum of 80 characters... (Optional)"
                     maxLength={80}

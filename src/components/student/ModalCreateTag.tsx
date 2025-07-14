@@ -11,7 +11,7 @@ import InputBox from "../InputBox";
 import Button from "../Button";
 import { X } from "lucide-react";
 import { create } from "@/utils/tag";
-import { useDialog } from "@/hooks/useDialog";
+import { useDialog } from "@/context/dialog/useDialog";
 
 interface ICreateTag {
   isVisible: boolean;

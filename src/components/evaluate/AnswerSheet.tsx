@@ -106,6 +106,8 @@ const AnswerSheet = ({ data, onUpdate, onDelete }: IAnswerSheet) => {
           placeHolder="Type the answer here..."
           containerClassname="flex-1"
           handleClear={handleClear}
+          withVoiceInput
+          rows={3}
         />
 
         <div className="flex flex-col w-40 gap-2">

@@ -14,6 +14,7 @@ import * as student from "@/utils/student";
 import { useDialog } from "@/context/dialog";
 import CreateStudent from "./CreateStudent";
 import ModalEditStudent from "./ModalEditStudent";
+import { useStudent } from "@/context/student";
 
 // Extend TableMeta to include updateData
 declare module "@tanstack/react-table" {
@@ -25,6 +26,7 @@ declare module "@tanstack/react-table" {
 const Table = () => {
   const [data, setData] = useState<Student[]>([]);
   const { alert, confirm } = useDialog();
+  const { fetchStudentList } = useStudent();
   const [columnFilters, setColumnFilters] = useState<FilterProp[]>([]);
   const [rowSelection, setRowSelection] = useState({});
   const [onEditStudent, setOnEditStudent] = useState<Student | null>(null);
@@ -59,6 +61,8 @@ const Table = () => {
       setRowSelection({});
       loadData(); // reload from DB
     });
+
+    await fetchStudentList();
   };
 
   const columns: ColumnDef<Student, any>[] = [

@@ -27,6 +27,21 @@ export type DialogContextType = {
   confirm: (options: ConfirmOptions) => Promise<boolean>;
 };
 
-export type StudentData = Omit<Student, "tag_id"> & {
-  tag: string | null; // tag.content as `tag`
+//#region Evaluation
+
+export type AnswerSheetProp = {
+  id: string;
+  question: string;
+  answer: string;
+  score: string;
+  justification: string;
+  isSaved: string;
+  student: Student;
+};
+
+//#region Context
+
+export type StudentContextType = {
+  studentList: Student[];
+  fetchStudentList: () => Promise<void>;
 };

@@ -1,31 +1,119 @@
 import { useState } from "react";
 import InputBox from "@/components/InputBox";
 import AnswerSheet from "@/components/evaluate/AnswerSheet";
+import Button from "@/components/Button";
+import { AnswerSheetProp } from "@/types/types";
+import { Student, Tag } from "@/types/models";
+import ModalStudentSelector from "@/components/evaluate/ModalStudentSelector";
+import { nanoid } from "nanoid";
+
+const mockTags: Tag[] = [
+  { id: 1, label: "STEM" },
+  { id: 2, label: "HUMSS" },
+];
+
+const mockStudents: Student[] = [
+  {
+    id: "S001",
+    first_name: "Juan",
+    middle_name: "Dela",
+    last_name: "Cruz",
+    tag: { id: 1, label: "STEM" },
+    remarks: "Top Performer",
+  },
+  {
+    id: "S002",
+    first_name: "Maria",
+    last_name: "Reyes",
+    tag: { id: 2, label: "HUMSS" },
+  },
+];
 
 export default function Evaluate() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [question, setQuestion] = useState("");
+  const [answerList, setAnswerList] = useState<AnswerSheetProp[]>([]);
+
+  const handleUpdate = (updated: AnswerSheetProp) => {
+    setAnswerList((prev) =>
+      prev.map((item) => (item.id === updated.id ? updated : item))
+    );
+  };
+
+  const handleDelete = (id: string) => {
+    setAnswerList((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleAddClick = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleStudentsSubmit = (students: Student[]) => {
+    const existingStudentIds = new Set(answerList.map((a) => a.student.id));
+
+    const newAnswerSheets: AnswerSheetProp[] = students
+      .filter((student) => !existingStudentIds.has(student.id))
+      .map((student) => ({
+        id: nanoid(),
+        question: question,
+        answer: "",
+        score: "",
+        justification: "",
+        isSaved: "false",
+        student: student,
+      }));
+
+    setAnswerList((prev) => [...prev, ...newAnswerSheets]);
+    setIsModalVisible(false);
+  };
+
   return (
     <div className="flex h-screen flex-row gap-6">
       <div className="flex flex-col p-6 flex-1 items-center">
-        {/* This is the main content area of the page */}
         <div className="w-full max-w-5xl flex flex-col gap-4">
           <div>
             <p className="text-textBody text-xl mb-2 font-semibold">Question</p>
             <InputBox
               value={question}
               setValue={setQuestion}
-              placeHolder="Type the question here..."
+              placeholder="Type the question here..."
               withVoiceInput
+              inputClassName="p-2"
             />
           </div>
+
           <div>
             <p className="text-textBody text-xl mb-2 font-semibold">Answers</p>
-            <AnswerSheet question={question} />
+            <div className="flex flex-col gap-4">
+              {answerList.map((a) => (
+                <AnswerSheet
+                  key={a.id}
+                  data={a}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                />
+              ))}
+              <Button
+                onClick={handleAddClick}
+                title="Add Answer Sheet"
+                className="py-2"
+              />
+            </div>
           </div>
         </div>
+
+        <ModalStudentSelector
+          isVisible={isModalVisible}
+          setIsVisible={setIsModalVisible}
+          students={mockStudents}
+          tags={mockTags}
+          selectionMode="multiple"
+          onSubmit={handleStudentsSubmit}
+          disabledStudentIds={answerList.map((a) => a.student.id)}
+        />
       </div>
 
-      {/* This is the sidebar for usage information */}
+      {/* Sidebar for usage info */}
       <div className="hidden 2xl:block bg-panel w-[26rem] transition-all duration-500"></div>
     </div>
   );

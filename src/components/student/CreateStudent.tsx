@@ -61,7 +61,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
   };
 
   useEffect(() => {
-    setForm({ id: nanoid(), fName: "", mName: "", lName: "", remarks: "" });
+    setForm({ id: nanoid(12), fName: "", mName: "", lName: "", remarks: "" });
     setTag(undefined);
   }, [isModalVisible]);
 
@@ -117,7 +117,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
               >
                 <div
                   className={clsx(
-                    "w-[34rem] p-6 ",
+                    "w-[44rem] p-6 ",
                     "text-left align-middle shadow-xl",
                     "flex flex-col gap-4"
                   )}
@@ -130,8 +130,8 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                     Fill out the form to insert new student to the table.
                   </p>
 
-                  <div className="grid grid-cols-2 gap-2 w-full items-center">
-                    <p className="col-span-2 text-textBody -mb-1">
+                  <div className="grid grid-cols-3 gap-2 w-full items-center">
+                    <p className="col-span-3 text-textBody -mb-1">
                       STUDENT NUMBER
                     </p>
                     <InputBox
@@ -144,7 +144,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
 
                     <TagPicker tag={tag} setTag={setTag} />
 
-                    <p className="col-span-2 text-textBody mt-4 -mb-1">NAME</p>
+                    <p className="col-span-3 text-textBody mt-4 -mb-1">NAME</p>
                     <InputBox
                       value={form.fName}
                       setValue={(e) =>
@@ -153,7 +153,6 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       placeholder="First"
                       maxLength={30}
                       inputClassName="px-2 py-1"
-                      containerClassname="col-span-2"
                     />
                     <InputBox
                       value={form.mName}
@@ -163,7 +162,6 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       placeholder="Middle (Optional)"
                       maxLength={30}
                       inputClassName="px-2 py-1"
-                      containerClassname="col-span-2"
                     />
                     <InputBox
                       value={form.lName}
@@ -173,9 +171,8 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       placeholder="Last"
                       maxLength={40}
                       inputClassName="px-2 py-1"
-                      containerClassname="col-span-2"
                     />
-                    <p className="col-span-2 text-textBody mt-4 -mb-1">
+                    <p className="col-span-3 text-textBody mt-4 -mb-1">
                       REMARKS
                     </p>
                     <ParagraphBox
@@ -183,7 +180,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       setValue={(e) =>
                         setForm((prev) => ({ ...prev, remarks: e }))
                       }
-                      containerClassname="col-span-2"
+                      containerClassname="col-span-3"
                       rows={2}
                       placeholder="Maximum of 80 characters... (Optional)"
                       maxLength={80}

@@ -242,32 +242,44 @@ const Table = () => {
             </tr>
           ))}
         </thead>
-        <tbody className="flex-1">
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr
-                key={row.id}
-                className="hover:bg-secondary"
-                onClick={() => setOnEditStudent(row.original)}
-              >
-                {row.getVisibleCells().map((cell) => {
-                  return (
-                    <td
-                      key={cell.id}
-                      className="p-2 align-middle border-b border-panel"
-                      style={{ width: cell.column.getSize() }}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
+        {data.length ? (
+          <tbody className="flex-1">
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr
+                  key={row.id}
+                  className="hover:bg-secondary"
+                  onClick={() => setOnEditStudent(row.original)}
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td
+                        key={cell.id}
+                        className="p-2 align-middle border-b border-panel"
+                        style={{ width: cell.column.getSize() }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        ) : (
+          <div
+            className="bg-panel mt-6 p-4 flex flex-row justify-center items-center"
+            style={{ width: table.getTotalSize() }}
+          >
+            <p className="text-primary font-semibold text-lg">
+              No Student to Show.
+            </p>
+          </div>
+        )}
+
         <div className="h-20"></div>
       </div>
       {Object.keys(rowSelection).length > 0 && (

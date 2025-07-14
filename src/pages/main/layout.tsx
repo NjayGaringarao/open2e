@@ -4,8 +4,8 @@ import Home from "./home";
 import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
-import { DialogProvider } from "@/provider/DialogProvider";
 import Student from "./student";
+import { MainProvider } from "@/context/MainProvider";
 
 const pageComponents = {
   "/home": <Home />,
@@ -19,11 +19,11 @@ export default function Layout() {
   const location = useLocation();
 
   return (
-    <DialogProvider>
-      <div className="flex h-screen bg-background text-textBody">
-        <Sidebar />
+    <div className="flex h-screen bg-background text-textBody">
+      <Sidebar />
 
-        <main className="flex-1 overflow-auto relative">
+      <main className="flex-1 overflow-auto relative">
+        <MainProvider>
           {Object.entries(pageComponents).map(([path, element]) => (
             <div
               key={path}
@@ -33,8 +33,8 @@ export default function Layout() {
             </div>
           ))}
           {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
-        </main>
-      </div>
-    </DialogProvider>
+        </MainProvider>
+      </main>
+    </div>
   );
 }

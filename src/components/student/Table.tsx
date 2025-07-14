@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { FilterProp } from "./types";
 import SearchBox from "./SearchBox";
 import * as student from "@/utils/student";
-import { useDialog } from "@/hooks/useDialog";
+import { useDialog } from "@/context/dialog";
 import CreateStudent from "./CreateStudent";
 import ModalEditStudent from "./ModalEditStudent";
 

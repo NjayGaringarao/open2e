@@ -12,7 +12,7 @@ import InputBox from "../InputBox";
 import clsx from "clsx";
 import Loading from "../Loading";
 import * as student from "@/utils/student";
-import { useDialog } from "@/hooks/useDialog";
+import { useDialog } from "@/context/dialog";
 import { Tag } from "@/types/models";
 import ParagraphBox from "../ParagraphBox";
 import { nanoid } from "nanoid";

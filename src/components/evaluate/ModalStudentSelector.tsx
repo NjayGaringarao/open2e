@@ -7,32 +7,10 @@ import {
 } from "@headlessui/react";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  useReactTable,
-  flexRender,
-  getSortedRowModel,
-  SortingState,
-  getFilteredRowModel,
-  RowSelectionState,
-} from "@tanstack/react-table";
-import { Tag, Student } from "@/types/models";
 import InputBox from "../InputBox";
 import Button from "../Button";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-} from "@dnd-kit/sortable";
-import DraggableHeader from "../table/DraggableHeader";
+import { Tag, Student } from "@/types/models";
+import StudentTable from "../table/StudentTable";
 
 interface StudentSelectorModalProps {
   isVisible: boolean;
@@ -55,161 +33,29 @@ const ModalStudentSelector = ({
 }: StudentSelectorModalProps) => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("All");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [columnOrder, setColumnOrder] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const filteredStudents = useMemo(() => {
     if (tagFilter === "All") return students;
     return students.filter((s) => s.tag?.label === tagFilter);
   }, [tagFilter, students]);
 
-  const columns: ColumnDef<Student, any>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllPageRowsSelected()}
-          onChange={table.getToggleAllPageRowsSelectedHandler()}
-          className="w-4 h-4 accent-primary"
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-          className="w-4 h-4 accent-primary"
-          onClick={(e) => e.stopPropagation()}
-        />
-      ),
-      enableSorting: false,
-      size: 40,
-    },
-    {
-      accessorKey: "id",
-      header: "ID",
-      cell: (props) => (
-        <p
-          className={clsx(
-            "text-textBody font-mono text-base w-auto",
-            "truncate overflow-hidden whitespace-nowrap"
-          )}
-        >
-          {props.getValue()}
-        </p>
-      ),
-      footer: (props) => props.column.id,
-    },
-
-    {
-      accessorKey: "first_name",
-      header: "First Name",
-      cell: (props) => (
-        <p
-          className={clsx(
-            "text-textBody font-mono text-base w-auto",
-            "truncate overflow-hidden whitespace-nowrap"
-          )}
-        >
-          {props.getValue()}
-        </p>
-      ),
-    },
-    {
-      accessorKey: "middle_name",
-      header: "Middle Name",
-      cell: (props) => (
-        <p
-          className={clsx(
-            "text-textBody font-mono text-base w-auto",
-            "truncate overflow-hidden whitespace-nowrap"
-          )}
-        >
-          {props.getValue()}
-        </p>
-      ),
-    },
-    {
-      accessorKey: "last_name",
-      header: "Last Name",
-      cell: (props) => (
-        <p
-          className={clsx(
-            "text-textBody font-mono text-base w-auto",
-            "truncate overflow-hidden whitespace-nowrap"
-          )}
-        >
-          {props.getValue()}
-        </p>
-      ),
-    },
-
-    {
-      accessorKey: "tag.label",
-      header: "Tag",
-      cell: ({ row }) => (
-        <p
-          className={clsx(
-            "text-textBody font-mono text-base w-auto",
-            "truncate overflow-hidden whitespace-nowrap"
-          )}
-        >
-          {row.original.tag?.label ?? "—"}
-        </p>
-      ),
-    },
-  ];
-
-  const table = useReactTable({
-    data: filteredStudents,
-    columns,
-    state: { globalFilter, sorting, rowSelection, columnOrder },
-    enableRowSelection: (row) => !disabledStudentIds?.includes(row.original.id),
-    enableMultiRowSelection: (row) =>
-      selectionMode === "multiple" &&
-      !disabledStudentIds?.includes(row.original.id),
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getRowId: (row) => row.id,
-    enableColumnResizing: true,
-    onColumnOrderChange: setColumnOrder,
-    columnResizeMode: "onChange",
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  });
+  const handleSelectionChange = (selected: Student[]) => {
+    if (selectionMode === "single") {
+      setSelectedIds(selected.length > 0 ? [selected[0].id] : []);
+    } else {
+      setSelectedIds(selected.map((s) => s.id));
+    }
+  };
 
   const handleSubmit = () => {
-    const selected = table
-      .getSelectedRowModel()
-      .rows.map((row) => row.original);
+    const selected = students.filter((s) => selectedIds.includes(s.id));
     onSubmit(selected);
     setIsVisible(false);
   };
 
   useEffect(() => {
-    if (selectionMode === "single") {
-      const keys = Object.keys(rowSelection);
-      if (keys.length > 1) {
-        const firstKey = keys[0];
-        setRowSelection({ [firstKey]: true });
-      }
-    }
-  }, [rowSelection, selectionMode]);
-
-  useEffect(() => {
-    if (columnOrder.length === 0 && table.getAllLeafColumns().length > 0) {
-      setColumnOrder(table.getAllLeafColumns().map((col) => col.id));
-    }
-  }, [table, columnOrder]);
-
-  useEffect(() => {
-    setRowSelection({});
+    setSelectedIds([]);
   }, [isVisible]);
 
   return (
@@ -270,98 +116,15 @@ const ModalStudentSelector = ({
                   </select>
                 </div>
 
-                <div className="overflow-y-auto rounded-md max-h-[45vh]">
-                  <table className="w-full table-fixed select-none">
-                    <thead className="sticky top-0 text-textBody text-sm uppercase">
-                      <DndContext
-                        sensors={useSensors(useSensor(PointerSensor))}
-                        collisionDetection={closestCenter}
-                        onDragEnd={({ active, over }) => {
-                          if (active.id !== over?.id) {
-                            setColumnOrder((prev) => {
-                              const oldIndex = prev.indexOf(
-                                active.id as string
-                              );
-                              const newIndex = prev.indexOf(over?.id as string);
-                              return arrayMove(prev, oldIndex, newIndex);
-                            });
-                          }
-                        }}
-                      >
-                        <SortableContext
-                          items={table
-                            .getAllLeafColumns()
-                            .filter((col) => col.id !== "select")
-                            .map((col) => col.id)}
-                          strategy={horizontalListSortingStrategy}
-                        >
-                          {table.getHeaderGroups().map((hg) => (
-                            <tr key={hg.id}>
-                              {hg.headers.map((header) =>
-                                header.column.id === "select" ? (
-                                  <th
-                                    key={header.id}
-                                    className="p-2 text-left font-semibold bg-panel border border-textBody"
-                                    colSpan={header.colSpan}
-                                    style={{
-                                      position: "relative",
-                                      width: header.getSize(),
-                                    }}
-                                  >
-                                    {flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext()
-                                    )}
-                                  </th>
-                                ) : (
-                                  <DraggableHeader
-                                    key={header.id}
-                                    header={header}
-                                  />
-                                )
-                              )}
-                            </tr>
-                          ))}
-                        </SortableContext>
-                      </DndContext>
-                    </thead>
-
-                    <tbody>
-                      {table.getRowModel().rows.map((row) => (
-                        <tr
-                          key={row.id}
-                          className={clsx(
-                            row.getIsSelected() && "bg-secondary",
-                            disabledStudentIds?.includes(row.original.id)
-                              ? "opacity-40 cursor-not-allowed bg-secondary"
-                              : "cursor-pointer hover:bg-secondary",
-                            "border-b border-panel"
-                          )}
-                          onClick={() => {
-                            if (
-                              !disabledStudentIds?.includes(row.original.id)
-                            ) {
-                              row.toggleSelected();
-                            }
-                          }}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <td
-                              key={cell.id}
-                              className="p-2"
-                              style={{ width: cell.column.getSize() }}
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <StudentTable
+                  data={filteredStudents}
+                  selectionMode={selectionMode}
+                  disabledRowIds={disabledStudentIds}
+                  onSelectionChange={handleSelectionChange}
+                  enableGlobalSearch={false}
+                  enableTagFilter={false}
+                  height="max-h-[45vh]"
+                />
 
                 <div className="flex flex-row justify-end gap-3 pt-2">
                   <Button title="Confirm" onClick={handleSubmit} />

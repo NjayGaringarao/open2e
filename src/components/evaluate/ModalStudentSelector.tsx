@@ -5,9 +5,8 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import clsx from "clsx";
-import InputBox from "../InputBox";
 import Button from "../Button";
 import { Tag, Student } from "@/types/models";
 import StudentTable from "../table/StudentTable";
@@ -26,19 +25,11 @@ const ModalStudentSelector = ({
   isVisible,
   setIsVisible,
   students,
-  tags,
   selectionMode,
   onSubmit,
   disabledStudentIds,
 }: StudentSelectorModalProps) => {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [tagFilter, setTagFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const filteredStudents = useMemo(() => {
-    if (tagFilter === "All") return students;
-    return students.filter((s) => s.tag?.label === tagFilter);
-  }, [tagFilter, students]);
 
   const handleSelectionChange = (selected: Student[]) => {
     if (selectionMode === "single") {
@@ -90,39 +81,19 @@ const ModalStudentSelector = ({
               )}
             >
               <div className="p-6 flex flex-col gap-4 overflow-hidden">
-                <DialogTitle className="text-2xl font-semibold text-primary">
-                  Select Student{selectionMode === "multiple" ? "s" : ""}
-                </DialogTitle>
-
-                <div className="grid grid-cols-3 justify-between gap-2">
-                  <InputBox
-                    placeholder="Search by name or tag..."
-                    value={globalFilter}
-                    setValue={setGlobalFilter}
-                    inputClassName="py-1 px-2"
-                    containerClassname="col-span-2"
-                  />
-                  <select
-                    className="text-textBody px-3 py-1 border border-textBody rounded-md outline-none focus:border-primary"
-                    value={tagFilter}
-                    onChange={(e) => setTagFilter(e.target.value)}
-                  >
-                    <option value="All">All Tags</option>
-                    {tags.map((t) => (
-                      <option key={t.id} value={t.label}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
+                <div className="flex flex-col gap-2">
+                  <DialogTitle className="text-2xl font-semibold text-primary">
+                    Select Students
+                  </DialogTitle>
+                  <p className="text-textBody text-base">
+                    To be able to add an answer sheet, you must first select a
+                    student to evaluate.
+                  </p>
                 </div>
 
                 <StudentTable
-                  data={filteredStudents}
-                  selectionMode={selectionMode}
                   disabledRowIds={disabledStudentIds}
                   onSelectionChange={handleSelectionChange}
-                  enableGlobalSearch={false}
-                  enableTagFilter={false}
                   height="max-h-[45vh]"
                 />
 

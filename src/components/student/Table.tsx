@@ -1,36 +1,16 @@
 import { Student } from "@/types/models";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useStudent } from "@/context/student";
 import { useDialog } from "@/context/dialog";
 import * as student from "@/utils/student";
-import InputBox from "../InputBox";
-import CreateStudent from "./CreateStudent";
 import ModalEditStudent from "./ModalEditStudent";
 import StudentTable from "../table/StudentTable";
-import { SearchIcon } from "lucide-react";
 
 const Table = () => {
   const { confirm } = useDialog();
-  const { studentList, fetchStudentList } = useStudent();
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [tagFilter, setTagFilter] = useState("All");
+  const { fetchStudentList } = useStudent();
   const [selected, setSelected] = useState<Student[]>([]);
   const [onEditStudent, setOnEditStudent] = useState<Student | null>(null);
-
-  const filteredStudents = useMemo(() => {
-    const base =
-      tagFilter === "All"
-        ? studentList
-        : studentList.filter((s) => s.tag?.label === tagFilter);
-
-    const lower = globalFilter.toLowerCase();
-    return base.filter(
-      (s) =>
-        `${s.first_name} ${s.middle_name ?? ""} ${s.last_name}`
-          .toLowerCase()
-          .includes(lower) || s.tag?.label.toLowerCase().includes(lower)
-    );
-  }, [studentList, globalFilter, tagFilter]);
 
   const handleDelete = async () => {
     if (
@@ -50,43 +30,10 @@ const Table = () => {
   return (
     <>
       <div className="relative flex flex-col gap-4 max-w-full overflow-y-auto">
-        <div className="flex gap-2 w-full justify-between">
-          <div className="flex flex-row gap-2 items-center group">
-            <SearchIcon className="text-textBody h-10 w-10 group-hover:text-primary" />
-            <InputBox
-              placeholder="Search here..."
-              value={globalFilter}
-              setValue={setGlobalFilter}
-              inputClassName="py-1 px-2 group-hover:border-primary"
-              containerClassname="col-span-2"
-            />
-            <select
-              value={tagFilter}
-              onChange={(e) => setTagFilter(e.target.value)}
-              className="px-2 py-1 border border-textBody rounded-md text-sm lg:text-base w-auto min-w-44 outline-none focus:border-primary focus:border-2"
-            >
-              <option value="All">All Tags</option>
-              {[
-                ...new Set(
-                  studentList.map((s) => s.tag?.label).filter(Boolean)
-                ),
-              ].map((label) => (
-                <option key={label} value={label}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <CreateStudent refreshHandler={fetchStudentList} />
-        </div>
-
         <StudentTable
           mode="MAIN"
-          data={filteredStudents}
-          selectionMode="multiple"
           onRowClick={(s) => setOnEditStudent(s)}
           onSelectionChange={setSelected}
-          height="  "
         />
       </div>
 

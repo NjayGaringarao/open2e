@@ -21,49 +21,41 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Student, Tag } from "@/types/models";
+import { Student } from "@/types/models";
 import clsx from "clsx";
 import InputBox from "../InputBox";
 import DraggableHeader from "./DraggableHeader";
 import CreateStudent from "../student/CreateStudent";
 import { useStudent } from "@/context/student";
+import { SearchIcon, UserRoundX } from "lucide-react";
+import { useTag } from "@/context/tag";
 
 interface StudentTableProps {
-  mode?: "SELECTION" | "MAIN";
-  data: Student[];
-  tags?: Tag[];
-  enableTagFilter?: boolean;
-  enableGlobalSearch?: boolean;
-  selectionMode?: "none" | "single" | "multiple";
+  mode?: "SELECTION.multiple" | "SELECTION.single" | "MAIN";
   disabledRowIds?: string[];
   onRowClick?: (student: Student) => void;
   onSelectionChange?: (selected: Student[]) => void;
   columnVisibility?: Record<string, boolean>;
   footerActions?: React.ReactNode;
-  showCreateButton?: boolean;
   height?: string;
+  containerClassname?: string;
 }
 
 const StudentTable = ({
-  mode = "SELECTION",
-  data,
-  tags = [],
-  enableTagFilter = false,
-  enableGlobalSearch = false,
-  selectionMode = "none",
+  mode = "SELECTION.multiple",
   disabledRowIds = [],
   onRowClick,
   onSelectionChange,
   footerActions,
-  showCreateButton = false,
-  height = "max-h-[60vh]",
+  containerClassname,
 }: StudentTableProps) => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("All");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [columnOrder, setColumnOrder] = useState<string[]>([]);
-  const { fetchStudentList } = useStudent();
+  const { fetchStudentList, studentList: data } = useStudent();
+  const { tagList: tags } = useTag();
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -158,9 +150,10 @@ const StudentTable = ({
     data: filteredStudents,
     columns,
     state: { sorting, rowSelection, columnOrder },
-    enableRowSelection: selectionMode !== "none",
-    enableMultiRowSelection: selectionMode === "multiple",
+    enableRowSelection: true,
+    enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
+    enableSorting: true,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -172,12 +165,15 @@ const StudentTable = ({
   });
 
   useEffect(() => {
-    if (selectionMode === "single") {
+    // IF :  Selection should be single, implement this:
+
+    if (mode === "SELECTION.single") {
       const keys = Object.keys(rowSelection);
       if (keys.length > 1) {
         setRowSelection({ [keys[0]]: true });
       }
     }
+
     onSelectionChange?.(
       table.getSelectedRowModel().rows.map((row) => row.original)
     );
@@ -190,40 +186,40 @@ const StudentTable = ({
   }, [table, columnOrder]);
 
   return (
-    <div className="flex flex-col gap-2 overflow-hidden">
-      {(enableGlobalSearch || enableTagFilter || showCreateButton) && (
-        <div className="flex gap-2 justify-between items-center">
-          <div className="flex gap-2 items-center">
-            {enableGlobalSearch && (
-              <InputBox
-                placeholder="Search by name or tag..."
-                value={globalFilter}
-                setValue={setGlobalFilter}
-                inputClassName="py-1 px-2"
-              />
-            )}
-            {enableTagFilter && (
-              <select
-                value={tagFilter}
-                onChange={(e) => setTagFilter(e.target.value)}
-                className="text-textBody px-3 py-1 border border-textBody rounded-md outline-none focus:border-primary"
-              >
-                <option value="All">All Tags</option>
-                {tags.map((t) => (
-                  <option key={t.id} value={t.label}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-          {showCreateButton && (
-            <CreateStudent refreshHandler={fetchStudentList} />
-          )}
-        </div>
+    <div
+      className={clsx(
+        "flex flex-col gap-2 overflow-hidden",
+        containerClassname
       )}
+    >
+      <div className="flex gap-2 w-full justify-between items-center">
+        <div className="flex gap-2 items-center group">
+          <SearchIcon className="text-textBody h-10 w-10 group-hover:text-primary" />
+          <InputBox
+            placeholder="Search here..."
+            value={globalFilter}
+            setValue={setGlobalFilter}
+            inputClassName="py-1 px-2 group-hover:border-primary"
+            containerClassname="col-span-2"
+          />
 
-      <div className={clsx("overflow-y-auto rounded-md", height)}>
+          <select
+            value={tagFilter}
+            onChange={(e) => setTagFilter(e.target.value)}
+            className="px-2 py-1 border border-textBody rounded-md text-sm lg:text-base w-auto min-w-44 outline-none focus:border-primary focus:border-2"
+          >
+            <option value="All">All Tags</option>
+            {tags.map((t) => (
+              <option key={t.id} value={t.label}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        {mode === "MAIN" && <CreateStudent refreshHandler={fetchStudentList} />}
+      </div>
+
+      <div className={clsx("overflow-y-auto rounded-md h-full")}>
         <table className="w-full table-fixed select-none">
           <thead className="sticky top-0 text-textBody text-sm uppercase">
             <DndContext
@@ -284,10 +280,10 @@ const StudentTable = ({
                   const isDisabled = disabledRowIds.includes(row.original.id);
                   if (isDisabled) return;
 
-                  if (mode === "SELECTION") {
+                  if (mode !== "MAIN") {
                     row.toggleSelected();
                     onRowClick?.(row.original);
-                  } else if (mode === "MAIN") {
+                  } else {
                     onRowClick?.(row.original);
                   }
                 }}
@@ -313,6 +309,17 @@ const StudentTable = ({
               </tr>
             ))}
             <div className="h-24"></div>
+            {filteredStudents.length === 0 && (
+              <div
+                className={clsx(
+                  "absolute bottom-0 w-full p-6 rounded-md bg-panel",
+                  "flex flex-row gap-4 items-center justify-center",
+                  "text-textBody text-lg"
+                )}
+              >
+                <UserRoundX /> <p>No student to show</p>
+              </div>
+            )}
           </tbody>
         </table>
       </div>

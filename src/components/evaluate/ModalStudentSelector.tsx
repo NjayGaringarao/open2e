@@ -20,6 +20,19 @@ import {
 import { Tag, Student } from "@/types/models";
 import InputBox from "../InputBox";
 import Button from "../Button";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
+import DraggableHeader from "../table/DraggableHeader";
 
 interface StudentSelectorModalProps {
   isVisible: boolean;
@@ -44,6 +57,7 @@ const ModalStudentSelector = ({
   const [tagFilter, setTagFilter] = useState("All");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [columnOrder, setColumnOrder] = useState<string[]>([]);
 
   const filteredStudents = useMemo(() => {
     if (tagFilter === "All") return students;
@@ -151,7 +165,7 @@ const ModalStudentSelector = ({
   const table = useReactTable({
     data: filteredStudents,
     columns,
-    state: { globalFilter, sorting, rowSelection },
+    state: { globalFilter, sorting, rowSelection, columnOrder },
     enableRowSelection: (row) => !disabledStudentIds?.includes(row.original.id),
     enableMultiRowSelection: (row) =>
       selectionMode === "multiple" &&
@@ -163,6 +177,7 @@ const ModalStudentSelector = ({
     getFilteredRowModel: getFilteredRowModel(),
     getRowId: (row) => row.id,
     enableColumnResizing: true,
+    onColumnOrderChange: setColumnOrder,
     columnResizeMode: "onChange",
     debugTable: true,
     debugHeaders: true,
@@ -186,6 +201,12 @@ const ModalStudentSelector = ({
       }
     }
   }, [rowSelection, selectionMode]);
+
+  useEffect(() => {
+    if (columnOrder.length === 0 && table.getAllLeafColumns().length > 0) {
+      setColumnOrder(table.getAllLeafColumns().map((col) => col.id));
+    }
+  }, [table, columnOrder]);
 
   useEffect(() => {
     setRowSelection({});
@@ -252,43 +273,59 @@ const ModalStudentSelector = ({
                 <div className="overflow-y-auto rounded-md max-h-[45vh]">
                   <table className="w-full table-fixed select-none">
                     <thead className="sticky top-0 text-textBody text-sm uppercase">
-                      {table.getHeaderGroups().map((hg) => (
-                        <tr key={hg.id}>
-                          {hg.headers.map((header) => (
-                            <th
-                              key={header.id}
-                              className="p-2 text-left font-semibold bg-panel border border-textBody"
-                              onClick={header.column.getToggleSortingHandler()}
-                              colSpan={header.colSpan}
-                              style={{
-                                position: "relative",
-                                width: header.getSize(),
-                              }}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
+                      <DndContext
+                        sensors={useSensors(useSensor(PointerSensor))}
+                        collisionDetection={closestCenter}
+                        onDragEnd={({ active, over }) => {
+                          if (active.id !== over?.id) {
+                            setColumnOrder((prev) => {
+                              const oldIndex = prev.indexOf(
+                                active.id as string
+                              );
+                              const newIndex = prev.indexOf(over?.id as string);
+                              return arrayMove(prev, oldIndex, newIndex);
+                            });
+                          }
+                        }}
+                      >
+                        <SortableContext
+                          items={table
+                            .getAllLeafColumns()
+                            .filter((col) => col.id !== "select")
+                            .map((col) => col.id)}
+                          strategy={horizontalListSortingStrategy}
+                        >
+                          {table.getHeaderGroups().map((hg) => (
+                            <tr key={hg.id}>
+                              {hg.headers.map((header) =>
+                                header.column.id === "select" ? (
+                                  <th
+                                    key={header.id}
+                                    className="p-2 text-left font-semibold bg-panel border border-textBody"
+                                    colSpan={header.colSpan}
+                                    style={{
+                                      position: "relative",
+                                      width: header.getSize(),
+                                    }}
+                                  >
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                                  </th>
+                                ) : (
+                                  <DraggableHeader
+                                    key={header.id}
+                                    header={header}
+                                  />
+                                )
                               )}
-                              {{
-                                asc: " ↑",
-                                desc: " ↓",
-                              }[header.column.getIsSorted() as string] ?? null}
-                              {header.column.getCanResize() && (
-                                <div
-                                  onMouseDown={header.getResizeHandler()}
-                                  onTouchStart={header.getResizeHandler()}
-                                  className={`resizer ${
-                                    header.column.getIsResizing()
-                                      ? "isResizing"
-                                      : ""
-                                  }`}
-                                ></div>
-                              )}
-                            </th>
+                            </tr>
                           ))}
-                        </tr>
-                      ))}
+                        </SortableContext>
+                      </DndContext>
                     </thead>
+
                     <tbody>
                       {table.getRowModel().rows.map((row) => (
                         <tr

@@ -29,6 +29,7 @@ import CreateStudent from "../student/CreateStudent";
 import { useStudent } from "@/context/student";
 import { SearchIcon, UserRoundX } from "lucide-react";
 import { useTag } from "@/context/tag";
+import ManageTag from "../student/ManageTag";
 
 interface StudentTableProps {
   mode?: "SELECTION.multiple" | "SELECTION.single" | "MAIN";
@@ -188,7 +189,7 @@ const StudentTable = ({
   return (
     <div
       className={clsx(
-        "flex flex-col gap-2 overflow-hidden",
+        "flex flex-col gap-4 overflow-hidden",
         containerClassname
       )}
     >
@@ -216,7 +217,13 @@ const StudentTable = ({
             ))}
           </select>
         </div>
-        {mode === "MAIN" && <CreateStudent refreshHandler={fetchStudentList} />}
+
+        {mode === "MAIN" && (
+          <div className="flex flex-row gap-2">
+            <CreateStudent refreshHandler={fetchStudentList} />
+            <ManageTag />
+          </div>
+        )}
       </div>
 
       <div className={clsx("overflow-y-auto rounded-md h-full")}>

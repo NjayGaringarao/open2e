@@ -24,11 +24,12 @@ const Button = ({
       className={clsx(
         "p-1 px-4 text-base font-semibold rounded-md shadow-base",
         "transition-all transform hover:brightness-110 hover:shadow-textBody",
-        disabled ? "opacity-50" : "opacity-100",
+        disabled ? "opacity-50 cursor-not-allowed" : "opacity-100",
         secondary
           ? "bg-transparent border border-primary text-primary"
           : "bg-primary text-background",
         "flex flex-row gap-2 items-center justify-center",
+        "outline-none focus:outline-primary",
         className
       )}
       onClick={onClick}

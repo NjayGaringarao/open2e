@@ -15,15 +15,14 @@
 
 @layer base {
   :root {
-    --primary: #00abbf;
-    --background: #FAF9F6;
-    --secondary: #ffc13128;
-    --textHeader: #2C3E50;
-    --textBody: #4F4F4F;
+    --primary: #e6a91d;
+    --background: #fafcfd;
+    --secondary: #00abbf28;
     --panel: #f1f1f1;
-    --uBlack: #2C3E50;
-    --uGray: #7F8C8D;
-    --uGrayLight: #dfdfdfc9;
+    --uBlack: #2c2413;
+    --uGray: #434343;
+    --uGrayLight: #666666;
+    --uGrayLightLight: #999999;
     --uRed: #dc2626;
     --uGreen: #22c55e;
     --uBlue: #2563eb;
@@ -45,12 +44,11 @@
       --primary: #ffc131;
       --background: #202020;
       --secondary: #00abbf28;
-      --textHeader: #FFFFFF;
-      --textBody: #D1D1D1;
       --panel: #393939;
       --uBlack: #0A0F18;
-      --uGray: #B0D0D3;
-      --uGrayLight: #334756;
+      --uGray: #999999;
+      --uGrayLight: #666666;
+      --uGrayLightLight: #434343;
       --uRed: #ef4444;
       --uGreen: #7bf1a8;
       --uBlue: #60a5fa;

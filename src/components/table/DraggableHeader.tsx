@@ -20,7 +20,7 @@ const DraggableHeader = <T,>({ header }: { header: Header<T, unknown> }) => {
       style={style}
       {...attributes}
       className={clsx(
-        "p-1 text-center align-middle font-bold text-xs text-textBody uppercase border border-textBody sticky top-0 z-10",
+        "p-1 text-center align-middle font-bold text-xs text-uGrayLight uppercase border border-uGrayLight sticky top-0 z-10",
         "relative bg-panel group"
       )}
     >
@@ -51,7 +51,7 @@ const DraggableHeader = <T,>({ header }: { header: Header<T, unknown> }) => {
         <div
           className={clsx(
             "absolute opacity-0 top-0 right-0 h-full w-2 cursor-col-resize select-none touch-none",
-            header.column.getIsResizing() ? "bg-secondary" : "bg-textBody",
+            header.column.getIsResizing() ? "bg-secondary" : "bg-uGrayLight",
             "group-hover:opacity-100"
           )}
           onMouseDown={header.getResizeHandler()}

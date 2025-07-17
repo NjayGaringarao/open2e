@@ -165,7 +165,7 @@ const ModalEditStudent = ({
                 </DialogTitle>
 
                 <div className="grid grid-cols-3 gap-2 w-full items-center">
-                  <p className="col-span-3 text-textBody -mb-1">
+                  <p className="col-span-3 text-uGrayLight -mb-1">
                     STUDENT NUMBER
                   </p>
                   <InputBox
@@ -179,7 +179,7 @@ const ModalEditStudent = ({
 
                   <TagPicker tag={tag} setTag={setTag} />
 
-                  <p className="col-span-3 text-textBody mt-4 -mb-1">NAME</p>
+                  <p className="col-span-3 text-uGrayLight mt-4 -mb-1">NAME</p>
                   <InputBox
                     value={form.fName}
                     setValue={(e) => setForm((prev) => ({ ...prev, fName: e }))}
@@ -201,7 +201,7 @@ const ModalEditStudent = ({
                     maxLength={40}
                     inputClassName="px-2 py-1"
                   />
-                  <p className="col-span-3 text-textBody mt-4 -mb-1">REMARKS</p>
+                  <p className="col-span-3 text-uGrayLight mt-4 -mb-1">REMARKS</p>
                   <ParagraphBox
                     value={form.remarks}
                     setValue={(e) =>

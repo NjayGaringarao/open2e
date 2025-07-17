@@ -53,7 +53,7 @@ export default function Evaluate() {
       <div className="flex flex-col p-6 flex-1 items-center">
         <div className="w-full max-w-5xl flex flex-col gap-4">
           <div>
-            <p className="text-textBody text-xl mb-2 font-semibold">Question</p>
+            <p className="text-uGrayLight text-xl mb-2 font-semibold">Question</p>
             <InputBox
               value={question}
               setValue={setQuestion}
@@ -64,7 +64,7 @@ export default function Evaluate() {
           </div>
 
           <div>
-            <p className="text-textBody text-xl mb-2 font-semibold">Answers</p>
+            <p className="text-uGrayLight text-xl mb-2 font-semibold">Answers</p>
             <div className="flex flex-col gap-4">
               {answerList.map((a) => (
                 <AnswerSheet
@@ -82,7 +82,7 @@ export default function Evaluate() {
                 />
               ) : (
                 <div className="h-24 2-full bg-panel rounded-lg flex flex-row gap-2 items-center justify-center">
-                  <p className="text-textBody text-lg">
+                  <p className="text-uGrayLight text-lg">
                     No answer to evaluate.
                   </p>
                   <button

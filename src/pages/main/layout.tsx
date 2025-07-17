@@ -20,7 +20,7 @@ export default function Layout() {
 
   return (
     <MainProvider>
-      <div className="flex h-screen bg-background text-textBody">
+      <div className="flex h-screen bg-background text-uGrayLight">
         <Sidebar />
 
         <main className="flex-1 overflow-auto relative">

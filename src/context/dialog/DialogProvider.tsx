@@ -170,7 +170,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
                     {alertOptions?.title}
                   </DialogTitle>
                   {alertOptions?.description && (
-                    <p className="text-textBody text-lg mb-4 leading-snug">
+                    <p className="text-uGrayLight text-lg mb-4 leading-snug">
                       {alertOptions.description}
                     </p>
                   )}
@@ -223,7 +223,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
                   {confirmOptions?.title}
                 </DialogTitle>
                 {confirmOptions?.description && (
-                  <p className="text-textBody text-base mb-6 leading-snug">
+                  <p className="text-uGrayLight text-base mb-6 leading-snug">
                     {confirmOptions.description}
                   </p>
                 )}

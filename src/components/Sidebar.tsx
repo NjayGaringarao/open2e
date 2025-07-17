@@ -66,7 +66,7 @@ export default function Sidebar() {
               <Icon
                 className={clsx(
                   "w-7 h-7",
-                  active ? "text-primary" : "text-textBody"
+                  active ? "text-primary" : "text-uGrayLight"
                 )}
               />
               {(expanded || screenSize === "extralarge") && (

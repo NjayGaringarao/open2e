@@ -129,12 +129,12 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                     New Student
                   </DialogTitle>
 
-                  <p className="text-textBody text-base -mt-2">
+                  <p className="text-uGrayLight text-base -mt-2">
                     Fill out the form to insert new student to the table.
                   </p>
 
                   <div className="grid grid-cols-3 gap-2 w-full items-center">
-                    <p className="col-span-3 text-textBody -mb-1">
+                    <p className="col-span-3 text-uGrayLight -mb-1">
                       STUDENT NUMBER
                     </p>
                     <InputBox
@@ -148,7 +148,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
 
                     <TagPicker tag={tag} setTag={setTag} />
 
-                    <p className="col-span-3 text-textBody mt-4 -mb-1">NAME</p>
+                    <p className="col-span-3 text-uGrayLight mt-4 -mb-1">NAME</p>
                     <InputBox
                       value={form.fName}
                       setValue={(e) =>
@@ -176,7 +176,7 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
                       maxLength={40}
                       inputClassName="px-2 py-1"
                     />
-                    <p className="col-span-3 text-textBody mt-4 -mb-1">
+                    <p className="col-span-3 text-uGrayLight mt-4 -mb-1">
                       REMARKS
                     </p>
                     <ParagraphBox

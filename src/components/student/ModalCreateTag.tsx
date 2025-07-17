@@ -104,13 +104,13 @@ const ModalCreateTag = ({
                   </DialogTitle>
                   <button
                     onClick={() => setIsVisible(false)}
-                    className="text-textBody hover:text-primary"
+                    className="text-uGrayLight hover:text-primary"
                   >
                     <X />
                   </button>
                 </div>
 
-                <p className="text-textBody text-base -mt-2">
+                <p className="text-uGrayLight text-base -mt-2">
                   Tag Label should be less than 16 characters.
                 </p>
                 <InputBox

@@ -20,7 +20,7 @@ const AnswerSheet = ({ data, onUpdate, onDelete }: IAnswerSheet) => {
   const [isModified, setIsModified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isResultVisible, setIsResultVisible] = useState(false);
-  const [color, setColor] = useState("bg-textBody");
+  const [color, setColor] = useState("bg-uGrayLight");
 
   const evaluate = async () => {
     setIsLoading(true);
@@ -65,7 +65,7 @@ const AnswerSheet = ({ data, onUpdate, onDelete }: IAnswerSheet) => {
     setIsModified(false);
     setScore(null);
     setJustification("");
-    setColor("bg-textBody");
+    setColor("bg-uGrayLight");
 
     onUpdate({
       ...data,
@@ -92,7 +92,7 @@ const AnswerSheet = ({ data, onUpdate, onDelete }: IAnswerSheet) => {
     if (score !== null && !isModified) {
       setColor(`bg-score-${score}`);
     } else {
-      setColor("bg-textBody");
+      setColor("bg-uGrayLight");
     }
   }, [score, isModified]);
 
@@ -165,13 +165,13 @@ const AnswerSheet = ({ data, onUpdate, onDelete }: IAnswerSheet) => {
       </div>
       <div
         className={clsx(
-          "absolute ml-4 bg-background border border-textBody rounded-md px-4 resize-none",
-          "text-base lg:text-lg text-textBody font-mono",
+          "absolute ml-4 bg-background border border-uGrayLight rounded-md px-4 resize-none",
+          "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary group",
           "flex flex-row gap-4 items-center"
         )}
       >
-        <User className="text-textBody w-4 h-4 group-hover:text-primary -mr-3" />
+        <User className="text-uGrayLight w-4 h-4 group-hover:text-primary -mr-3" />
         {data.student.middle_name
           ? `${data.student.first_name} ${data.student.middle_name} ${data.student.last_name}`
           : `${data.student.first_name} ${data.student.last_name}`}

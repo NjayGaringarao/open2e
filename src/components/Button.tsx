@@ -23,13 +23,15 @@ const Button = ({
     <button
       className={clsx(
         "p-1 px-4 text-base font-semibold rounded-md shadow-base",
-        "transition-all transform hover:brightness-110 hover:shadow-textBody",
+        "transition-all transform hover:brightness-110 hover:shadow-uGrayLight",
+     
+        "shadow shadow-uGrayLight",
         disabled ? "opacity-50 cursor-not-allowed" : "opacity-100",
         secondary
-          ? "bg-transparent border border-primary text-primary"
-          : "bg-primary text-background",
+          ? "bg-transparent text-primary"
+          : "bg-primary text-background ",
         "flex flex-row gap-2 items-center justify-center",
-        "outline-none focus:outline-primary",
+        "outline-none focus:shadow-md focus:shadow-primary",
         className
       )}
       onClick={onClick}

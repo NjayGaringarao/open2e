@@ -6,13 +6,13 @@ import { invoke } from "@tauri-apps/api/core";
 import Loading from "@/components/Loading";
 
 const rotatingNames = [
-  <p className="text-textBody animate-fadeIn">
+  <p className="text-uGrayLight animate-fadeIn">
     Alyssa Jane P. Marquez [Principal Investigator]
   </p>,
-  <p className="text-textBody animate-fadeIn">
+  <p className="text-uGrayLight animate-fadeIn">
     Niño Jr V. Garingarao [Software Engineer]
   </p>,
-  <p className="text-textBody animate-fadeIn">
+  <p className="text-uGrayLight animate-fadeIn">
     John Paul C. Marquez [Research & Development Support]
   </p>,
 ];
@@ -70,15 +70,15 @@ const Index = () => {
           <p className="text-8xl lg:text-9xl 2xl:text-[10rem] font-bold text-primary">
             Open2E
           </p>
-          <p className="text-textBody text-base w-96 bg-background font-mono">
+          <p className="text-uGrayLight text-base w-96 bg-background font-mono">
             {displayedText}
-            <span className="w-[0.5ch] h-[1.2em] ml-[1px] bg-textBody animate-blink">
+            <span className="w-[0.5ch] h-[1.2em] ml-[1px] bg-uGrayLight animate-blink">
               |
             </span>
           </p>
         </div>
         <Loading classname="absolute bottom-8 right-8" size="small" />
-        <div className="absolute bottom-8 left-8 text-textBody text-base font-mono">
+        <div className="absolute bottom-8 left-8 text-uGrayLight text-base font-mono">
           {rotatingNames[nameIndex]}
         </div>
       </div>

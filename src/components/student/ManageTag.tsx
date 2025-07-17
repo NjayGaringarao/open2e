@@ -104,13 +104,13 @@ const ManageTag = () => {
                     </DialogTitle>
                     <button
                       onClick={() => setIsModalVisible(false)}
-                      className="text-textBody hover:text-primary"
+                      className="text-uGrayLight hover:text-primary"
                     >
                       <X />
                     </button>
                   </div>
 
-                  <p className="text-textBody text-base -mt-2">
+                  <p className="text-uGrayLight text-base -mt-2">
                     Tagging helps you group your students.
                   </p>
 
@@ -133,7 +133,7 @@ const ManageTag = () => {
                               <p>{_tag.label}</p>
                             </div>
                             <button
-                              className="text-textBody hover:text-uRed"
+                              className="text-uGrayLight hover:text-uRed"
                               onClick={() => deleteTag(_tag.id)}
                             >
                               <Trash />
@@ -142,7 +142,7 @@ const ManageTag = () => {
                         ))}
                       </div>
                       <div className="flex flex-row justify-between items-center">
-                        <p className="text-textBody">{`${tagList.length} Tag(s) Available`}</p>
+                        <p className="text-uGrayLight">{`${tagList.length} Tag(s) Available`}</p>
                         <Button
                           title="Add"
                           className="self-end w-32"

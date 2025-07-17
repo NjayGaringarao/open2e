@@ -29,7 +29,7 @@ const InputBox = ({
       {title && (
         <div
           className={clsx(
-            "text-sm text-textBody flex flex-row gap-2",
+            "text-sm text-uGrayLight flex flex-row gap-2",
             titleClassName
           )}
         >
@@ -40,8 +40,8 @@ const InputBox = ({
       <input
         type="text"
         className={clsx(
-          "bg-transparent border border-textBody w-full rounded-md resize-none",
-          "text-base lg:text-lg text-textBody font-mono",
+          "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
+          "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary",
           "focus:border-2 focus:border-primary focus:outline-none",
           "placeholder:italic",
@@ -60,7 +60,7 @@ const InputBox = ({
           )}
         >
           <button>
-            <Mic className="text-textBody hover:text-primary h-6 w-6" />
+            <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
           </button>
         </div>
       )}

@@ -34,7 +34,7 @@ const ParagraphBox = ({
     <div className={clsx("relative flex flex-col", containerClassname)}>
       {title && (
         <p
-          className={clsx("text-sm lg:text-base text-textBody", titleClassName)}
+          className={clsx("text-sm lg:text-base text-uGrayLight", titleClassName)}
         >
           {title}
         </p>
@@ -42,8 +42,8 @@ const ParagraphBox = ({
 
       <textarea
         className={clsx(
-          "bg-background border border-textBody w-full rounded-md pl-4 pr-12 py-4 resize-none",
-          "text-base lg:text-lg text-textBody font-mono",
+          "bg-panel w-full rounded-md pl-4 pr-12 py-4 resize-none",
+          "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary",
           "focus:border-2 focus:border-primary focus:outline-none",
           "placeholder:italic",
@@ -67,11 +67,11 @@ const ParagraphBox = ({
             handleClear();
           }}
         >
-          <X className="text-textBody hover:text-primary h-6 w-6" />
+          <X className="text-uGrayLight hover:text-primary h-6 w-6" />
         </button>
         {withVoiceInput && (
           <button>
-            <Mic className="text-textBody hover:text-primary h-6 w-6" />
+            <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
           </button>
         )}
       </div>

@@ -104,7 +104,7 @@ const StudentTable = ({
       accessorKey: "id",
       header: "ID",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base truncate">
+        <p className="text-uGrayLight font-mono text-base truncate">
           {props.getValue()}
         </p>
       ),
@@ -113,7 +113,7 @@ const StudentTable = ({
       accessorKey: "first_name",
       header: "First Name",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base truncate">
+        <p className="text-uGrayLight font-mono text-base truncate">
           {props.getValue()}
         </p>
       ),
@@ -122,7 +122,7 @@ const StudentTable = ({
       accessorKey: "middle_name",
       header: "Middle Name",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base truncate">
+        <p className="text-uGrayLight font-mono text-base truncate">
           {props.getValue()}
         </p>
       ),
@@ -131,7 +131,7 @@ const StudentTable = ({
       accessorKey: "last_name",
       header: "Last Name",
       cell: (props) => (
-        <p className="text-textBody font-mono text-base truncate">
+        <p className="text-uGrayLight font-mono text-base truncate">
           {props.getValue()}
         </p>
       ),
@@ -140,7 +140,7 @@ const StudentTable = ({
       accessorKey: "tag.label",
       header: "Tag",
       cell: ({ row }) => (
-        <p className="text-textBody font-mono text-base truncate">
+        <p className="text-uGrayLight font-mono text-base truncate">
           {row.original.tag?.label ?? "—"}
         </p>
       ),
@@ -195,7 +195,7 @@ const StudentTable = ({
     >
       <div className="flex gap-2 w-full justify-between items-center">
         <div className="flex gap-2 items-center group">
-          <SearchIcon className="text-textBody h-10 w-10 group-hover:text-primary" />
+          <SearchIcon className="text-uGrayLight h-10 w-10 group-hover:text-primary" />
           <InputBox
             placeholder="Search here..."
             value={globalFilter}
@@ -207,7 +207,7 @@ const StudentTable = ({
           <select
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
-            className="px-2 py-1 border border-textBody rounded-md text-sm lg:text-base w-auto min-w-44 outline-none focus:border-primary focus:border-2"
+            className="px-2 py-1 border border-uGrayLight rounded-md text-sm lg:text-base w-auto min-w-44 outline-none focus:border-primary focus:border-2"
           >
             <option value="All">All Tags</option>
             {tags.map((t) => (
@@ -228,7 +228,7 @@ const StudentTable = ({
 
       <div className={clsx("overflow-y-auto rounded-md h-full")}>
         <table className="w-full table-fixed select-none">
-          <thead className="sticky top-0 text-textBody text-sm uppercase">
+          <thead className="sticky top-0 text-uGrayLight text-sm uppercase">
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
@@ -255,7 +255,7 @@ const StudentTable = ({
                       header.column.id === "select" ? (
                         <th
                           key={header.id}
-                          className="p-2 text-left font-semibold bg-panel border border-textBody"
+                          className="p-2 text-left font-semibold bg-panel border border-uGrayLight"
                           style={{ width: header.getSize() }}
                         >
                           {flexRender(
@@ -321,7 +321,7 @@ const StudentTable = ({
                 className={clsx(
                   "absolute bottom-0 w-full p-6 rounded-md bg-panel",
                   "flex flex-row gap-4 items-center justify-center",
-                  "text-textBody text-lg"
+                  "text-uGrayLight text-lg"
                 )}
               >
                 <UserRoundX /> <p>No student to show</p>

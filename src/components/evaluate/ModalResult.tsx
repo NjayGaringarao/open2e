@@ -55,13 +55,13 @@ const ModalResult = ({
               <div className="flex flex-row justify-between items-center">
                 <DialogTitle
                   as="h3"
-                  className="text-2xl font-semibold text-center md:text-start text-textHeader"
+                  className="text-2xl font-semibold text-center md:text-start text-uGray"
                 >
                   Evaluation Result
                 </DialogTitle>
                 <button>
                   <X
-                    className="h-6 w-6 text-textBody hover:text-primary"
+                    className="h-6 w-6 text-uGrayLight hover:text-primary"
                     onClick={() => {
                       onClose();
                     }}
@@ -70,19 +70,19 @@ const ModalResult = ({
               </div>
               <div className="flex flex-col items-center gap-6">
                 <div className="flex flex-row items-center w-full gap-4">
-                  <div className="px-12 py-8 text-4xl font-bold text-textHeader border border-primary rounded-md text-center">
+                  <div className="px-12 py-8 text-4xl font-bold text-uGray border border-primary rounded-md text-center">
                     {score}
                   </div>
-                  <ChevronRight className="h-12 w-12 text-textBody" />
-                  <div className="text-base text-textBody font-mono flex flex-col gap-3 flex-1 max-h-52 overflow-y-auto pr-1">
-                    <p className="text-textBody font-sans text-lg underline underline-offset-2">
+                  <ChevronRight className="h-12 w-12 text-uGrayLight" />
+                  <div className="text-base text-uGrayLight font-mono flex flex-col gap-3 flex-1 max-h-52 overflow-y-auto pr-1">
+                    <p className="text-uGrayLight font-sans text-lg underline underline-offset-2">
                       Why you got that score?
                     </p>
                     <Markdown text={justification} />
                   </div>
                 </div>
                 <div className="flex flex-row items-center justify-end gap-2 w-full">
-                  <p className="text-textBody text-base italic">
+                  <p className="text-uGrayLight text-base italic">
                     Not satisfied with the score?
                   </p>
                   <button
@@ -94,7 +94,7 @@ const ModalResult = ({
                     Evaluate Again
                   </button>
                 </div>
-                <div className="grid grid-cols-7 gap-2 w-full border-t-2 border-primary pt-4 text-textBody text-sm opacity-70">
+                <div className="grid grid-cols-7 gap-2 w-full border-t-2 border-primary pt-4 text-uGrayLight text-sm opacity-70">
                   <p className="font-semibold">QUESTION</p>
                   <p className=" col-span-6 font-mono truncate">
                     {": ".concat(question!)}

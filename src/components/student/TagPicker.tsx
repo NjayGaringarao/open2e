@@ -34,7 +34,7 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
       <button
         className={clsx(
           "h-full bg-panel px-4 py-2 rounded-md",
-          "text-textBody text-base font-semibold",
+          "text-uGrayLight text-base font-semibold",
           "flex flex-row justify-between items-center",
           "hover:brightness-110 focus:border-2 focus:border-primary focus:outline-none",
           className
@@ -97,7 +97,7 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
                     </DialogTitle>
                     <button
                       onClick={() => setIsModalVisible(false)}
-                      className="text-textBody hover:text-primary"
+                      className="text-uGrayLight hover:text-primary"
                     >
                       <X />
                     </button>
@@ -119,7 +119,7 @@ const TagPicker = ({ tag, setTag, className }: ITagPicker) => {
                           No Tag (Default)
                         </button>
 
-                        <p className="text-textBody text-base mt-4">
+                        <p className="text-uGrayLight text-base mt-4">
                           Available Tag(s)
                         </p>
 

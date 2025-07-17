@@ -20,7 +20,7 @@ const SearchBox = ({ columnFilters, setColumnFilters }: ISearch) => {
 
   return (
     <div className="flex flex-row gap-2 items-center">
-      <p className="text-textBody font-semibold text-lg">Search</p>
+      <p className="text-uGrayLight font-semibold text-lg">Search</p>
       <InputBox
         value={taskName}
         setValue={(e) => onFilterChange("name", e)}

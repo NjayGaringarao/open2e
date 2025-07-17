@@ -85,7 +85,7 @@ const ModalStudentSelector = ({
                   <DialogTitle className="text-2xl font-semibold text-primary">
                     Select Students
                   </DialogTitle>
-                  <p className="text-textBody text-base">
+                  <p className="text-uGrayLight text-base">
                     To be able to add an answer sheet, you must first select a
                     student to evaluate.
                   </p>

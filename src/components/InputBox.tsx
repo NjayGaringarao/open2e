@@ -43,7 +43,7 @@ const InputBox = ({
           "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
           "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary",
-          "focus:border-2 focus:border-primary focus:outline-none",
+          "outline-primary",
           "placeholder:italic",
           inputClassName,
           withVoiceInput ? "pr-12" : ""

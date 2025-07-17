@@ -45,7 +45,8 @@ const ParagraphBox = ({
           "bg-panel w-full rounded-md pl-4 pr-12 py-4 resize-none",
           "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary",
-          "focus:border-2 focus:border-primary focus:outline-none",
+          "shadow-inner shadow-uGrayLight w-full rounded-md",
+          "outline-primary",
           "placeholder:italic",
           inputClassName
         )}

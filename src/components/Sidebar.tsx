@@ -66,11 +66,11 @@ export default function Sidebar() {
               <Icon
                 className={clsx(
                   "w-7 h-7",
-                  active ? "text-primary" : "text-uGrayLight"
+                  active ? "text-primary" : "text-uGray"
                 )}
               />
               {(expanded || screenSize === "extralarge") && (
-                <p className="overflow-hidden ease-in-out ml-1">{name}</p>
+                <p className="overflow-hidden ease-in-out ml-1 text-uGray">{name}</p>
               )}
             </Link>
           );

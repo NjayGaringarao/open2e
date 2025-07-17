@@ -30,6 +30,7 @@ import { useStudent } from "@/context/student";
 import { SearchIcon, UserRoundX } from "lucide-react";
 import { useTag } from "@/context/tag";
 import ManageTag from "../student/ManageTag";
+import Select from "../Select";
 
 interface StudentTableProps {
   mode?: "SELECTION.multiple" | "SELECTION.single" | "MAIN";
@@ -204,10 +205,9 @@ const StudentTable = ({
             containerClassname="col-span-2"
           />
 
-          <select
+          <Select
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
-            className="px-2 py-1 border border-uGrayLight rounded-md text-sm lg:text-base w-auto min-w-44 outline-none focus:border-primary focus:border-2"
           >
             <option value="All">All Tags</option>
             {tags.map((t) => (
@@ -215,7 +215,7 @@ const StudentTable = ({
                 {t.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         {mode === "MAIN" && (

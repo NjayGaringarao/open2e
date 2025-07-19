@@ -45,3 +45,14 @@ export type StudentContextType = {
   studentList: Student[];
   fetchStudentList: () => Promise<void>;
 };
+
+//#region Data Types
+
+export type Name = {
+  first : string,
+  middle? : string,
+  last: string
+}
+
+export type UserRole = "LEARNER" | "EVALUATOR" | undefined
+export type EvaluationMode = "ONLINE" | "OFFLINE" | undefined

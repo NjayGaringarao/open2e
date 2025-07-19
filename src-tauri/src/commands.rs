@@ -1,5 +1,6 @@
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_store::StoreExt;
+use tauri_plugin_system_info::utils::SysInfoState;
 
 #[tauri::command]
 pub async fn initialize_app(app: tauri::AppHandle) -> Result<(), String> {
@@ -64,4 +65,12 @@ pub async fn load_window(app: tauri::AppHandle) -> Result<(), String> {
 
     store.close_resource();
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_total_memory_gb() -> Result<u64, String> {
+    let state = SysInfoState::default();
+    let memory = state.sysinfo.lock().unwrap().total_memory();
+    let total_memory_in_gb = ((memory as f64) / 1024.0 / 1024.0 / 1024.0).round() as u64;
+    Ok(total_memory_in_gb)
 }

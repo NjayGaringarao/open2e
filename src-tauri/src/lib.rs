@@ -14,7 +14,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             commands::load_window,
-            commands::initialize_app
+            commands::initialize_app,
+            commands::get_total_memory_gb
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

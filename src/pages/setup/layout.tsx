@@ -7,6 +7,7 @@ import Role from "./Role";
 import Welcome from "./Welcome";
 import Eula from "./Eula";
 import { useSetup } from "@/context/SetupProvider";
+import { LocalSetupProvider } from "@/context/LocalSetup/LocalSetupProvider";
 
 const Layout = () => {
   const { mode, step } = useSetup();
@@ -20,7 +21,15 @@ const Layout = () => {
       {step === 3 && <Role />}
       {step === 4 && <Mode />}
       {step === 5 &&
-        (mode ? mode === "ONLINE" ? <OpenAIKey /> : <LocalSetup /> : null)}
+        (mode ? (
+          mode === "ONLINE" ? (
+            <OpenAIKey />
+          ) : (
+            <LocalSetupProvider>
+              <LocalSetup />
+            </LocalSetupProvider>
+          )
+        ) : null)}
       {step === 6 && <Final />}
     </div>
   );

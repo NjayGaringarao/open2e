@@ -1,7 +1,10 @@
 mod commands;
 mod migrations;
 
-use commands::{get_total_memory_gb, initialize_app, load_window, validate_key};
+use commands::{
+    download_ollama, get_total_memory_gb, initialize_app, install_llm, install_ollama, load_window,
+    validate_key,
+};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -18,7 +21,10 @@ pub fn run() {
             load_window,
             initialize_app,
             get_total_memory_gb,
-            validate_key
+            validate_key,
+            install_ollama,
+            download_ollama,
+            install_llm
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

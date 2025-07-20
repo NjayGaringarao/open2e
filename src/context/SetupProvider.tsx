@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { EvaluationMode, Name, UserRole } from "@/types/types";
 import { INavigate } from "@/pages/setup/types";
+import { DialogProvider } from "./dialog";
 
 interface SetupContextType {
   // Step control
@@ -66,25 +67,27 @@ export const SetupProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <SetupContext.Provider
-      value={{
-        step,
-        totalSteps: TOTAL_STEPS,
-        navigate,
-        systemMemory,
-        mode,
-        setMode,
-        userRole,
-        setUserRole,
-        isEulaAgreed,
-        setIsEulaAgreed,
-        apiKey,
-        setApiKey,
-        username,
-        setUsername,
-      }}
-    >
-      {children}
-    </SetupContext.Provider>
+    <DialogProvider>
+      <SetupContext.Provider
+        value={{
+          step,
+          totalSteps: TOTAL_STEPS,
+          navigate,
+          systemMemory,
+          mode,
+          setMode,
+          userRole,
+          setUserRole,
+          isEulaAgreed,
+          setIsEulaAgreed,
+          apiKey,
+          setApiKey,
+          username,
+          setUsername,
+        }}
+      >
+        {children}
+      </SetupContext.Provider>
+    </DialogProvider>
   );
 };

@@ -1,9 +1,11 @@
 import clsx from "clsx";
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
 const Role = () => {
-  const { userRole, setUserRole, navigate, step, totalSteps } = useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
+  const { userRole, setUserRole } = useSetupProcedure();
   return (
     <StepContainer
       step={step}

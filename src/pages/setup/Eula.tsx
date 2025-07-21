@@ -1,10 +1,10 @@
-import { useSetup } from "@/context/SetupProvider";
-
 import StepContainer from "@/components/setup/StepContainer";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
 const Eula = () => {
-  const { isEulaAgreed, setIsEulaAgreed, navigate, step, totalSteps } =
-    useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
+  const { isEulaAgreed, setIsEulaAgreed } = useSetupProcedure();
   return (
     <StepContainer
       step={step}

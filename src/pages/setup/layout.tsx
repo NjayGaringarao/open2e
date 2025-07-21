@@ -5,12 +5,13 @@ import Name from "./Name";
 import Role from "./Role";
 import Welcome from "./Welcome";
 import Eula from "./Eula";
-import { useSetup } from "@/context/SetupProvider";
-import { LocalSetupProvider } from "@/context/LocalSetup/LocalSetupProvider";
 import ConfirmSetup from "./ConfirmSetup";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
 const Layout = () => {
-  const { mode, step } = useSetup();
+  const { step } = useSetupNavigation();
+  const { mode } = useSetupProcedure();
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background">
@@ -21,14 +22,7 @@ const Layout = () => {
       {step === 3 && <Role />}
       {step === 4 && <Mode />}
       {step === 5 && <ConfirmSetup />}
-      {step === 6 &&
-        (mode === "ONLINE" ? (
-          <Final />
-        ) : (
-          <LocalSetupProvider>
-            <LocalSetup />
-          </LocalSetupProvider>
-        ))}
+      {step === 6 && (mode === "ONLINE" ? <Final /> : <LocalSetup />)}
     </div>
   );
 };

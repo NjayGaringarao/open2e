@@ -1,8 +1,8 @@
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
+import { useSetupNavigation } from "@/context/setup/navigation";
 
 const Final = () => {
-  const { navigate, step, totalSteps } = useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
   return (
     <StepContainer
       step={step}

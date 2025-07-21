@@ -1,8 +1,11 @@
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
-  const { navigate, step, totalSteps, username, mode, userRole } = useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
+
+  const { username, mode, userRole } = useSetupProcedure();
 
   return (
     <StepContainer
@@ -48,8 +51,8 @@ const ConfirmSetup = () => {
               <td className="border border-uGrayLightLight px-4 py-2">
                 {userRole === "EVALUATOR" ? (
                   <ul className=" text-uGray text-base font-semibold list-disc list-inside">
-                    <li>Question & Answer Evaluation</li>
-                    <li>AI Chat</li>
+                    <li>Batch Evaluation</li>
+                    <li>Student Management</li>
                     <li>Performance Analytics</li>
                   </ul>
                 ) : (

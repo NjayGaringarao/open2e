@@ -1,8 +1,9 @@
 import Loading from "@/components/Loading";
 import StepContainer from "@/components/setup/StepContainer";
 import { useDialog } from "@/context/dialog";
-import { useLocalSetup } from "@/context/LocalSetup/useLocalSetup";
-import { useSetup } from "@/context/SetupProvider";
+import { useLocalSetup } from "@/context/setup/local/useLocalSetup";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 import { Check } from "lucide-react";
 
 const installationSteps = [
@@ -13,7 +14,8 @@ const installationSteps = [
 ];
 
 const LocalSetup = () => {
-  const { navigate, step, totalSteps, finishSetup } = useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
+  const { finishSetup } = useSetupProcedure();
   const { confirm } = useDialog();
   const { currentStep, percent, isInstalling, isInstalled, startInstallation } =
     useLocalSetup();

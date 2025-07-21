@@ -3,10 +3,12 @@ import InputBox from "@/components/InputBox";
 import clsx from "clsx";
 
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
+import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
 const Name = () => {
-  const { username, setUsername, navigate, step, totalSteps } = useSetup();
+  const { navigate, step, totalSteps } = useSetupNavigation();
+  const { username, setUsername } = useSetupProcedure();
   return (
     <StepContainer
       step={step}

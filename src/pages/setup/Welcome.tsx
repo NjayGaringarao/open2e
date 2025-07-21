@@ -1,10 +1,9 @@
 import icon from "@/constant/icon";
-
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
+import { useSetupNavigation } from "@/context/setup/navigation";
 
 const Welcome = () => {
-  const { step, totalSteps, navigate } = useSetup();
+  const { step, totalSteps, navigate } = useSetupNavigation();
   return (
     <StepContainer
       step={step}

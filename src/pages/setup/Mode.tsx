@@ -1,27 +1,22 @@
 import icon from "@/constant/icon";
 import clsx from "clsx";
 import StepContainer from "@/components/setup/StepContainer";
-import { useSetup } from "@/context/SetupProvider";
 import InputBox from "@/components/InputBox";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import Loading from "@/components/Loading";
 import { Check, X } from "lucide-react";
 import Markdown from "@/components/Markdown";
+import { useSetupProcedure } from "@/context/setup/procedure";
+import { useSetupNavigation } from "@/context/setup/navigation";
 
 const Mode = () => {
   const MINIMUM_SYSTEM_MEMORY = 8;
 
-  const {
-    mode,
-    setMode,
-    systemMemory,
-    navigate,
-    step,
-    totalSteps,
-    apiKey,
-    setApiKey,
-  } = useSetup();
+  const { mode, setMode, systemMemory, apiKey, setApiKey } =
+    useSetupProcedure();
+
+  const { navigate, step, totalSteps } = useSetupNavigation();
 
   const [isApikeyValid, setIsApiKeyValid] = useState(false);
   const [verifying, setVerifying] = useState(false);

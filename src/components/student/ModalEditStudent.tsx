@@ -15,7 +15,7 @@ import Loading from "../Loading";
 import ParagraphBox from "../ParagraphBox";
 import TagPicker from "./TagPicker";
 import { useDialog } from "@/context/dialog/useDialog";
-import { useStudent } from "@/context/student";
+import { useStudent } from "@/context/main/student";
 
 interface IEditStudent {
   onEditStudent: Student | null;
@@ -201,7 +201,9 @@ const ModalEditStudent = ({
                     maxLength={40}
                     inputClassName="px-2 py-1"
                   />
-                  <p className="col-span-3 text-uGrayLight mt-4 -mb-1">REMARKS</p>
+                  <p className="col-span-3 text-uGrayLight mt-4 -mb-1">
+                    REMARKS
+                  </p>
                   <ParagraphBox
                     value={form.remarks}
                     setValue={(e) =>

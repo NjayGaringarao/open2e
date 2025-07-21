@@ -17,7 +17,7 @@ import { Tag } from "@/types/models";
 import ParagraphBox from "../ParagraphBox";
 import { nanoid } from "nanoid";
 import TagPicker from "./TagPicker";
-import { useStudent } from "@/context/student";
+import { useStudent } from "@/context/main/student";
 
 interface IAdd {
   refreshHandler: () => void;
@@ -148,7 +148,9 @@ const CreateStudent = ({ refreshHandler }: IAdd) => {
 
                     <TagPicker tag={tag} setTag={setTag} />
 
-                    <p className="col-span-3 text-uGrayLight mt-4 -mb-1">NAME</p>
+                    <p className="col-span-3 text-uGrayLight mt-4 -mb-1">
+                      NAME
+                    </p>
                     <InputBox
                       value={form.fName}
                       setValue={(e) =>

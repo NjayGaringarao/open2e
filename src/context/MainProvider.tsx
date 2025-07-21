@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { StudentProvider } from "@/context/student";
+import { StudentProvider } from "@/context/main/student";
 import { DialogProvider } from "@/context/dialog";
-import { TagProvider } from "@/context/tag/TagProvider";
+import { TagProvider } from "@/context/main/tag/TagProvider";
 import { Provider } from "@/components/ui/provider";
 import { SettingsProvider } from "./main/settings";
 

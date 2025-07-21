@@ -12,8 +12,8 @@ import { Fragment, useState } from "react";
 import Button from "../Button";
 import ModalCreateTag from "./ModalCreateTag";
 import { useDialog } from "@/context/dialog/useDialog";
-import { useTag } from "@/context/tag";
-import { useStudent } from "@/context/student";
+import { useTag } from "@/context/main/tag";
+import { useStudent } from "@/context/main/student";
 
 const ManageTag = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);

@@ -26,9 +26,9 @@ import clsx from "clsx";
 import InputBox from "../InputBox";
 import DraggableHeader from "./DraggableHeader";
 import CreateStudent from "../student/CreateStudent";
-import { useStudent } from "@/context/student";
+import { useStudent } from "@/context/main/student";
 import { SearchIcon, UserRoundX } from "lucide-react";
-import { useTag } from "@/context/tag";
+import { useTag } from "@/context/main/tag";
 import ManageTag from "../student/ManageTag";
 import Select from "../Select";
 

@@ -6,8 +6,8 @@ import { AnswerSheetProp } from "@/types/types";
 import { Student } from "@/types/models";
 import ModalStudentSelector from "@/components/evaluate/ModalStudentSelector";
 import { nanoid } from "nanoid";
-import { useStudent } from "@/context/student";
-import { useTag } from "@/context/tag/useTag";
+import { useStudent } from "@/context/main/student";
+import { useTag } from "@/context/main/tag/useTag";
 
 export default function Evaluate() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -53,7 +53,9 @@ export default function Evaluate() {
       <div className="flex flex-col p-6 flex-1 items-center">
         <div className="w-full max-w-5xl flex flex-col gap-4">
           <div>
-            <p className="text-uGrayLight text-xl mb-2 font-semibold">Question</p>
+            <p className="text-uGrayLight text-xl mb-2 font-semibold">
+              Question
+            </p>
             <InputBox
               value={question}
               setValue={setQuestion}
@@ -64,7 +66,9 @@ export default function Evaluate() {
           </div>
 
           <div>
-            <p className="text-uGrayLight text-xl mb-2 font-semibold">Answers</p>
+            <p className="text-uGrayLight text-xl mb-2 font-semibold">
+              Answers
+            </p>
             <div className="flex flex-col gap-4">
               {answerList.map((a) => (
                 <AnswerSheet

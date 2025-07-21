@@ -45,50 +45,52 @@ const InputBox = ({
         </div>
       )}
 
-      <input
-        type={isHidden ? "password" : "text"}
-        className={clsx(
-          "bg-transparent",
-          "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
-          "text-base lg:text-lg text-uGrayLight font-mono",
-          "hover:border hover:border-primary",
-          "outline-primary",
-          "placeholder:italic",
-          inputClassName,
-          withVoiceInput || isPassword ? "pr-12" : ""
-        )}
-        value={value ?? ""}
-        onChange={(e) => setValue(e.target.value)}
-        {...inputProp}
-      />
-      {withVoiceInput && !isPassword && (
-        <div
+      <div className="flex-1">
+        <input
+          type={isHidden ? "password" : "text"}
           className={clsx(
-            "absolute bottom-2 right-4 flex flex-col justify-center gap-2",
-            inputProp.disabled ? "hidden" : "visible"
+            "bg-transparent",
+            "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
+            "text-base lg:text-lg text-uGrayLight font-mono",
+            "hover:border hover:border-primary",
+            "outline-primary",
+            "placeholder:italic",
+            inputClassName,
+            withVoiceInput || isPassword ? "pr-12" : ""
           )}
-        >
-          <button>
-            <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
-          </button>
-        </div>
-      )}
-      {isPassword && (
-        <div
-          className={clsx(
-            "absolute bottom-2 right-4 flex flex-col justify-center gap-2",
-            inputProp.disabled ? "hidden" : "visible"
-          )}
-        >
-          <button onClick={() => setIsHidden((prev) => !prev)}>
-            {isHidden ? (
-              <Eye className="text-uGrayLightLight hover:text-primary h-6 w-6" />
-            ) : (
-              <EyeClosed className="text-uGrayLightLight hover:text-primary h-6 w-6" />
+          value={value ?? ""}
+          onChange={(e) => setValue(e.target.value)}
+          {...inputProp}
+        />
+        {withVoiceInput && !isPassword && (
+          <div
+            className={clsx(
+              "absolute bottom-0 top-0 right-4 flex flex-col justify-center",
+              inputProp.disabled ? "hidden" : "visible"
             )}
-          </button>
-        </div>
-      )}
+          >
+            <button>
+              <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
+            </button>
+          </div>
+        )}
+        {isPassword && (
+          <div
+            className={clsx(
+              "absolute bottom-0 top-0 right-4 flex flex-col justify-center",
+              inputProp.disabled ? "hidden" : "visible"
+            )}
+          >
+            <button onClick={() => setIsHidden((prev) => !prev)}>
+              {isHidden ? (
+                <Eye className="text-uGrayLightLight hover:text-primary h-6 w-6" />
+              ) : (
+                <EyeClosed className="text-uGrayLightLight hover:text-primary h-6 w-6" />
+              )}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

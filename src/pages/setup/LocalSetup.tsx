@@ -13,7 +13,7 @@ const installationSteps = [
 ];
 
 const LocalSetup = () => {
-  const { navigate, step, totalSteps } = useSetup();
+  const { navigate, step, totalSteps, finishSetup } = useSetup();
   const { confirm } = useDialog();
   const { currentStep, percent, isInstalling, isInstalled, startInstallation } =
     useLocalSetup();
@@ -35,20 +35,21 @@ const LocalSetup = () => {
     <StepContainer
       step={step}
       totalSteps={totalSteps}
-      onNext={isInstalled ? navigate.next : handleInstall}
+      onNext={isInstalled ? finishSetup : handleInstall}
       onBack={navigate.back}
-      nextLabel={isInstalled ? "Next" : "Start"}
+      nextLabel={
+        isInstalled ? "Finish" : isInstalling ? "Installing" : "Install"
+      }
       disabledBack={isInstalling || isInstalled}
       disabledNext={isInstalling}
     >
       {isInstalled ? (
         <div>
           <h1 className="text-5xl font-semibold text-primary">
-            Installed Successfully!
+            Setup Complete!
           </h1>
           <p className="text-uGrayLight text-lg mt-4">
-            You are now able to do evaluations locally without the need of
-            internet. Press Next to continue.
+            You're now ready to explore Open2E. Click "Finish" to get started
           </p>
         </div>
       ) : isInstalling ? (
@@ -116,7 +117,8 @@ const LocalSetup = () => {
           <p className="text-uGrayLight text-lg mt-4">
             Running evaluation locally requires installation of local AI. This
             will require approximately 3.2GB of data. Make sure you have a
-            stable internet connection to avoid disruption.
+            stable internet connection to avoid disruption. Press Install to run
+            installation.
           </p>
         </div>
       )}

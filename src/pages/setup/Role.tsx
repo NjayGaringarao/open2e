@@ -29,7 +29,7 @@ const Role = () => {
         >
           <h3 className="text-uGray text-xl font-bold mb-2">LEARNER</h3>
           <ul className="text-uGrayLight text-base list-disc list-inside">
-            <li>For student or self-learner.</li>
+            <li>For student and self-learner.</li>
           </ul>
           <div className="border-t border-uGrayLightLight my-4" />
           <ul className="text-uGrayLight text-base list-disc list-inside">
@@ -48,7 +48,7 @@ const Role = () => {
         >
           <h3 className="text-uGray text-xl font-bold mb-2">EVALUATOR</h3>
           <ul className="text-uGrayLight text-base list-disc list-inside">
-            <li>For Teacher, instructor or similar.</li>
+            <li>For teacher, instructor and etc.</li>
           </ul>
           <div className="border-t border-uGrayLightLight my-4" />
           <ul className="text-uGrayLight text-base list-disc list-inside">

@@ -9,6 +9,7 @@ const Final = () => {
       totalSteps={totalSteps}
       onNext={navigate.next}
       onBack={navigate.back}
+      nextLabel="Finish"
     >
       <h2 className="text-5xl font-semibold text-primary">Setup Complete</h2>
       <p className="text-uGrayLight text-lg mt-4">

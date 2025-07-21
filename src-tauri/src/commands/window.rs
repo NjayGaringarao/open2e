@@ -2,7 +2,7 @@ use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_store::StoreExt;
 
 #[tauri::command]
-pub async fn initialize_app(app: tauri::AppHandle) -> Result<(), String> {
+pub async fn show_main(app: tauri::AppHandle) -> Result<(), String> {
     // TODO: Implement initialization logic.
     // FOR NOW: Just show main window.
 

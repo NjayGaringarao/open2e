@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { EvaluationMode, Name, UserRole } from "@/types/types";
 import { INavigate } from "@/pages/setup/types";
 import { DialogProvider } from "./dialog";
+import { load } from "@tauri-apps/plugin-store";
 
 interface SetupContextType {
   // Step control
@@ -22,6 +23,7 @@ interface SetupContextType {
   setApiKey: (key: string) => void;
   username: Name;
   setUsername: React.Dispatch<React.SetStateAction<Name>>;
+  finishSetup: () => Promise<void>;
 }
 
 const SetupContext = createContext<SetupContextType | undefined>(undefined);
@@ -49,6 +51,26 @@ export const SetupProvider = ({ children }: { children: React.ReactNode }) => {
     middle: "",
     last: "",
   });
+
+  // SaveSetup
+  const finishSetup = async () => {
+    const store = await load("store.settings", { autoSave: false });
+
+    await store.set("username", {
+      first: username.first,
+      middle: username.middle,
+      last: username.last,
+    });
+
+    await store.set("setup", {
+      is_initialized: true,
+      role: userRole,
+      mode: mode,
+    });
+    await store.save();
+
+    await invoke("show_main");
+  };
 
   // Navigation handlers
   const navigate: INavigate = {
@@ -84,6 +106,7 @@ export const SetupProvider = ({ children }: { children: React.ReactNode }) => {
           setApiKey,
           username,
           setUsername,
+          finishSetup,
         }}
       >
         {children}

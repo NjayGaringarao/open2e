@@ -2,7 +2,7 @@ mod commands;
 mod migrations;
 
 use commands::{
-    download_ollama, get_total_memory_gb, initialize_app, install_llm, install_ollama, load_window,
+    download_ollama, get_total_memory_gb, install_llm, install_ollama, load_window, show_main,
     validate_key,
 };
 
@@ -19,7 +19,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             load_window,
-            initialize_app,
+            show_main,
             get_total_memory_gb,
             validate_key,
             install_ollama,

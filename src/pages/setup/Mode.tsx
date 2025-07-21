@@ -2,27 +2,74 @@ import icon from "@/constant/icon";
 import clsx from "clsx";
 import StepContainer from "@/components/setup/StepContainer";
 import { useSetup } from "@/context/SetupProvider";
+import InputBox from "@/components/InputBox";
+import { useEffect, useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+import Loading from "@/components/Loading";
+import { Check, X } from "lucide-react";
+import Markdown from "@/components/Markdown";
 
 const Mode = () => {
   const MINIMUM_SYSTEM_MEMORY = 8;
 
-  const { mode, setMode, systemMemory, navigate, step, totalSteps } =
-    useSetup();
+  const {
+    mode,
+    setMode,
+    systemMemory,
+    navigate,
+    step,
+    totalSteps,
+    apiKey,
+    setApiKey,
+  } = useSetup();
+
+  const [isApikeyValid, setIsApiKeyValid] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [prompt, setPrompt] = useState("Validation failed: Invalid API Key");
+
+  const validateKey = async (apiKey: string) => {
+    try {
+      setVerifying(true);
+      const isValid = await invoke<boolean>("validate_key", { key: apiKey });
+      setIsApiKeyValid(isValid);
+      setPrompt(
+        isValid
+          ? "Validation Success: API Key is Valid."
+          : "Incorrect API key provided or no internet connection. You can find your API key at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)."
+      );
+    } catch (error) {
+      setIsApiKeyValid(false);
+      setPrompt(
+        "Incorrect API key provided or no internet connection. You can find your API key at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)."
+      );
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  useEffect(() => {
+    validateKey(apiKey);
+
+    // DEBOUNCE
+    const timeout = setTimeout(() => {
+      validateKey(apiKey);
+    }, 600);
+    return () => clearTimeout(timeout);
+  }, [apiKey]);
+
   return (
     <StepContainer
       step={step}
       totalSteps={totalSteps}
       onNext={navigate.next}
       onBack={navigate.back}
-      disabledNext={!mode}
+      disabledNext={!mode || (mode === "ONLINE" && !isApikeyValid)}
     >
-      <h2 className="text-5xl text-primary font-semibold mb-2">
-        Select Resources
-      </h2>
+      <h2 className="text-5xl text-primary font-semibold">Select Resources</h2>
       <p className="text-uGrayLight text-lg">
-        Please choose based on the resources that you can afford.
+        Select the method that works best for your current environment.
       </p>
-      <div className="grid grid-rows-2 gap-4 mt-12">
+      <div className="flex flex-col gap-4 mt-12">
         {/** ONLINE */}
         <div
           className={clsx(
@@ -32,11 +79,13 @@ const Mode = () => {
           )}
           onClick={() => setMode("ONLINE")}
         >
-          <img
-            src={icon.openai}
-            alt="openai"
-            className="h-12 w-auto bg-white p-1 rounded-md"
-          />
+          <div className="h-full">
+            <img
+              src={icon.openai}
+              alt="openai"
+              className="h-12 w-auto bg-white p-1 rounded-md"
+            />
+          </div>
           <div className="flex-1">
             <p className="text-xl font-medium text-uGray">
               Use Internet (OpenAI's GPT-4o)
@@ -44,9 +93,42 @@ const Mode = () => {
             <p className="text-base text-uGrayLight">
               Requires both OpenAI API key and an active internet connection.
             </p>
+            <div
+              className={clsx(
+                "flex-1 flex-col justify-center",
+                mode === "ONLINE" ? "flex" : "hidden",
+                "mt-4"
+              )}
+            >
+              <InputBox
+                id="api-key"
+                isPassword
+                value={apiKey}
+                setValue={setApiKey}
+                placeholder="sk-..."
+                inputClassName={clsx(
+                  "py-1 px-3 w-full",
+                  "border border-panel",
+                  "text-base font-mono"
+                )}
+              />
+
+              <div className="flex flex-row gap-2 text-xs text-uGrayLight items-center">
+                {verifying ? (
+                  <Loading size="small" />
+                ) : isApikeyValid ? (
+                  <Check className="h-8 w-8 text-uGray" />
+                ) : (
+                  <X className="h-8 w-8 text-uRed" />
+                )}
+                <p className=" font-mono">
+                  <Markdown text={prompt} />
+                </p>
+              </div>
+            </div>
           </div>
           <div className="px-4">
-            <p className="text-xl font-mono text-uGrayLight">P1.20</p>
+            <p className="text-xl font-mono text-uGrayLight">P2.30</p>
             <p className="text-xs font-mono text-uGrayLight -mt-1">Est/Eval</p>
           </div>
         </div>

@@ -55,4 +55,4 @@ export type Name = {
 }
 
 export type UserRole = "LEARNER" | "EVALUATOR" | undefined
-export type EvaluationMode = "ONLINE" | "OFFLINE" | undefined
+export type LLMSource = "INTERNET" | "LOCAL" | undefined

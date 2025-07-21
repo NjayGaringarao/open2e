@@ -11,7 +11,7 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 
 const Layout = () => {
   const { step } = useSetupNavigation();
-  const { mode } = useSetupProcedure();
+  const { llmSource } = useSetupProcedure();
 
   return (
     <div className="h-screen w-screen flex flex-col bg-background">
@@ -22,7 +22,8 @@ const Layout = () => {
       {step === 3 && <Role />}
       {step === 4 && <Mode />}
       {step === 5 && <ConfirmSetup />}
-      {step === 6 && (mode === "ONLINE" ? <OnlineSetup /> : <LocalSetup />)}
+      {step === 6 &&
+        (llmSource === "INTERNET" ? <OnlineSetup /> : <LocalSetup />)}
     </div>
   );
 };

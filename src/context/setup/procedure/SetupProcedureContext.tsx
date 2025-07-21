@@ -1,10 +1,10 @@
-import { EvaluationMode, Name, UserRole } from "@/types/types";
+import { LLMSource, Name, UserRole } from "@/types/types";
 import { createContext } from "react";
 
 export interface SetupProcedureContextType {
   systemMemory: number;
-  mode?: EvaluationMode;
-  setMode: (mode: EvaluationMode) => void;
+  llmSource?: LLMSource;
+  setLlmSource: (mode: LLMSource) => void;
   userRole?: UserRole;
   setUserRole: (role: UserRole) => void;
   isEulaAgreed: boolean;

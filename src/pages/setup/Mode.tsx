@@ -13,7 +13,7 @@ import { useSetupNavigation } from "@/context/setup/navigation";
 const Mode = () => {
   const MINIMUM_SYSTEM_MEMORY = 8;
 
-  const { mode, setMode, systemMemory, apiKey, setApiKey } =
+  const { llmSource, setLlmSource, systemMemory, apiKey, setApiKey } =
     useSetupProcedure();
 
   const { navigate, step, totalSteps } = useSetupNavigation();
@@ -58,21 +58,21 @@ const Mode = () => {
       totalSteps={totalSteps}
       onNext={navigate.next}
       onBack={navigate.back}
-      disabledNext={!mode || (mode === "ONLINE" && !isApikeyValid)}
+      disabledNext={!llmSource || (llmSource === "INTERNET" && !isApikeyValid)}
     >
       <h2 className="text-5xl text-primary font-semibold">Select Resources</h2>
       <p className="text-uGrayLight text-lg">
         Select the method that works best for your current environment.
       </p>
       <div className="flex flex-col gap-4 mt-12">
-        {/** ONLINE */}
+        {/** INTERNET */}
         <div
           className={clsx(
             "p-4 rounded-md bg-panel",
-            mode === "ONLINE" && "border border-primary",
+            llmSource === "INTERNET" && "border border-primary",
             "flex flex-row gap-4 items-center"
           )}
-          onClick={() => setMode("ONLINE")}
+          onClick={() => setLlmSource("INTERNET")}
         >
           <div className="h-full">
             <img
@@ -91,7 +91,7 @@ const Mode = () => {
             <div
               className={clsx(
                 "flex-1 flex-col justify-center",
-                mode === "ONLINE" ? "flex" : "hidden",
+                llmSource === "INTERNET" ? "flex" : "hidden",
                 "mt-4"
               )}
             >
@@ -127,17 +127,17 @@ const Mode = () => {
             <p className="text-xs font-mono text-uGrayLight -mt-1">Est/Eval</p>
           </div>
         </div>
-        {/** OFFLINE */}
+        {/** LOCAL */}
         <div
           className={clsx(
             "p-4 rounded-md bg-panel",
-            mode === "OFFLINE" && "border border-primary",
+            llmSource === "LOCAL" && "border border-primary",
             "flex flex-row gap-4 items-center",
             systemMemory < MINIMUM_SYSTEM_MEMORY && "opacity-50"
           )}
           onClick={
             systemMemory >= MINIMUM_SYSTEM_MEMORY
-              ? () => setMode("OFFLINE")
+              ? () => setLlmSource("LOCAL")
               : () => {}
           }
         >

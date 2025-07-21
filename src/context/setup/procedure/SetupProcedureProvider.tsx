@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
-import { EvaluationMode, Name, UserRole } from "@/types/types";
+import { LLMSource, Name, UserRole } from "@/types/types";
 import { load } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -12,7 +12,7 @@ export const SetupProcedureProvider = ({
 }) => {
   // Setup data
   const [systemMemory, setSystemMemory] = useState(0);
-  const [mode, setMode] = useState<EvaluationMode>();
+  const [llmSource, setLlmSource] = useState<LLMSource>();
   const [userRole, setUserRole] = useState<UserRole>();
   const [isEulaAgreed, setIsEulaAgreed] = useState(false);
   const [apiKey, setApiKey] = useState("");
@@ -34,8 +34,8 @@ export const SetupProcedureProvider = ({
 
     await store.set("setup", {
       is_initialized: true,
-      role: userRole,
-      mode: mode,
+      user_role: userRole,
+      llmSource: llmSource,
     });
 
     await store.set("apikey", {
@@ -57,8 +57,8 @@ export const SetupProcedureProvider = ({
     <SetupProcedureContext.Provider
       value={{
         systemMemory,
-        mode,
-        setMode,
+        llmSource,
+        setLlmSource,
         userRole,
         setUserRole,
         isEulaAgreed,

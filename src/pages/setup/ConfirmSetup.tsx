@@ -6,7 +6,7 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
-  const { username, mode, userRole } = useSetupProcedure();
+  const { username, llmSource, userRole } = useSetupProcedure();
   const { startInstallation } = useLocalSetup();
   const { confirm } = useDialog();
 
@@ -20,7 +20,7 @@ const ConfirmSetup = () => {
 
     if (!isConfirmed) return;
 
-    if (mode === "ONLINE") {
+    if (llmSource === "INTERNET") {
       navigate.next();
     } else {
       startInstallation();
@@ -40,7 +40,7 @@ const ConfirmSetup = () => {
           Hello {username.first}!
         </h1>
         <p className="text-uGrayLight text-lg">
-          {mode === "ONLINE"
+          {llmSource === "INTERNET"
             ? "You're almost done! Confirm your setup below to complete the initialization."
             : "You're almost there! Confirm your setup below to proceed with installing the necessary application dependencies."}
         </p>
@@ -89,7 +89,7 @@ const ConfirmSetup = () => {
                 RESOURCES
               </td>
               <td className="border border-uGrayLightLight px-4 py-2 font-semibold">
-                {mode === "ONLINE"
+                {llmSource === "INTERNET"
                   ? "OpenAI's GPT4o (Internet Required)"
                   : "Microsoft's Phi4-mini (Uses system resources)"}
               </td>

@@ -17,7 +17,7 @@ pub async fn show_window(app: tauri::AppHandle) -> Result<(), String> {
     if is_initialized {
         WebviewWindowBuilder::new(&app, "main", WebviewUrl::App("windows/main.html".into()))
             .title("Open 2E: Open Ended Evaluation")
-            .min_inner_size(800.0, 600.0)
+            .min_inner_size(940.0, 540.0)
             .center()
             .build()
             .map_err(|e| e.to_string())?;

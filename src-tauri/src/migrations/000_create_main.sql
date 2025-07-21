@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS evaluation (
   answer TEXT NOT NULL,
   score INTEGER NOT NULL,
   justification TEXT,
+  llm_model TEXT NOT NULL,
   timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE,
   FOREIGN KEY (respondent_id) REFERENCES student(id) ON DELETE CASCADE

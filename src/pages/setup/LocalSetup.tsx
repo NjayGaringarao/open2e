@@ -1,6 +1,5 @@
 import Loading from "@/components/Loading";
 import StepContainer from "@/components/setup/StepContainer";
-import { useDialog } from "@/context/dialog";
 import { useLocalSetup } from "@/context/setup/local/useLocalSetup";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
@@ -14,36 +13,19 @@ const installationSteps = [
 ];
 
 const LocalSetup = () => {
-  const { navigate, step, totalSteps } = useSetupNavigation();
+  const { step, totalSteps } = useSetupNavigation();
   const { finishSetup } = useSetupProcedure();
-  const { confirm } = useDialog();
-  const { currentStep, percent, isInstalling, isInstalled, startInstallation } =
-    useLocalSetup();
-
-  const handleInstall = async () => {
-    const isConfirmed = await confirm({
-      title: "Confirm Installation",
-      description:
-        "You will not be able to modify previous steps after this installation. Would you like to continue?",
-      mode: "CRITICAL",
-    });
-
-    if (!isConfirmed) return;
-
-    await startInstallation();
-  };
+  const { currentStep, percent, isInstalling, isInstalled } = useLocalSetup();
 
   return (
     <StepContainer
       step={step}
       totalSteps={totalSteps}
-      onNext={isInstalled ? finishSetup : handleInstall}
-      onBack={navigate.back}
-      nextLabel={
-        isInstalled ? "Finish" : isInstalling ? "Installing" : "Install"
-      }
-      disabledBack={isInstalling || isInstalled}
-      disabledNext={isInstalling}
+      onNext={finishSetup}
+      onBack={() => {}}
+      nextLabel="Finish"
+      hideBack
+      disabledNext={isInstalling || !isInstalled}
     >
       {isInstalled ? (
         <div>

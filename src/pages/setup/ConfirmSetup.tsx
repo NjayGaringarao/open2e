@@ -1,17 +1,37 @@
 import StepContainer from "@/components/setup/StepContainer";
+import { useDialog } from "@/context/dialog";
+import { useLocalSetup } from "@/context/setup/local";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
-
   const { username, mode, userRole } = useSetupProcedure();
+  const { startInstallation } = useLocalSetup();
+  const { confirm } = useDialog();
 
+  const handleOnNext = async () => {
+    const isConfirmed = await confirm({
+      title: "Confirm Setup",
+      description:
+        "Your configuration will be saved. Would you like to continue?",
+      mode: "CRITICAL",
+    });
+
+    if (!isConfirmed) return;
+
+    if (mode === "ONLINE") {
+      navigate.next();
+    } else {
+      startInstallation();
+      navigate.next();
+    }
+  };
   return (
     <StepContainer
       step={step}
       totalSteps={totalSteps}
-      onNext={navigate.next}
+      onNext={handleOnNext}
       onBack={navigate.back}
       nextLabel="Confirm"
     >

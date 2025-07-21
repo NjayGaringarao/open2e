@@ -2,8 +2,7 @@ mod commands;
 mod migrations;
 
 use commands::{
-    download_ollama, get_total_memory_gb, install_llm, install_ollama, load_window, show_main,
-    validate_key,
+    download_ollama, get_total_memory_gb, install_llm, install_ollama, show_window, validate_key,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -18,8 +17,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            load_window,
-            show_main,
+            show_window,
             get_total_memory_gb,
             validate_key,
             install_ollama,

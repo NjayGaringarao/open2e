@@ -1,4 +1,4 @@
-import Final from "./Final";
+import OnlineSetup from "./OnlineSetup";
 import LocalSetup from "./LocalSetup";
 import Mode from "./Mode";
 import Name from "./Name";
@@ -22,7 +22,7 @@ const Layout = () => {
       {step === 3 && <Role />}
       {step === 4 && <Mode />}
       {step === 5 && <ConfirmSetup />}
-      {step === 6 && (mode === "ONLINE" ? <Final /> : <LocalSetup />)}
+      {step === 6 && (mode === "ONLINE" ? <OnlineSetup /> : <LocalSetup />)}
     </div>
   );
 };

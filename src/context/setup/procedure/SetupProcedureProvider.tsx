@@ -37,9 +37,13 @@ export const SetupProcedureProvider = ({
       role: userRole,
       mode: mode,
     });
+
+    await store.set("apikey", {
+      openai: apiKey,
+    });
     await store.save();
 
-    await invoke("show_main");
+    await invoke("show_window");
   };
 
   // System info fetch

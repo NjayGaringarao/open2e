@@ -1,15 +1,18 @@
 import StepContainer from "@/components/setup/StepContainer";
 import { useSetupNavigation } from "@/context/setup/navigation";
+import { useSetupProcedure } from "@/context/setup/procedure";
 
-const Final = () => {
-  const { navigate, step, totalSteps } = useSetupNavigation();
+const OnlineSetup = () => {
+  const { step, totalSteps } = useSetupNavigation();
+  const { finishSetup } = useSetupProcedure();
   return (
     <StepContainer
       step={step}
       totalSteps={totalSteps}
-      onNext={navigate.next}
-      onBack={navigate.back}
+      onNext={finishSetup}
+      onBack={() => {}}
       nextLabel="Finish"
+      hideBack
     >
       <h2 className="text-5xl font-semibold text-primary">Setup Complete</h2>
       <p className="text-uGrayLight text-lg mt-4">
@@ -19,4 +22,4 @@ const Final = () => {
   );
 };
 
-export default Final;
+export default OnlineSetup;

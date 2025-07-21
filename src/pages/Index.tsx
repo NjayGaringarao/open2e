@@ -46,7 +46,7 @@ const Index = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      invoke("load_window");
+      invoke("show_window");
     }, 6000);
     return () => clearTimeout(timeout);
   }, []);

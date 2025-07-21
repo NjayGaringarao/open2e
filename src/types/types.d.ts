@@ -52,7 +52,10 @@ export type Name = {
   first : string,
   middle? : string,
   last: string
-}
+} | undefined
 
 export type UserRole = "LEARNER" | "EVALUATOR" | undefined
 export type LLMSource = "INTERNET" | "LOCAL" | undefined
+export type APIKeys = {
+  openai?: string
+} | undefined

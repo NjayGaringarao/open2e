@@ -24,24 +24,22 @@ export const SetupProcedureProvider = ({
 
   // SaveSetup
   const finishSetup = async () => {
-    const store = await load("store.settings", { autoSave: false });
+    const config = await load("store.config", { autoSave: false });
 
-    await store.set("username", {
-      first: username.first,
-      middle: username.middle,
-      last: username.last,
+    await config.set("user_name", {
+      first: username?.first,
+      middle: username?.middle,
+      last: username?.last,
     });
+    await config.set("is_initialized", true);
+    await config.set("user_role", userRole);
+    await config.set("llm_source", llmSource);
+    await config.save();
 
-    await store.set("setup", {
-      is_initialized: true,
-      user_role: userRole,
-      llmSource: llmSource,
-    });
+    const apikeys = await load("store.apikeys", { autoSave: false });
 
-    await store.set("apikey", {
-      openai: apiKey,
-    });
-    await store.save();
+    await apikeys.set("openai", apiKey);
+    await apikeys.close();
 
     await invoke("show_window");
   };

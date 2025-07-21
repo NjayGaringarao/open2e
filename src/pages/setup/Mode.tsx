@@ -60,9 +60,10 @@ const Mode = () => {
       onBack={navigate.back}
       disabledNext={!llmSource || (llmSource === "INTERNET" && !isApikeyValid)}
     >
-      <h2 className="text-5xl text-primary font-semibold">Select Resources</h2>
+      <h2 className="text-5xl text-primary font-semibold">Select LLM Source</h2>
       <p className="text-uGrayLight text-lg">
-        Select the method that works best for your current environment.
+        LLM Does the job in evaluating open-ended responses. Select the source
+        that works best for your current environment or budget.
       </p>
       <div className="flex flex-col gap-4 mt-12">
         {/** INTERNET */}

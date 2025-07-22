@@ -8,7 +8,7 @@ export const SettingsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [userName, setUserName] = useState<Name>();
+  const [userName, setUserName] = useState<Name>({});
   const [userRole, setUserRole] = useState<UserRole>();
   const [llmSource, setLlmSource] = useState<LLMSource>();
   const [openaiAPIKey, setOpenaiAPIKey] = useState<string | undefined>();
@@ -16,7 +16,7 @@ export const SettingsProvider = ({
   const loadSettings = async () => {
     // Config
     const config = await load("store.config", { autoSave: false });
-    setUserName(await config.get<Name>("username"));
+    setUserName((await config.get<Name>("username")) ?? {});
     setUserRole(await config.get<UserRole>("user_role"));
     setLlmSource(await config.get<LLMSource>("llm_source"));
     await config.close();

@@ -49,10 +49,10 @@ export type StudentContextType = {
 //#region Data Types
 
 export type Name = {
-  first : string,
-  middle? : string,
+  first: string,
+  middle : string,
   last: string
-} | undefined
+}
 
 export type UserRole = "LEARNER" | "EVALUATOR" | undefined
 export type LLMSource = "INTERNET" | "LOCAL" | undefined

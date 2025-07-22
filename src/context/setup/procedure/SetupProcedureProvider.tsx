@@ -27,9 +27,9 @@ export const SetupProcedureProvider = ({
     const config = await load("store.config", { autoSave: false });
 
     await config.set("user_name", {
-      first: username?.first,
-      middle: username?.middle,
-      last: username?.last,
+      first: username.first,
+      middle: username.middle,
+      last: username.last,
     });
     await config.set("is_initialized", true);
     await config.set("user_role", userRole);

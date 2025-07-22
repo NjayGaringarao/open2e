@@ -134,3 +134,26 @@ pub async fn install_llm(app: AppHandle, window: Window) -> Result<(), String> {
         Err("Ollama model installation failed".to_string())
     }
 }
+
+#[tauri::command]
+pub async fn clean_ollama(app: AppHandle) -> Result<String, String> {
+    // Resolve script path within bundled resources
+    let script_path = app
+        .path()
+        .resource_dir()
+        .map_err(|e| e.to_string())?
+        .join("src/scripts/windows/clean_ollama.ps1");
+
+    // Execute the PowerShell script
+    let output = std::process::Command::new("powershell")
+        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .arg(&script_path)
+        .output()
+        .map_err(|e| format!("Script failed to run: {}", e))?;
+
+    if output.status.success() {
+        Ok(String::from_utf8_lossy(&output.stdout).into())
+    } else {
+        Err(String::from_utf8_lossy(&output.stderr).into())
+    }
+}

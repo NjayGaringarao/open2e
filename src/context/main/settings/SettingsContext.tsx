@@ -1,7 +1,7 @@
 import { Name, UserRole, LLMSource } from "@/types/types";
 import { createContext } from "react";
 
-export interface IHandleUpdate {
+export interface IUpdate {
   userName?: Name;
   llmSource?: LLMSource;
   userRole?: UserRole;
@@ -13,7 +13,7 @@ export type SettingsContextType = {
   llmSource: LLMSource;
   userRole: UserRole;
   openaiAPIKey?: string;
-  handleUpdate: (param: IHandleUpdate) => Promise<void>;
+  update: (param: IUpdate) => Promise<void>;
 };
 
 export const SettingsContext = createContext<SettingsContextType | null>(null);

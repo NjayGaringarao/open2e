@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { LocalSetupContext } from "./LocalSetupContext";
+import { IStartInstallation, LocalSetupContext } from "./LocalSetupContext";
 import { listen } from "@tauri-apps/api/event";
 
 // const TOTAL_PROGRESS = 100;
@@ -50,12 +50,15 @@ export const LocalSetupProvider = ({
     }
   }
 
-  const startInstallation = async () => {
+  const startInstallation = async (options?: IStartInstallation) => {
     setIsInstalling(true);
     setCurrentStep(0);
     setPercent(0);
 
     try {
+      // Step 0: Clean install
+      if (options?.isCleanInstall) await invoke("clean_ollama");
+
       // Step 1: Download Ollama
       setCurrentStep(0);
       await invoke("download_ollama");

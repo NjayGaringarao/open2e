@@ -15,7 +15,7 @@ const Name = () => {
       totalSteps={totalSteps}
       onNext={navigate.next}
       onBack={navigate.back}
-      disabledNext={!username.first.length || !username.last.length}
+      disabledNext={!username.first?.length || !username.last?.length}
     >
       <div className="">
         <h1 className="text-5xl font-semibold text-primary">
@@ -29,7 +29,7 @@ const Name = () => {
 
       <div className="grid grid-cols-3 gap-2">
         <InputBox
-          value={username.first}
+          value={username.first ?? ""}
           setValue={(e) => setUsername((prev) => ({ ...prev, first: e }))}
           placeholder="First"
           inputClassName={clsx(
@@ -51,7 +51,7 @@ const Name = () => {
           maxLength={20}
         />
         <InputBox
-          value={username.last}
+          value={username.last ?? ""}
           setValue={(e) => setUsername((prev) => ({ ...prev, last: e }))}
           placeholder="Last"
           inputClassName={clsx(

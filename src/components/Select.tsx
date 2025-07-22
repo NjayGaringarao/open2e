@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { SelectHTMLAttributes } from "react";
 
-interface ISelect extends SelectHTMLAttributes<HTMLInputElement> {}
+interface ISelect extends SelectHTMLAttributes<HTMLSelectElement> {}
 
-const Select = ({ className, ...prop }: ISelect) => {
+const Select = ({ className, ...props }: ISelect) => {
   return (
     <select
       className={clsx(
@@ -15,8 +15,9 @@ const Select = ({ className, ...prop }: ISelect) => {
         "text-uGrayLight text-base",
         className
       )}
+      {...props}
     >
-      {prop.children}
+      {props.children}
     </select>
   );
 };

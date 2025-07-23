@@ -9,3 +9,15 @@ export type AnswerSheetProp = {
   isSaved: string;
   student: Student;
 };
+
+export type EvaluatorResult = {
+  results: {
+    score: number;
+    justification: string;
+  };
+  error?: string | null;
+};
+
+export type LearnerResult = EvaluatorResult & {
+  suggested_queries: string;
+};

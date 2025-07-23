@@ -10,7 +10,7 @@ import { Fragment, useEffect, useState } from "react";
 import InputBox from "../InputBox";
 import Button from "../Button";
 import * as student from "@/utils/student";
-import { Student, Tag } from "@/types/models";
+import { Student, Tag } from "@/models";
 import Loading from "../Loading";
 import ParagraphBox from "../ParagraphBox";
 import TagPicker from "./TagPicker";

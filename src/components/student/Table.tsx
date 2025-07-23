@@ -1,4 +1,4 @@
-import { Student } from "@/types/models";
+import { Student } from "@/models";
 import { useState } from "react";
 import { useStudent } from "@/context/main/student";
 import { useDialog } from "@/context/dialog";

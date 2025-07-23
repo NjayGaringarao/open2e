@@ -1,5 +1,5 @@
 import { useSettings } from "@/context/main/settings";
-import { LLMSource as LLMSourceType } from "@/types/types";
+import { LLMSource as LLMSourceType } from "@/types/config";
 import { useEffect, useState } from "react";
 import Button from "../Button";
 import Select from "../Select";

@@ -13,7 +13,7 @@ import clsx from "clsx";
 import Loading from "../Loading";
 import * as student from "@/utils/student";
 import { useDialog } from "@/context/dialog";
-import { Tag } from "@/types/models";
+import { Tag } from "@/models";
 import ParagraphBox from "../ParagraphBox";
 import { nanoid } from "nanoid";
 import TagPicker from "./TagPicker";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
-import { LLMSource, Name, UserRole } from "@/types/types";
+import { LLMSource, Name, UserRole } from "@/types/config";
 import { load } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
 

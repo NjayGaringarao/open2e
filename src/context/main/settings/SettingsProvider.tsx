@@ -1,4 +1,4 @@
-import { LLMSource, Name, UserRole } from "@/types/types";
+import { LLMSource, Name, UserRole } from "@/types/config";
 import React, { useEffect, useState } from "react";
 import { IUpdate, SettingsContext } from "./SettingsContext";
 import { load, Store } from "@tauri-apps/plugin-store";

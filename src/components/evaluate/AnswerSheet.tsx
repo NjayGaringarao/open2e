@@ -4,7 +4,7 @@ import Loading from "../Loading";
 import ModalResult from "./ModalResult";
 import { Save, Trash, User } from "lucide-react";
 import clsx from "clsx";
-import { AnswerSheetProp } from "@/types/types";
+import { AnswerSheetProp } from "@/types/evaluation";
 
 export interface IAnswerSheet {
   data: AnswerSheetProp;

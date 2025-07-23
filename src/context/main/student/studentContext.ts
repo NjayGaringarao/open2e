@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Student } from "@/types/models";
+import { Student } from "@/models";
 
 export type StudentContextType = {
   studentList: Student[];

@@ -1,7 +1,7 @@
-import { Name } from "@/types/types";
+import { Name } from "@/types/config";
 
-export const DEFAULT_USERNAME : Name = {
-    first: "",
-    middle : "",
-    last: ""
-}
+export const DEFAULT_USERNAME: Name = {
+  first: "",
+  middle: "",
+  last: "",
+};

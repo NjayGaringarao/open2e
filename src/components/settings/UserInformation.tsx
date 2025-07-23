@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import InputBox from "../InputBox";
-import { Name } from "@/types/types";
+import { Name } from "@/types/config";
 import { useSettings } from "@/context/main/settings";
 import Button from "../Button";
 import { DEFAULT_USERNAME } from "@/constant/default";

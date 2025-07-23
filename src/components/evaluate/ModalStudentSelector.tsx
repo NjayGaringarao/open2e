@@ -8,7 +8,7 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import clsx from "clsx";
 import Button from "../Button";
-import { Tag, Student } from "@/types/models";
+import { Tag, Student } from "@/models";
 import StudentTable from "../table/StudentTable";
 
 interface StudentSelectorModalProps {

@@ -1,4 +1,4 @@
-import { LLMSource, Name, UserRole } from "@/types/types";
+import { LLMSource, Name, UserRole } from "@/types/config";
 import { createContext } from "react";
 
 export interface SetupProcedureContextType {

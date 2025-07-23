@@ -1,5 +1,5 @@
 import { EvaluatorResult, LearnerResult } from "@/types/evaluation";
-import { UserRole } from "@/types/miscellaneous";
+import { UserRole } from "@/types/config";
 import { OpenAI } from "openai";
 import {
   LEARNER_MODE_INSTRUCTION,

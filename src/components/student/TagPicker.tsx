@@ -1,4 +1,4 @@
-import { Tag } from "@/types/models";
+import { Tag } from "@/models";
 import {
   Transition,
   Dialog,

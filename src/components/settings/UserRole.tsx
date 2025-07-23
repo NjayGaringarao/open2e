@@ -1,5 +1,5 @@
 import { useSettings } from "@/context/main/settings";
-import { UserRole as UserRoleType } from "@/types/types";
+import { UserRole as UserRoleType } from "@/types/config";
 import { useEffect, useState } from "react";
 import Button from "../Button";
 import Select from "../Select";

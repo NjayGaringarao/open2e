@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Tag } from "@/types/models";
+import { Tag } from "@/models";
 
 export type TagContextType = {
   tagList: Tag[];

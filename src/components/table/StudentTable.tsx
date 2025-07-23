@@ -21,7 +21,7 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Student } from "@/types/models";
+import { Student } from "@/models";
 import clsx from "clsx";
 import InputBox from "../InputBox";
 import DraggableHeader from "./DraggableHeader";

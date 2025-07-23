@@ -22,7 +22,7 @@ import {
   AlertOptions,
   ConfirmOptions,
   DialogContextType,
-} from "@/types/types";
+} from "@/types/dialog";
 
 export const DialogContext = createContext<DialogContextType | null>(null);
 

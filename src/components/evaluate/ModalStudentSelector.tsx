@@ -8,14 +8,13 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import clsx from "clsx";
 import Button from "../Button";
-import { Tag, Student } from "@/models";
+import { Student } from "@/models";
 import StudentTable from "../table/StudentTable";
+import { useStudent } from "@/context/main/student";
 
 interface StudentSelectorModalProps {
   isVisible: boolean;
   setIsVisible: (value: boolean) => void;
-  students: Student[];
-  tags: Tag[];
   selectionMode: "single" | "multiple";
   onSubmit: (selected: Student[]) => void;
   disabledStudentIds?: string[];
@@ -24,13 +23,12 @@ interface StudentSelectorModalProps {
 const ModalStudentSelector = ({
   isVisible,
   setIsVisible,
-  students,
   selectionMode,
   onSubmit,
   disabledStudentIds,
 }: StudentSelectorModalProps) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
+  const { studentList } = useStudent();
   const handleSelectionChange = (selected: Student[]) => {
     if (selectionMode === "single") {
       setSelectedIds(selected.length > 0 ? [selected[0].id] : []);
@@ -40,7 +38,7 @@ const ModalStudentSelector = ({
   };
 
   const handleSubmit = () => {
-    const selected = students.filter((s) => selectedIds.includes(s.id));
+    const selected = studentList.filter((s) => selectedIds.includes(s.id));
     onSubmit(selected);
     setIsVisible(false);
   };

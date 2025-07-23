@@ -5,36 +5,51 @@ import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
 import Student from "./student";
-import { MainProvider } from "@/context/MainProvider";
-
-const pageComponents = {
-  "/home": <Home />,
-  "/evaluate": <Evaluate />,
-  "/settings": <Settings />,
-  "/chat": <Chat />,
-  "/student": <Student />,
-};
+import { useSettings } from "@/context/main/settings";
+import { ReactNode, useEffect, useState } from "react";
 
 export default function Layout() {
   const location = useLocation();
+  const { userRole } = useSettings();
+  const [pageComponents, setPageComponents] = useState<
+    Record<string, ReactNode>
+  >({});
+
+  useEffect(() => {
+    if (!userRole) return;
+
+    if (userRole === "EVALUATOR") {
+      setPageComponents({
+        "/home": <Home />,
+        "/evaluate": <Evaluate />,
+        "/settings": <Settings />,
+        "/student": <Student />,
+      });
+    } else {
+      setPageComponents({
+        "/home": <Home />,
+        "/evaluate": <Evaluate />,
+        "/settings": <Settings />,
+        "/chat": <Chat />,
+      });
+    }
+  }, [userRole]);
 
   return (
-    <MainProvider>
-      <div className="flex h-screen bg-background text-uGrayLight">
-        <Sidebar />
+    <div className="flex h-screen bg-background text-uGrayLight">
+      <Sidebar />
 
-        <main className="flex-1 overflow-auto relative">
-          {Object.entries(pageComponents).map(([path, element]) => (
-            <div
-              key={path}
-              className={location.pathname === path ? "block" : "hidden"}
-            >
-              {element}
-            </div>
-          ))}
-          {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
-        </main>
-      </div>
-    </MainProvider>
+      <main className="flex-1 overflow-auto relative">
+        {Object.entries(pageComponents).map(([path, element]) => (
+          <div
+            key={path}
+            className={location.pathname === path ? "block" : "hidden"}
+          >
+            {element}
+          </div>
+        ))}
+        {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
+      </main>
+    </div>
   );
 }

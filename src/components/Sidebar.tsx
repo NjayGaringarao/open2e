@@ -1,4 +1,9 @@
-import { useState } from "react";
+import {
+  ForwardRefExoticComponent,
+  RefAttributes,
+  useEffect,
+  useState,
+} from "react";
 import { Link, useLocation } from "react-router";
 import clsx from "clsx";
 import icon from "../constant/icon";
@@ -8,23 +13,45 @@ import {
   MessageSquareText,
   ClipboardCheck,
   User,
-  List,
+  LucideProps,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
+import { useSettings } from "@/context/main/settings";
 
-const tabs = [
-  { name: "Home", path: "/home", icon: Home },
-  { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
-  { name: "Enumerate", path: "/enumerate", icon: List },
-  { name: "Chat", path: "/chat", icon: MessageSquareText },
-  { name: "Student", path: "/student", icon: User },
-  { name: "Settings", path: "/settings", icon: Settings },
-];
+type Tab = {
+  name: string;
+  path: string;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
+};
 
 export default function Sidebar() {
   const screenSize = useScreenSize();
+  const { userRole } = useSettings();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
+  const [tabList, setTabList] = useState<Tab[]>([]);
+
+  useEffect(() => {
+    if (!userRole) return;
+
+    if (userRole === "EVALUATOR") {
+      setTabList([
+        { name: "Home", path: "/home", icon: Home },
+        { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
+        { name: "Student", path: "/student", icon: User },
+        { name: "Settings", path: "/settings", icon: Settings },
+      ]);
+    } else {
+      setTabList([
+        { name: "Home", path: "/home", icon: Home },
+        { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
+        { name: "Chat", path: "/chat", icon: MessageSquareText },
+        { name: "Settings", path: "/settings", icon: Settings },
+      ]);
+    }
+  }, [userRole]);
 
   return (
     <aside
@@ -49,7 +76,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col space-y-2">
-        {tabs.map(({ name, path, icon: Icon }) => {
+        {tabList.map(({ name, path, icon: Icon }) => {
           const active = location.pathname === path;
           return (
             <Link
@@ -70,7 +97,9 @@ export default function Sidebar() {
                 )}
               />
               {(expanded || screenSize === "extralarge") && (
-                <p className="overflow-hidden ease-in-out ml-1 text-uGray">{name}</p>
+                <p className="overflow-hidden ease-in-out ml-1 text-uGray">
+                  {name}
+                </p>
               )}
             </Link>
           );

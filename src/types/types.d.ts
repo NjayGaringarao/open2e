@@ -1,3 +1,8 @@
+/**
+ * NOTE: This is a legacy file and will be set to depreciated. DO NOT USE
+ * TODO: DELETE THIS FILE and use src/types instead
+ */
+
 import { Student } from "./models";
 
 //#region Dialog
@@ -49,13 +54,16 @@ export type StudentContextType = {
 //#region Data Types
 
 export type Name = {
-  first: string,
-  middle : string,
-  last: string
-}
+  first: string;
+  middle: string;
+  last: string;
+};
 
-export type UserRole = "LEARNER" | "EVALUATOR" | undefined
-export type LLMSource = "INTERNET" | "LOCAL" | undefined
-export type APIKeys = {
-  openai?: string
-} | undefined
+export type UserRole = "LEARNER" | "EVALUATOR" | undefined;
+export type LLMSource = "INTERNET" | "LOCAL" | undefined;
+
+export type APIKeys =
+  | {
+      openai?: string;
+    }
+  | undefined;

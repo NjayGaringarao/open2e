@@ -8,7 +8,6 @@ export type LearnerSheetData = {
   score: number | null;
   justification: string;
   isEvaluationSaved: boolean;
-  suggested_query: string;
 };
 
 export type LearnerResult = {
@@ -18,4 +17,10 @@ export type LearnerResult = {
   };
   error?: string | null;
   suggested_query: string;
+};
+
+export type Article = {
+  title: string;
+  subtitle: string;
+  url: string;
 };

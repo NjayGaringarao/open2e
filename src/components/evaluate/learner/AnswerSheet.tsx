@@ -72,7 +72,9 @@ const AnswerSheet = () => {
               color
             )}
             onClick={handlePress}
-            disabled={isLoading || sheet.trackedAnswer === ""}
+            disabled={
+              isLoading || sheet.trackedAnswer === "" || question.tracked === ""
+            }
           >
             {isLoading ? (
               <Loading size="medium" />
@@ -143,7 +145,7 @@ const AnswerSheet = () => {
         score={sheet.score ?? 0}
         justification={sheet.justification}
         answer={sheet.committedAnswer}
-        question={question}
+        question={question.committed}
         onClose={(e) => {
           if (e?.re_evaluate) evaluateSheet();
           setIsResultVisible(false);

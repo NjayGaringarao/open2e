@@ -28,6 +28,11 @@
       "csp": "default-src blob: data: filesystem: ws: wss: http: https: 'unsafe-eval' 'unsafe-inline'"
     }
   },
+  "plugins": {
+    "sql": {
+      "preload": ["sqlite:evaluator.db", "sqlite:learner.db"]
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",

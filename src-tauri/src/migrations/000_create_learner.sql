@@ -16,3 +16,21 @@ CREATE TABLE IF NOT EXISTS message (
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (conversation_id) REFERENCES conversation(conversation_id) ON DELETE CASCADE
 );
+
+-- Create question table
+CREATE TABLE IF NOT EXISTS question (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL
+);
+
+-- Create evaluation table
+CREATE TABLE IF NOT EXISTS evaluation (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  question_id INTEGER NOT NULL,
+  answer TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  justification TEXT,
+  llm_model TEXT NOT NULL,
+  timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
+);

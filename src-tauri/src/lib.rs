@@ -11,8 +11,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(
             tauri_plugin_sql::Builder::new()
-                .add_migrations("sqlite:main.db", migrations::main())
-                .add_migrations("sqlite:chat.db", migrations::chat())
+                .add_migrations("sqlite:evaluator.db", migrations::evaluator())
+                .add_migrations("sqlite:learner.db", migrations::learner())
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::new().build())

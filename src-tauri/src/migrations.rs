@@ -1,19 +1,19 @@
 use tauri_plugin_sql::{Migration, MigrationKind};
 
-pub fn main() -> Vec<Migration> {
+pub fn evaluator() -> Vec<Migration> {
     vec![Migration {
         version: 1,
-        description: "create all tables",
-        sql: include_str!("./migrations/000_create_main.sql"),
+        description: "creates a table for evaluator mode.",
+        sql: include_str!("./migrations/000_create_evaluator.sql"),
         kind: MigrationKind::Up,
     }]
 }
 
-pub fn chat() -> Vec<Migration> {
+pub fn learner() -> Vec<Migration> {
     vec![Migration {
         version: 1,
-        description: "create conversation and message tables",
-        sql: include_str!("./migrations/000_create_chat.sql"),
+        description: "creates a table for learner mode.",
+        sql: include_str!("./migrations/000_create_learner.sql"),
         kind: MigrationKind::Up,
     }]
 }

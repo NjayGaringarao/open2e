@@ -21,6 +21,7 @@ export default {
         uGreen: "var(--uGreen)",
         uBlue: "var(--uBlue)",
         score: {
+          0: "var(--score-0)",
           1: "var(--score-1)",
           2: "var(--score-2)",
           3: "var(--score-3)",
@@ -46,13 +47,13 @@ export default {
   },
   safelist: [
     {
-      pattern: /^bg-score-(1|2|3|4|5|6|7|8|9|10)$/,
+      pattern: /^bg-score-(0|1|2|3|4|5|6|7|8|9|10)$/,
     },
     {
-      pattern: /^text-score-(1|2|3|4|5|6|7|8|9|10)$/,
+      pattern: /^text-score-(0|1|2|3|4|5|6|7|8|9|10)$/,
     },
     {
-      pattern: /^border-score-(1|2|3|4|5|6|7|8|9|10)$/,
+      pattern: /^border-score-(0|1|2|3|4|5|6|7|8|9|10)$/,
     },
   ],
 

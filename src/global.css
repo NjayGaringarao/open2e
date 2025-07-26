@@ -27,6 +27,7 @@
     --uGreen: #22c55e;
     --uBlue: #2563eb;
     /* Scores */
+    --score-0: #ff3939;
     --score-1: #ff4d4d;
     --score-2: #ff6b4d;
     --score-3: #ff884d;
@@ -53,6 +54,7 @@
       --uGreen: #7bf1a8;
       --uBlue: #60a5fa;
       /* Scores */
+      --score-0: #ef4444;
       --score-1: #ff5c5c;
       --score-2: #ff765c;
       --score-3: #ff956c;

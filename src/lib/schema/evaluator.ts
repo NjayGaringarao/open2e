@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ResponseToEvaluatorSchema = z.object({
-  results: z.object({
+  result: z.object({
     score: z.number().int().min(0).max(10),
     justification: z.string().min(1),
   }),

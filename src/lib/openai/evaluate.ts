@@ -1,4 +1,4 @@
-import { EvaluatorResult, LearnerResult } from "@/types/evaluation";
+import { EvaluatorResult } from "@/types/evaluation/evaluator";
 import { UserRole } from "@/types/config";
 import { OpenAI } from "openai";
 import {
@@ -8,6 +8,7 @@ import {
 import { zodTextFormat } from "openai/helpers/zod";
 import { ResponseToEvaluatorSchema, ResponseToLearnerSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
+import { LearnerResult } from "@/types/evaluation/learner";
 
 interface IEvaluateInput {
   question: string;
@@ -52,6 +53,7 @@ const evaluateLearner = async (
   openai: OpenAI,
   input: string
 ): Promise<LearnerResult> => {
+  console.log({ input });
   const response = await openai.responses.create({
     model: EVALUATION_MODEL,
     instructions: LEARNER_MODE_INSTRUCTION(),

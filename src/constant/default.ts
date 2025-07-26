@@ -14,5 +14,4 @@ export const DEFAULT_LEARNERSHEET: LearnerSheetData = {
   score: null,
   justification: "",
   isEvaluationSaved: false,
-  suggested_query: "",
 };

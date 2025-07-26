@@ -1,4 +1,5 @@
 import { EvaluatorResult } from "@/types/evaluation/evaluator";
+import { LearnerResult } from "@/types/evaluation/learner";
 import { UserRole } from "@/types/config";
 import { OpenAI } from "openai";
 import {
@@ -8,7 +9,6 @@ import {
 import { zodTextFormat } from "openai/helpers/zod";
 import { ResponseToEvaluatorSchema, ResponseToLearnerSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
-import { LearnerResult } from "@/types/evaluation/learner";
 
 interface IEvaluateInput {
   question: string;
@@ -17,23 +17,28 @@ interface IEvaluateInput {
 
 //#region Overloads
 
+//#region Overloads
 export function evaluate(
   userRole: "LEARNER",
   apiKey: string,
   input: IEvaluateInput
-): Promise<LearnerResult>;
+): Promise<{ result: LearnerResult | null; error?: string }>;
 
 export function evaluate(
   userRole: "EVALUATOR",
   apiKey: string,
   input: IEvaluateInput
-): Promise<EvaluatorResult>;
+): Promise<{ result: EvaluatorResult | null; error?: string }>;
 
+// Implementation signature (must be compatible with both above)
 export async function evaluate(
   userRole: Exclude<UserRole, undefined>,
   apiKey: string,
   { question, answer }: IEvaluateInput
-): Promise<LearnerResult | EvaluatorResult> {
+): Promise<{
+  result: LearnerResult | EvaluatorResult | null;
+  error?: string;
+}> {
   const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
 
   const input = `
@@ -41,10 +46,17 @@ export async function evaluate(
   ANSWERS: ${answer}
   `;
 
-  if (userRole == "LEARNER") {
-    return await evaluateLearner(openai, input);
-  } else {
-    return await evaluateEvaluator(openai, input);
+  try {
+    if (userRole === "LEARNER") {
+      const result = await evaluateLearner(openai, input);
+      return { result };
+    } else {
+      const result = await evaluateEvaluator(openai, input);
+      return { result };
+    }
+  } catch (error) {
+    console.error("lib.openai.evaluate :: Error occurred:", error);
+    return { result: null, error: `${error}` };
   }
 }
 
@@ -53,29 +65,20 @@ const evaluateLearner = async (
   openai: OpenAI,
   input: string
 ): Promise<LearnerResult> => {
-  console.log({ input });
   const response = await openai.responses.create({
     model: EVALUATION_MODEL,
     instructions: LEARNER_MODE_INSTRUCTION(),
-    input: input,
+    input,
     temperature: 0,
     text: {
       format: zodTextFormat(ResponseToLearnerSchema, "EvaluationToLearner"),
     },
   });
 
-  try {
-    const validated = ResponseToLearnerSchema.parse(
-      JSON.parse(response.output_text.trim())
-    );
-    return validated;
-  } catch (err) {
-    console.error(
-      "lib.openai.evaluateLearner :: JSON parsing or schema validation failed:",
-      err
-    );
-    throw new Error("Openai returned invalid or unstructured JSON.");
-  }
+  const raw = response.output_text?.trim();
+  if (!raw) throw new Error("No content returned from OpenAI");
+
+  return ResponseToLearnerSchema.parse(JSON.parse(raw));
 };
 
 const evaluateEvaluator = async (
@@ -85,23 +88,15 @@ const evaluateEvaluator = async (
   const response = await openai.responses.create({
     model: EVALUATION_MODEL,
     instructions: EVALUATOR_MODE_INSTRUCTION(),
-    input: input,
+    input,
     temperature: 0,
     text: {
       format: zodTextFormat(ResponseToEvaluatorSchema, "EvaluationToEvaluator"),
     },
   });
 
-  try {
-    const validated = ResponseToEvaluatorSchema.parse(
-      JSON.parse(response.output_text.trim())
-    );
-    return validated;
-  } catch (err) {
-    console.error(
-      "lib.openai.evaluateEvaluator :: JSON parsing or schema validation failed:",
-      err
-    );
-    throw new Error("Openai returned invalid or unstructured JSON.");
-  }
+  const raw = response.output_text?.trim();
+  if (!raw) throw new Error("No content returned from OpenAI");
+
+  return ResponseToEvaluatorSchema.parse(JSON.parse(raw));
 };

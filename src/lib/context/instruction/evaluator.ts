@@ -15,6 +15,7 @@ How to evaluate?
   - "Why that score is appropriate based on the rubrics?"
   - "Why is the score not higher?"
 - Keep justification concise and rubric-aligned.
+- Use key points for easier reading.
 `;
 
   return [INTRO.trim(), RUBRIC_BLOCK.trim()].join("\n\n");

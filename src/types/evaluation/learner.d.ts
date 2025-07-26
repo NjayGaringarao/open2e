@@ -24,3 +24,7 @@ export type Article = {
   subtitle: string;
   url: string;
 };
+
+export type ArticleResult = {
+  articles: { title: string; subtitle: string; url: string }[];
+};

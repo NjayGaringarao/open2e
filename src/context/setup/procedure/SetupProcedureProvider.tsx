@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
 import { LLMSource, Name, UserRole } from "@/types/config";
-import { load } from "@tauri-apps/plugin-store";
+import { load, Store } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
 
 export const SetupProcedureProvider = ({
@@ -24,22 +24,36 @@ export const SetupProcedureProvider = ({
 
   // SaveSetup
   const finishSetup = async () => {
-    const config = await load("store.config", { autoSave: false });
+    let configStore: Store | null = null;
+    let apikeyStore: Store | null = null;
 
-    await config.set("user_name", {
-      first: username.first,
-      middle: username.middle,
-      last: username.last,
-    });
-    await config.set("is_initialized", true);
-    await config.set("user_role", userRole);
-    await config.set("llm_source", llmSource);
-    await config.save();
+    try {
+      configStore = await load("store.config", { autoSave: false });
 
-    const apikeys = await load("store.apikeys", { autoSave: false });
+      await configStore.set("user_name", {
+        first: username.first,
+        middle: username.middle,
+        last: username.last,
+      });
+      await configStore.set("is_initialized", true);
+      await configStore.set("user_role", userRole);
+      await configStore.set("llm_source", llmSource);
+      await configStore.save();
 
-    await apikeys.set("openai", apiKey);
-    await apikeys.close();
+      if (apiKey) {
+        apikeyStore = await load("store.apikeys", { autoSave: false });
+        await apikeyStore.set("openai", apiKey);
+        await apikeyStore.save();
+      }
+    } catch (error) {
+      console.warn(`context.setup.procedure.SetupProdureProvider :: ${error}`);
+    } finally {
+      // NOTE: These causes an uncaught promise...
+      // IDK WHY, But it works just fine.
+      // TODO: Resolve the issue
+      configStore && (await configStore.close());
+      apikeyStore && (await apikeyStore.close());
+    }
 
     await invoke("show_window");
   };

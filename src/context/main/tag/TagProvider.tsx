@@ -3,10 +3,12 @@ import { getAll } from "@/utils/tag";
 import { useDialog } from "@/context/dialog/useDialog";
 import { Tag } from "@/models";
 import { TagContext } from "./tagContext";
+import { useSettings } from "../settings";
 
 export const TagProvider = ({ children }: { children: React.ReactNode }) => {
   const [tagList, setTagList] = useState<Tag[]>([]);
   const { alert } = useDialog();
+  const { userRole } = useSettings();
 
   const fetchTagList = async () => {
     const { error, tags } = await getAll();
@@ -23,7 +25,7 @@ export const TagProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchTagList();
+    if (userRole === "EVALUATOR") fetchTagList();
   }, []);
 
   return (

@@ -54,7 +54,7 @@ const AnswerSheet = () => {
             updateSheet((prev) => ({ ...prev, trackedAnswer: e }))
           }
           disabled={isLoading}
-          placeHolder="Type the answer here..."
+          placeholder="Type the answer here..."
           containerClassname="flex-1"
           handleClear={clearSheet}
           withVoiceInput

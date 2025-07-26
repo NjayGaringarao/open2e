@@ -34,7 +34,10 @@ const ParagraphBox = ({
     <div className={clsx("relative flex flex-col", containerClassname)}>
       {title && (
         <p
-          className={clsx("text-sm lg:text-base text-uGrayLight", titleClassName)}
+          className={clsx(
+            "text-sm lg:text-base text-uGrayLight",
+            titleClassName
+          )}
         >
           {title}
         </p>

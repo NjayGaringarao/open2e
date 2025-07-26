@@ -88,7 +88,7 @@ export default function EvaluatorSheet({ sheet }: Props) {
           value={sheet.trackedAnswer}
           setValue={(val) => updateSheet(sheet.id, { trackedAnswer: val })}
           disabled={isLoading || state.isLocked}
-          placeHolder="Type the answer here..."
+          placeholder="Type the answer here..."
           containerClassname="flex-1"
           handleClear={handleClear}
           withVoiceInput

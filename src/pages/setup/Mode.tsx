@@ -117,9 +117,9 @@ const Mode = () => {
                 ) : (
                   <X className="h-8 w-8 text-uRed" />
                 )}
-                <p className=" font-mono">
+                <div className="font-mono">
                   <Markdown text={prompt} />
-                </p>
+                </div>
               </div>
             </div>
           </div>

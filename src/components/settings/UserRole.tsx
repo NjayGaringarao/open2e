@@ -67,7 +67,7 @@ const UserRole = () => {
           <option key="LEARNER" value="LEARNER">
             Learner (Good for Student and Self-learner)
           </option>
-          <option key="LEARNER" value="EVALUATOR">
+          <option key="EVALUATOR" value="EVALUATOR">
             Evaluator (Good for Teacher, Instructor, and etc)
           </option>
         </Select>

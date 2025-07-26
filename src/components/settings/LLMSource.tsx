@@ -138,10 +138,10 @@ const LLMSource = () => {
           onChange={(e) => setSelection(e.target.value as LLMSourceType)}
           className="col-span-2 text-lg"
         >
-          <option key="LEARNER" value="INTERNET">
+          <option key="INTERNET" value="INTERNET">
             Internet (Openai: GPT4o)
           </option>
-          <option key="LEARNER" value="LOCAL">
+          <option key="LOCAL" value="LOCAL">
             Local (Microsoft: Phi4-mini)
           </option>
         </Select>
@@ -189,9 +189,9 @@ const LLMSource = () => {
             ) : (
               <X className="h-8 w-8 text-uRed" />
             )}
-            <p className="font-mono">
+            <div className="font-mono">
               <Markdown text={prompt} />
-            </p>
+            </div>
           </div>
         </div>
       ) : (

@@ -12,7 +12,7 @@ export const SettingsProvider = ({
   const [userName, setUserName] = useState<Name>(DEFAULT_USERNAME);
   const [userRole, setUserRole] = useState<UserRole>();
   const [llmSource, setLlmSource] = useState<LLMSource>();
-  const [openaiAPIKey, setOpenaiAPIKey] = useState<string | undefined>();
+  const [openaiAPIKey, setOpenaiAPIKey] = useState<string>();
 
   const loadSettings = async () => {
     let config: Store | null = null;
@@ -21,18 +21,27 @@ export const SettingsProvider = ({
       // Config
       config = await load("store.config", { autoSave: false });
 
-      const name = await config.get<Name>("user_name");
-      name && setUserName(name);
+      const _userName = await config.get<Name>("user_name");
+      _userName && setUserName(_userName);
 
-      setUserRole(await config.get<UserRole>("user_role"));
-      setLlmSource(await config.get<LLMSource>("llm_source"));
+      const _userRole = await config.get<UserRole>("user_role");
+      setUserRole(_userRole);
+
+      const _llmSource = await config.get<LLMSource>("llm_source");
+      _llmSource && setLlmSource(_llmSource);
 
       // Apikeys
-      apiKeys = await load("store.apikeys", { autoSave: false });
-      setOpenaiAPIKey(await apiKeys.get<string>("openai"));
+      if (_llmSource === "INTERNET") {
+        apiKeys = await load("store.apikeys", { autoSave: false });
+        const _openai = await apiKeys.get<string>("openai");
+        _openai && setOpenaiAPIKey(_openai);
+      }
     } catch (error) {
       alert(`SettingsProvider.loadSettings :: ${error}`);
     } finally {
+      // NOTE: These causes an uncaught promise...
+      // IDK WHY, But it works just fine.
+      // TODO: Resolve the issue
       config && (await config.close());
       apiKeys && (await apiKeys.close());
     }
@@ -58,7 +67,7 @@ export const SettingsProvider = ({
 
       // Update Api keys
       if (openaiAPIKey) {
-        apiKeys = await load("store.apiKeys", { autoSave: false });
+        apiKeys = await load("store.apikeys", { autoSave: false });
         await apiKeys.set("openai", openaiAPIKey);
         await apiKeys.save();
       }

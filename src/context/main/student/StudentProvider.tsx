@@ -3,6 +3,7 @@ import { Student } from "@/models";
 import * as student from "@/utils/student";
 import { useDialog } from "@/context/dialog/useDialog";
 import { StudentContext } from "./studentContext";
+import { useSettings } from "../settings";
 
 export const StudentProvider = ({
   children,
@@ -11,6 +12,7 @@ export const StudentProvider = ({
 }) => {
   const [studentList, setStudentList] = useState<Student[]>([]);
   const { alert } = useDialog();
+  const { userRole } = useSettings();
 
   const fetchStudentList = async () => {
     const { error, students } = await student.getAll();
@@ -28,7 +30,7 @@ export const StudentProvider = ({
   };
 
   useEffect(() => {
-    fetchStudentList();
+    if (userRole === "EVALUATOR") fetchStudentList();
   }, []);
 
   return (

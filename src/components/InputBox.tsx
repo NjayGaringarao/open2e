@@ -49,7 +49,7 @@ const InputBox = ({
         <input
           type={isHidden ? "password" : "text"}
           className={clsx(
-            "bg-transparent",
+            "bg-panel",
             "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
             "text-base lg:text-lg text-uGrayLight font-mono",
             "hover:border hover:border-primary",

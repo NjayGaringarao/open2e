@@ -1,3 +1,4 @@
+import icon from "@/constant/icon";
 import { Article } from "@/types/evaluation/learner"; // adjust path if needed
 import { openUrl } from "@tauri-apps/plugin-opener"; // opens default browser
 import clsx from "clsx";
@@ -41,7 +42,7 @@ export default function ArticleItem({ article }: Props) {
       )}
     >
       <img
-        src={previewImage ?? "/placeholder.png"}
+        src={previewImage ?? icon.logo}
         alt="preview"
         className="w-16 h-16 object-cover rounded-md flex-shrink-0 bg-uGrayLightLight p-2"
       />

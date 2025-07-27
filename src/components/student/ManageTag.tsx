@@ -1,4 +1,4 @@
-import { remove } from "@/utils/tag";
+import { remove } from "@/database/tag";
 import {
   Transition,
   Dialog,

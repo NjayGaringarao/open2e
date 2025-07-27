@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import InputBox from "../InputBox";
 import Button from "../Button";
-import * as student from "@/utils/student";
+import * as student from "@/database/student";
 import { Student, Tag } from "@/models";
 import Loading from "../Loading";
 import ParagraphBox from "../ParagraphBox";

@@ -11,7 +11,7 @@ import { Fragment, useEffect, useState } from "react";
 import InputBox from "../InputBox";
 import clsx from "clsx";
 import Loading from "../Loading";
-import * as student from "@/utils/student";
+import * as student from "@/database/student";
 import { useDialog } from "@/context/dialog";
 import { Tag } from "@/models";
 import ParagraphBox from "../ParagraphBox";

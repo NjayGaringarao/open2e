@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Student } from "@/models";
-import * as student from "@/utils/student";
+import * as student from "@/database/student";
 import { useDialog } from "@/context/dialog/useDialog";
 import { StudentContext } from "./studentContext";
 import { useSettings } from "../settings";

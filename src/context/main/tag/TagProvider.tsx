@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAll } from "@/utils/tag";
+import { getAll } from "@/database/tag";
 import { useDialog } from "@/context/dialog/useDialog";
 import { Tag } from "@/models";
 import { TagContext } from "./tagContext";

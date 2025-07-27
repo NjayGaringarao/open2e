@@ -2,7 +2,7 @@ import { Student } from "@/models";
 import { useState } from "react";
 import { useStudent } from "@/context/main/student";
 import { useDialog } from "@/context/dialog";
-import * as student from "@/utils/student";
+import * as student from "@/database/student";
 import ModalEditStudent from "./ModalEditStudent";
 import StudentTable from "../table/StudentTable";
 

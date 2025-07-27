@@ -1,5 +1,9 @@
 import Database from "@tauri-apps/plugin-sql";
 
-export const openMainDatabase = async () => {
-  return await Database.load("sqlite:main.db");
+export const openEvaluatorDatabase = async () => {
+  return await Database.load("sqlite:evaluator.db");
+};
+
+export const openLearnerDatabase = async () => {
+  return await Database.load("sqlite:learner.db");
 };

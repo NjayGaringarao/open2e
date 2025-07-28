@@ -13,6 +13,7 @@ export const SettingsProvider = ({
   const [userRole, setUserRole] = useState<UserRole>();
   const [llmSource, setLlmSource] = useState<LLMSource>();
   const [openaiAPIKey, setOpenaiAPIKey] = useState<string>();
+  const [gptZeroAPIKey, setGPTZeroAPIKey] = useState<string>();
 
   const loadSettings = async () => {
     let config: Store | null = null;
@@ -34,10 +35,12 @@ export const SettingsProvider = ({
       if (_llmSource === "INTERNET") {
         apiKeys = await load("store.apikeys", { autoSave: false });
         const _openai = await apiKeys.get<string>("openai");
-        _openai && setOpenaiAPIKey(_openai);
+        setOpenaiAPIKey(_openai);
+        const _gptZero = await apiKeys.get<string>("gptZero");
+        setGPTZeroAPIKey(_gptZero?.length ? _gptZero : undefined);
       }
     } catch (error) {
-      alert(`SettingsProvider.loadSettings :: ${error}`);
+      console.error(`SettingsProvider.loadSettings :: ${error}`);
     } finally {
       // NOTE: These causes an uncaught promise...
       // IDK WHY, But it works just fine.
@@ -52,6 +55,7 @@ export const SettingsProvider = ({
     userRole,
     llmSource,
     openaiAPIKey,
+    gptZeroAPIKey,
   }: IUpdate) => {
     let config: Store | null = null;
     let apiKeys: Store | null = null;
@@ -66,9 +70,10 @@ export const SettingsProvider = ({
       }
 
       // Update Api keys
-      if (openaiAPIKey) {
+      if (openaiAPIKey || gptZeroAPIKey) {
         apiKeys = await load("store.apikeys", { autoSave: false });
-        await apiKeys.set("openai", openaiAPIKey);
+        openaiAPIKey && (await apiKeys.set("openai", openaiAPIKey));
+        gptZeroAPIKey && (await apiKeys.set("gptZero", gptZeroAPIKey));
         await apiKeys.save();
       }
     } catch (error) {
@@ -87,7 +92,14 @@ export const SettingsProvider = ({
 
   return (
     <SettingsContext.Provider
-      value={{ userName, userRole, llmSource, openaiAPIKey, update }}
+      value={{
+        userName,
+        userRole,
+        llmSource,
+        openaiAPIKey,
+        gptZeroAPIKey,
+        update,
+      }}
     >
       {children}
     </SettingsContext.Provider>

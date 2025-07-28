@@ -5,6 +5,7 @@ import { SettingsIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
 import { LocalSetupProvider } from "@/context/setup/local";
+import AIDetection from "@/components/settings/AIDetection";
 
 export default function Settings() {
   return (
@@ -33,6 +34,13 @@ export default function Settings() {
           >
             <LocalSetupProvider>
               <LLMSource />
+            </LocalSetupProvider>
+          </DropDown>
+          <DropDown
+            headerElement={<p className="text-uGray text-lg">AI Detection</p>}
+          >
+            <LocalSetupProvider>
+              <AIDetection />
             </LocalSetupProvider>
           </DropDown>
         </div>

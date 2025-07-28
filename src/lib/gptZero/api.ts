@@ -2,7 +2,7 @@ export const validateApiKey = async (
   api: string
 ): Promise<{ error?: string }> => {
   try {
-    const res = await fetch("https://api.gptzero.me/v3/usage", {
+    const res = await fetch("https://api.gptzero.me/v3/usage-stats", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${api}`,

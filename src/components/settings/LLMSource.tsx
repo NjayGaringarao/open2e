@@ -74,13 +74,13 @@ const LLMSource = () => {
       setIsLoading(false);
       toaster.create({
         title: "Updated Succesfully",
-        description: "Succesfully updated the UI Mode.",
+        description: "Succesfully updated the LLM Source.",
         type: "success",
       });
     } catch (error) {
       toaster.create({
         title: "Error Encountered",
-        description: "There was an error occurred updating the UI Mode.",
+        description: "There was an error occurred updating the LLM Source.",
         type: "error",
       });
     } finally {

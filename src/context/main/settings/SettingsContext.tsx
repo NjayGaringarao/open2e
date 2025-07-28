@@ -6,6 +6,7 @@ export interface IUpdate {
   llmSource?: LLMSource;
   userRole?: UserRole;
   openaiAPIKey?: string;
+  gptZeroAPIKey?: string;
 }
 
 export type SettingsContextType = {
@@ -13,6 +14,7 @@ export type SettingsContextType = {
   llmSource: LLMSource;
   userRole: UserRole;
   openaiAPIKey?: string;
+  gptZeroAPIKey?: string;
   update: (param: IUpdate) => Promise<void>;
 };
 

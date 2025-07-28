@@ -9,8 +9,10 @@ export interface SetupProcedureContextType {
   setUserRole: (role: UserRole) => void;
   isEulaAgreed: boolean;
   setIsEulaAgreed: (agreed: boolean) => void;
-  apiKey: string;
-  setApiKey: (key: string) => void;
+  openaiApiKey: string;
+  setOpenaiApiKey: (key: string) => void;
+  gptZeroApiKey: string;
+  setGptZeroApiKey: (key: string) => void;
   username: Name;
   setUsername: React.Dispatch<React.SetStateAction<Name>>;
   finishSetup: () => Promise<void>;

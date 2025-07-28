@@ -8,6 +8,7 @@ import Eula from "./Eula";
 import ConfirmSetup from "./ConfirmSetup";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
+import AiDetection from "./AiDetection";
 
 const Layout = () => {
   const { step } = useSetupNavigation();
@@ -21,8 +22,9 @@ const Layout = () => {
       {step === 2 && <Name />}
       {step === 3 && <Role />}
       {step === 4 && <Mode />}
-      {step === 5 && <ConfirmSetup />}
-      {step === 6 &&
+      {step === 5 && <AiDetection />}
+      {step === 6 && <ConfirmSetup />}
+      {step === 7 &&
         (llmSource === "INTERNET" ? <OnlineSetup /> : <LocalSetup />)}
     </div>
   );

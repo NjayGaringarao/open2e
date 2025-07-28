@@ -6,7 +6,7 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
-  const { username, llmSource, userRole } = useSetupProcedure();
+  const { username, llmSource, userRole, gptZeroApiKey } = useSetupProcedure();
   const { startInstallation } = useLocalSetup();
   const { confirm } = useDialog();
 
@@ -74,12 +74,26 @@ const ConfirmSetup = () => {
                     <li>Batch Evaluation</li>
                     <li>Student Management</li>
                     <li>Performance Analytics</li>
+                    <li>
+                      AI Detection (
+                      {gptZeroApiKey.length
+                        ? "With API key"
+                        : "Without API Key"}
+                      )
+                    </li>
                   </ul>
                 ) : (
                   <ul className=" text-uGray text-base font-semibold list-disc list-inside">
                     <li>Question & Answer Evaluation</li>
                     <li>AI Chat</li>
                     <li>Performance Analytics</li>
+                    <li>
+                      AI Detection (
+                      {gptZeroApiKey.length
+                        ? "With API key"
+                        : "Without API Key"}
+                      )
+                    </li>
                   </ul>
                 )}
               </td>

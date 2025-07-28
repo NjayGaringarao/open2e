@@ -13,8 +13,13 @@ import { useSetupNavigation } from "@/context/setup/navigation";
 const Mode = () => {
   const MINIMUM_SYSTEM_MEMORY = 8;
 
-  const { llmSource, setLlmSource, systemMemory, apiKey, setApiKey } =
-    useSetupProcedure();
+  const {
+    llmSource,
+    setLlmSource,
+    systemMemory,
+    openaiApiKey,
+    setOpenaiApiKey,
+  } = useSetupProcedure();
 
   const { navigate, step, totalSteps } = useSetupNavigation();
 
@@ -22,10 +27,12 @@ const Mode = () => {
   const [verifying, setVerifying] = useState(false);
   const [prompt, setPrompt] = useState("Validation failed: Invalid API Key");
 
-  const validateKey = async (apiKey: string) => {
+  const validateKey = async (openaiApiKey: string) => {
     try {
       setVerifying(true);
-      const isValid = await invoke<boolean>("validate_key", { key: apiKey });
+      const isValid = await invoke<boolean>("validate_key", {
+        key: openaiApiKey,
+      });
       setIsApiKeyValid(isValid);
       setPrompt(
         isValid
@@ -43,14 +50,12 @@ const Mode = () => {
   };
 
   useEffect(() => {
-    validateKey(apiKey);
-
     // DEBOUNCE
     const timeout = setTimeout(() => {
-      validateKey(apiKey);
+      validateKey(openaiApiKey);
     }, 600);
     return () => clearTimeout(timeout);
-  }, [apiKey]);
+  }, [openaiApiKey]);
 
   return (
     <StepContainer
@@ -99,9 +104,9 @@ const Mode = () => {
               <InputBox
                 id="api-key"
                 isPassword
-                value={apiKey}
-                setValue={setApiKey}
-                placeholder="sk-..."
+                value={openaiApiKey}
+                setValue={setOpenaiApiKey}
+                placeholder="Paste your API key here..."
                 inputClassName={clsx(
                   "py-1 px-3 w-full",
                   "border border-panel",

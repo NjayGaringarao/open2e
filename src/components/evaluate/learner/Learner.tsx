@@ -1,6 +1,6 @@
 import AnswerSheet from "./AnswerSheet";
 import { LearnerProvider } from "@/context/main/learner/LearnerProvider";
-import Question from "./Question";
+import QuestionBox from "./QuestionBox";
 import { nanoid } from "nanoid";
 import { useLearner } from "@/context/main/learner/useLearner";
 import ArticleItem from "./ArticleItem";
@@ -11,7 +11,7 @@ const LearnerContent = () => {
   return (
     <div className="flex flex-col p-6 flex-1 items-center justify-center">
       <div className="w-full max-w-5xl flex flex-col gap-8">
-        <Question />
+        <QuestionBox />
 
         <div>
           <p className="text-uGrayLight text-xl mb-2 font-semibold">Answer</p>

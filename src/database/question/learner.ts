@@ -22,7 +22,7 @@ export const getTopQuestions = async (): Promise<{
       `
     );
 
-    return { questions: rows };
+    return { questions: rows.slice(0, 3) };
   } catch (error) {
     return { questions: [], error: `${error}` };
   } finally {
@@ -42,11 +42,12 @@ export const getSimilarQuestions = async (
       `
       SELECT id, content FROM question
       WHERE LOWER(content) LIKE $1
+      LIMIT 3
       `,
       [`%${normalized}%`]
     );
 
-    return { questions: rows };
+    return { questions: rows.slice(0, 3) };
   } catch (error) {
     return { questions: [], error: `${error}` };
   } finally {

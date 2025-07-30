@@ -16,7 +16,6 @@ const QuestionBox = () => {
   const suggestionClickedRef = useRef(false);
 
   const fetchSimilarQuestion = async (question: string) => {
-    setSuggestionList([]);
     const { questions, error } = await getSimilarQuestions(question);
 
     if (error) {
@@ -28,7 +27,7 @@ const QuestionBox = () => {
 
   const fetchTopQuestion = async () => {
     // this will query top asked questions
-    setSuggestionList([]);
+
     const { questions, error } = await getTopQuestions();
 
     if (error) {
@@ -59,6 +58,7 @@ const QuestionBox = () => {
 
     // Debounce
     const handler = setTimeout(() => {
+      setSuggestionList([]);
       if (isFilled) {
         fetchSimilarQuestion(question.tracked);
       } else {
@@ -79,30 +79,34 @@ const QuestionBox = () => {
         setValue={(e) => updateQuestion((prev) => ({ ...prev, tracked: e }))}
         placeholder="Type the question here..."
         withVoiceInput
-        inputClassName="p-4"
+        inputClassName="p-4 text-lg"
         disabled={isLoading}
         onFocus={() => setIsFocus(true)}
         onBlur={handleOnBlur}
       />
 
-      {isFocus && (
-        <div
-          className={clsx(
-            "absolute bg-uGray w-full mt-2 rounded-md z-50",
-            "flex flex-col"
-          )}
-        >
-          <p>{isFilled ? "Similar Questions:" : "Suggested Questions:"}</p>
-          {suggestionList.map((question) => (
-            <button
-              id={question.id.toString()}
-              onMouseDown={() => handleSuggestionClick(question.content)}
-            >
-              {question.content}
-            </button>
-          ))}
-        </div>
-      )}
+      <div
+        className={clsx(
+          "absolute bg-panel mt-2 p-2 rounded-md z-50",
+          "shadow-md shadow-background",
+          "flex-col items-start",
+          "animate-fadeIn",
+          isFocus && !!suggestionList.length ? "flex" : "hidden"
+        )}
+      >
+        <p className="text-sm text-uGrayLight">
+          {isFilled ? "Similar Questions:" : "Suggested Questions:"}
+        </p>
+        {suggestionList.map((question) => (
+          <button
+            key={question.id.toString()}
+            onMouseDown={() => handleSuggestionClick(question.content)}
+            className="px-4 text-uGrayLight text-lg"
+          >
+            {question.content}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

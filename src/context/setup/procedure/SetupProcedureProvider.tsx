@@ -16,7 +16,7 @@ export const SetupProcedureProvider = ({
   const [userRole, setUserRole] = useState<UserRole>();
   const [isEulaAgreed, setIsEulaAgreed] = useState(false);
   const [openaiApiKey, setOpenaiApiKey] = useState("");
-  const [gptZeroApiKey, setGptZeroApiKey] = useState("");
+  const [saplingApiKey, setSaplingApiKey] = useState("");
   const [username, setUsername] = useState<Name>({
     first: "",
     middle: "",
@@ -41,10 +41,10 @@ export const SetupProcedureProvider = ({
       await configStore.set("llm_source", llmSource);
       await configStore.save();
 
-      if (openaiApiKey || gptZeroApiKey) {
+      if (openaiApiKey || saplingApiKey) {
         apikeyStore = await load("store.apikeys", { autoSave: false });
         await apikeyStore.set("openai", openaiApiKey);
-        await apikeyStore.set("gptZero", gptZeroApiKey);
+        await apikeyStore.set("gptZero", saplingApiKey);
         await apikeyStore.save();
       }
     } catch (error) {
@@ -79,8 +79,8 @@ export const SetupProcedureProvider = ({
         setIsEulaAgreed,
         openaiApiKey,
         setOpenaiApiKey,
-        gptZeroApiKey,
-        setGptZeroApiKey,
+        saplingApiKey,
+        setSaplingApiKey,
         username,
         setUsername,
         finishSetup,

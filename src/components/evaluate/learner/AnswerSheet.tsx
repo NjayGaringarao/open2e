@@ -6,6 +6,7 @@ import { Save, User } from "lucide-react";
 import clsx from "clsx";
 import { useSettings } from "@/context/main/settings";
 import { useLearner } from "@/context/main/learner/useLearner";
+import AIDetection from "../AIDetection";
 
 const AnswerSheet = () => {
   const { userName } = useSettings();
@@ -110,6 +111,15 @@ const AnswerSheet = () => {
             )}
         </div>
       </div>
+
+      <AIDetection
+        text={sheet.committedAnswer}
+        className={clsx(
+          !sheet.committedAnswer.length || isLoading ? "hidden" : "mt-4"
+        )}
+      />
+
+      {/** Floating UserName */}
       <div
         className={clsx(
           "absolute ml-4 bg-background border border-uGrayLight rounded-md px-4 resize-none",

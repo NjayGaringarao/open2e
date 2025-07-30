@@ -13,7 +13,7 @@ export const SettingsProvider = ({
   const [userRole, setUserRole] = useState<UserRole>();
   const [llmSource, setLlmSource] = useState<LLMSource>();
   const [openaiAPIKey, setOpenaiAPIKey] = useState<string>();
-  const [gptZeroAPIKey, setGPTZeroAPIKey] = useState<string>();
+  const [saplingAPIKey, setSaplingAPIKey] = useState<string>();
 
   const loadSettings = async () => {
     let config: Store | null = null;
@@ -36,8 +36,8 @@ export const SettingsProvider = ({
         apiKeys = await load("store.apikeys", { autoSave: false });
         const _openai = await apiKeys.get<string>("openai");
         setOpenaiAPIKey(_openai);
-        const _gptZero = await apiKeys.get<string>("gptZero");
-        setGPTZeroAPIKey(_gptZero?.length ? _gptZero : undefined);
+        const _sapling = await apiKeys.get<string>("sapling");
+        setSaplingAPIKey(_sapling?.length ? _sapling : undefined);
       }
     } catch (error) {
       console.error(`SettingsProvider.loadSettings :: ${error}`);
@@ -55,7 +55,7 @@ export const SettingsProvider = ({
     userRole,
     llmSource,
     openaiAPIKey,
-    gptZeroAPIKey,
+    saplingAPIKey,
   }: IUpdate) => {
     let config: Store | null = null;
     let apiKeys: Store | null = null;
@@ -70,10 +70,10 @@ export const SettingsProvider = ({
       }
 
       // Update Api keys
-      if (openaiAPIKey || gptZeroAPIKey) {
+      if (openaiAPIKey || saplingAPIKey) {
         apiKeys = await load("store.apikeys", { autoSave: false });
         openaiAPIKey && (await apiKeys.set("openai", openaiAPIKey));
-        gptZeroAPIKey && (await apiKeys.set("gptZero", gptZeroAPIKey));
+        saplingAPIKey && (await apiKeys.set("sapling", saplingAPIKey));
         await apiKeys.save();
       }
     } catch (error) {
@@ -97,7 +97,7 @@ export const SettingsProvider = ({
         userRole,
         llmSource,
         openaiAPIKey,
-        gptZeroAPIKey,
+        saplingAPIKey,
         update,
       }}
     >

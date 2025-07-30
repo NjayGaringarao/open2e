@@ -8,7 +8,7 @@ import Button from "../Button";
 import { useDialog } from "@/context/dialog";
 import { useSettings } from "@/context/main/settings";
 import { toaster } from "@/components/ui/toaster";
-import { validateApiKey } from "@/lib/gptZero/api";
+import { validateApiKey } from "@/lib/sapling/api";
 
 const AIDetection = () => {
   const { confirm } = useDialog();
@@ -17,7 +17,7 @@ const AIDetection = () => {
   const [isApikeyValid, setIsApiKeyValid] = useState(false);
   const [isModified, setIsModified] = useState(false);
   const [prompt, setPrompt] = useState<string>();
-  const { update, gptZeroAPIKey } = useSettings();
+  const { update, saplingAPIKey } = useSettings();
 
   const validate = async (apiKey: string) => {
     try {
@@ -34,13 +34,13 @@ const AIDetection = () => {
 
       setPrompt(
         error
-          ? "Incorrect API key provided or no internet connection. You can find your API key at [https://app.gptzero.me/api](https://app.gptzero.me/api)."
+          ? "Incorrect API key provided or no internet connection. You can find your API key [here](https://sapling.ai/api_settings?utm_source=sapling.ai&utm_medium=documentation&utm_campaign=apidocs)."
           : "Validation Success: API Key is Valid."
       );
     } catch (error) {
       setIsApiKeyValid(false);
       setPrompt(
-        "Incorrect API key provided or no internet connection. You can find your API key at [https://app.gptzero.me/api](https://app.gptzero.me/api)."
+        "Incorrect API key provided or no internet connection. You can find your API key [here](https://sapling.ai/api_settings?utm_source=sapling.ai&utm_medium=documentation&utm_campaign=apidocs)."
       );
     } finally {
       setIsLoading(false);
@@ -48,7 +48,7 @@ const AIDetection = () => {
   };
 
   const handleReset = () => {
-    setForm(gptZeroAPIKey);
+    setForm(saplingAPIKey);
   };
 
   const handleUpdate = async () => {
@@ -62,7 +62,7 @@ const AIDetection = () => {
     try {
       setIsLoading(true);
 
-      await update({ gptZeroAPIKey: form });
+      await update({ saplingAPIKey: form });
 
       setIsLoading(false);
       toaster.create({
@@ -90,18 +90,18 @@ const AIDetection = () => {
   }, [form]);
 
   useEffect(() => {
-    setIsModified(form !== gptZeroAPIKey);
+    setIsModified(form !== saplingAPIKey);
   }, [form]);
 
   return (
     <div className="pl-8 flex flex-col gap-2">
-      <p className="text-lg text-uGrayLight ">GPT Zero's API Key.</p>
+      <p className="text-lg text-uGrayLight ">Sapling AI API Key.</p>
       <InputBox
         id="api-key"
         isPassword
         value={form ?? ""}
         setValue={(e) => setForm(e.length ? e : undefined)}
-        placeholder="sk-..."
+        placeholder="Paste here..."
         inputClassName={clsx(
           "py-1 px-3 w-full",
           "border border-panel",

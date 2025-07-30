@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS evaluation (
   answer TEXT NOT NULL,
   score INTEGER NOT NULL,
   justification TEXT,
+  detected_ai INTEGER,
   llm_model TEXT NOT NULL,
   timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE

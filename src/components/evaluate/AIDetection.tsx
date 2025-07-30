@@ -1,16 +1,18 @@
 import { useSettings } from "@/context/main/settings";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { detectAI } from "@/lib/sapling/detection"; // adjust path if needed
 import clsx from "clsx";
+import { LearnerSheetData } from "@/types/evaluation/learner";
 
 interface IAIDetection {
   text: string;
   className?: string;
+  sheet: LearnerSheetData;
+  setSheet: React.Dispatch<React.SetStateAction<LearnerSheetData>>;
 }
 
-const AIDetection = ({ text, className }: IAIDetection) => {
+const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
   const { saplingAPIKey } = useSettings();
-  const [percent, setPercent] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,7 +20,7 @@ const AIDetection = ({ text, className }: IAIDetection) => {
   const runDetection = async () => {
     setLoading(true);
     setError("");
-    setPercent(0);
+    setSheet((prev) => ({ ...prev, detectedAI: undefined }));
     setMessage("");
 
     const result = await detectAI(text, saplingAPIKey);
@@ -26,7 +28,7 @@ const AIDetection = ({ text, className }: IAIDetection) => {
     if (result.error) {
       setError(result.error);
     } else {
-      setPercent(result.percent);
+      setSheet((prev) => ({ ...prev, detectedAI: result.percent }));
       if (result.message) setMessage(result.message);
     }
 
@@ -47,20 +49,24 @@ const AIDetection = ({ text, className }: IAIDetection) => {
         <p className="text-sm text-uRed">Error: {error}</p>
       ) : (
         <>
-          <div className="w-full bg-gray-200 h-6 rounded overflow-hidden">
-            <div
-              className={`h-full text-background text-sm font-semibold flex items-center justify-center transition-all duration-300 ${
-                percent >= 85
-                  ? "bg-red-500"
-                  : percent >= 60
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
-              }`}
-              style={{ width: `${percent < 5 ? 5 : percent}%` }}
-            >
-              {percent}%
+          {sheet.detectedAI && (
+            <div className="w-full bg-gray-200 h-6 rounded overflow-hidden">
+              <div
+                className={`h-full text-background text-sm font-semibold flex items-center justify-center transition-all duration-300 ${
+                  sheet.detectedAI >= 85
+                    ? "bg-red-500"
+                    : sheet.detectedAI >= 60
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
+                }`}
+                style={{
+                  width: `${sheet.detectedAI < 5 ? 5 : sheet.detectedAI}%`,
+                }}
+              >
+                {sheet.detectedAI}%
+              </div>
             </div>
-          </div>
+          )}
           {message && (
             <p className="text-sm text-uGrayLight italic">{message}</p>
           )}

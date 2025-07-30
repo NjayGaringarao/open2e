@@ -7,6 +7,7 @@ interface IAdd {
   score: number;
   justification: string;
   llm_model: string;
+  detected_ai?: number;
 }
 
 // Utility function to normalize the question text
@@ -23,6 +24,7 @@ export const add = async ({
   score,
   justification,
   llm_model,
+  detected_ai,
 }: IAdd): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
@@ -55,9 +57,9 @@ export const add = async ({
 
     // Step 2: Insert into evaluation
     await db.execute(
-      `INSERT INTO evaluation (question_id, answer, score, justification, llm_model)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [question_id, answer, score, justification, llm_model]
+      `INSERT INTO evaluation (question_id, answer, score, justification, llm_model, detected_ai)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [question_id, answer, score, justification, llm_model, detected_ai]
     );
 
     return {};

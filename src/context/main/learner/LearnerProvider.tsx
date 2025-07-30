@@ -168,6 +168,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       score: sheet.score,
       justification: sheet.justification,
       llm_model: llmSource === "INTERNET" ? OE_MODEL : LE_MODEL,
+      detected_ai: sheet.detectedAI,
     });
 
     if (error) {

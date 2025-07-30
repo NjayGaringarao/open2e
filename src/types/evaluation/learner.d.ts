@@ -8,6 +8,7 @@ export type LearnerSheetData = {
   score: number | null;
   justification: string;
   isEvaluationSaved: boolean;
+  detectedAI?: number;
 };
 
 export type LearnerResult = {

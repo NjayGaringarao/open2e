@@ -117,6 +117,8 @@ const AnswerSheet = () => {
         className={clsx(
           !sheet.committedAnswer.length || isLoading ? "hidden" : "mt-4"
         )}
+        sheet={sheet}
+        setSheet={updateSheet}
       />
 
       {/** Floating UserName */}

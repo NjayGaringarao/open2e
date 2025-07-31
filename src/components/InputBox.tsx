@@ -32,7 +32,8 @@ const InputBox = ({
 
   const handleVoiceInput = async () => {
     const result = await listen();
-    setValue(value.concat(". ").concat(result));
+    const newValue = value.concat(" ").concat(result);
+    setValue(newValue);
   };
 
   useEffect(() => {

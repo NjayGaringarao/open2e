@@ -11,8 +11,10 @@ import {
 } from "@headlessui/react";
 import { useVoiceVisualizer, VoiceVisualizer } from "react-voice-visualizer";
 import Button from "@/components/Button";
+import { useSettings } from "../main/settings";
 
 export const SpeechProvider = ({ children }: { children: React.ReactNode }) => {
+  const { ttsConfig } = useSettings();
   const primaryColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--primary")
     .trim();
@@ -26,15 +28,13 @@ export const SpeechProvider = ({ children }: { children: React.ReactNode }) => {
 
   const talk = async (text: string): Promise<void> => {
     const utterance = new SpeechSynthesisUtterance(text);
-
-    // Choose a better voice (if available)
     const voices = window.speechSynthesis.getVoices();
 
-    // Voice tuning
-    utterance.rate = 0.8; // Slightly slower for clarity
-    utterance.pitch = 0.9; // Adds a friendlier tone
-    utterance.volume = 1;
-    utterance.voice = voices[1];
+    // Voice Setup
+    utterance.rate = ttsConfig.rate;
+    utterance.pitch = ttsConfig.pitch;
+    utterance.volume = ttsConfig.volume;
+    utterance.voice = voices[ttsConfig.voiceIndex];
 
     await new Promise<void>((resolve) => {
       utterance.onend = () => resolve();

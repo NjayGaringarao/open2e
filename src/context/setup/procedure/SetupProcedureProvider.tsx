@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
-import { LLMSource, Name, UserRole } from "@/types/config";
+import { LLMSource, Name, TTSConfig, UserRole } from "@/types/config";
 import { load, Store } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -39,6 +39,15 @@ export const SetupProcedureProvider = ({
       await configStore.set("is_initialized", true);
       await configStore.set("user_role", userRole);
       await configStore.set("llm_source", llmSource);
+
+      const ttsConfig: TTSConfig = {
+        rate: 0.8,
+        pitch: 0.9,
+        volume: 1,
+        voiceIndex: 1,
+      };
+
+      await configStore.set("tts_config", ttsConfig);
       await configStore.save();
 
       if (openaiApiKey || saplingApiKey) {

@@ -1,4 +1,4 @@
-import { LLMSource, Name, UserRole } from "@/types/config";
+import { LLMSource, Name, UserRole, TTSConfig } from "@/types/config";
 import React, { useEffect, useState } from "react";
 import { IUpdate, SettingsContext } from "./SettingsContext";
 import { load, Store } from "@tauri-apps/plugin-store";
@@ -14,12 +14,17 @@ export const SettingsProvider = ({
   const [llmSource, setLlmSource] = useState<LLMSource>();
   const [openaiAPIKey, setOpenaiAPIKey] = useState<string>();
   const [saplingAPIKey, setSaplingAPIKey] = useState<string>();
+  const [ttsConfig, setTTSConfig] = useState<TTSConfig>({
+    rate: 0.8,
+    pitch: 0.9,
+    volume: 1,
+    voiceIndex: 0,
+  });
 
   const loadSettings = async () => {
     let config: Store | null = null;
     let apiKeys: Store | null = null;
     try {
-      // Config
       config = await load("store.config", { autoSave: false });
 
       const _userName = await config.get<Name>("user_name");
@@ -31,7 +36,9 @@ export const SettingsProvider = ({
       const _llmSource = await config.get<LLMSource>("llm_source");
       _llmSource && setLlmSource(_llmSource);
 
-      // Apikeys
+      const _tts = await config.get<TTSConfig>("tts_config");
+      _tts && setTTSConfig(_tts);
+
       if (_llmSource === "INTERNET") {
         apiKeys = await load("store.apikeys", { autoSave: false });
         const _openai = await apiKeys.get<string>("openai");
@@ -42,9 +49,6 @@ export const SettingsProvider = ({
     } catch (error) {
       console.error(`SettingsProvider.loadSettings :: ${error}`);
     } finally {
-      // NOTE: These causes an uncaught promise...
-      // IDK WHY, But it works just fine.
-      // TODO: Resolve the issue
       config && (await config.close());
       apiKeys && (await apiKeys.close());
     }
@@ -56,20 +60,20 @@ export const SettingsProvider = ({
     llmSource,
     openaiAPIKey,
     saplingAPIKey,
-  }: IUpdate) => {
+    ttsConfig,
+  }: IUpdate & { ttsConfig?: TTSConfig }) => {
     let config: Store | null = null;
     let apiKeys: Store | null = null;
     try {
-      // Update Config
-      if (userName || userRole || llmSource) {
+      if (userName || userRole || llmSource || ttsConfig) {
         config = await load("store.config", { autoSave: false });
         userName && (await config.set("user_name", userName));
         userRole && (await config.set("user_role", userRole));
         llmSource && (await config.set("llm_source", llmSource));
+        ttsConfig && (await config.set("tts_config", ttsConfig));
         await config.save();
       }
 
-      // Update Api keys
       if (openaiAPIKey || saplingAPIKey) {
         apiKeys = await load("store.apikeys", { autoSave: false });
         openaiAPIKey && (await apiKeys.set("openai", openaiAPIKey));
@@ -98,6 +102,7 @@ export const SettingsProvider = ({
         llmSource,
         openaiAPIKey,
         saplingAPIKey,
+        ttsConfig,
         update,
       }}
     >

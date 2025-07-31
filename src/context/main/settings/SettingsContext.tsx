@@ -1,4 +1,4 @@
-import { Name, UserRole, LLMSource } from "@/types/config";
+import { Name, UserRole, LLMSource, TTSConfig } from "@/types/config";
 import { createContext } from "react";
 
 export interface IUpdate {
@@ -7,6 +7,7 @@ export interface IUpdate {
   userRole?: UserRole;
   openaiAPIKey?: string;
   saplingAPIKey?: string;
+  ttsConfig?: TTSConfig;
 }
 
 export type SettingsContextType = {
@@ -15,6 +16,7 @@ export type SettingsContextType = {
   userRole: UserRole;
   openaiAPIKey?: string;
   saplingAPIKey?: string;
+  ttsConfig: TTSConfig;
   update: (param: IUpdate) => Promise<void>;
 };
 

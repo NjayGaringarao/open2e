@@ -1,4 +1,5 @@
 "use client";
+import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
 import { Eye, EyeClosed, Mic } from "lucide-react";
 import { InputHTMLAttributes, useEffect, useState } from "react";
@@ -27,6 +28,12 @@ const InputBox = ({
   ...inputProp
 }: IInputBox) => {
   const [isHidden, setIsHidden] = useState(false);
+  const { listen } = useSpeech();
+
+  const handleVoiceInput = async () => {
+    const result = await listen();
+    setValue(value.concat(". ").concat(result));
+  };
 
   useEffect(() => {
     if (isPassword) setIsHidden(true);
@@ -69,7 +76,7 @@ const InputBox = ({
               inputProp.disabled ? "hidden" : "visible"
             )}
           >
-            <button>
+            <button onClick={handleVoiceInput}>
               <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
             </button>
           </div>

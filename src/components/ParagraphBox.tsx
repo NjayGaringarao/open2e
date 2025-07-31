@@ -1,4 +1,5 @@
 "use client";
+import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
 import { Mic, X } from "lucide-react";
 import { InputHTMLAttributes } from "react";
@@ -30,6 +31,13 @@ const ParagraphBox = ({
   handleClear = () => {},
   ...textAreaProp
 }: IParagraphBox) => {
+  const { listen } = useSpeech();
+
+  const handleVoiceInput = async () => {
+    const result = await listen();
+    setValue(value.concat(". ").concat(result));
+  };
+
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
       {title && (
@@ -74,7 +82,7 @@ const ParagraphBox = ({
           <X className="text-uGrayLight hover:text-primary h-6 w-6" />
         </button>
         {withVoiceInput && (
-          <button>
+          <button onClick={handleVoiceInput}>
             <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
           </button>
         )}

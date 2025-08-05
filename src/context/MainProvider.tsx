@@ -5,6 +5,7 @@ import { TagProvider } from "@/context/main/tag/TagProvider";
 import { Provider } from "@/components/ui/provider";
 import { SettingsProvider } from "./main/settings";
 import { SpeechProvider } from "./speech";
+import { ChatProvider } from "./main/chat/ChatProvider";
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +14,9 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         <SettingsProvider>
           <SpeechProvider>
             <TagProvider>
-              <StudentProvider>{children}</StudentProvider>
+              <StudentProvider>
+                <ChatProvider>{children}</ChatProvider>
+              </StudentProvider>
             </TagProvider>
           </SpeechProvider>
         </SettingsProvider>

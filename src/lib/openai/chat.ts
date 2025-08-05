@@ -1,29 +1,34 @@
 import { InputMessage, OutputMessage } from "@/types/chat";
 import OpenAI from "openai";
-import { createChatContext } from "../context/chat";
+import { getChatContext } from "../context/chat";
 import { CHAT_MODEL } from "./models";
 
 export const chat = async (
   apiKey: string,
-  question_topic: string,
   conversation: InputMessage[]
-): Promise<OutputMessage> => {
+): Promise<{ reply?: OutputMessage; error?: string }> => {
   const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
 
   const systemMessage: InputMessage = {
     role: "system",
-    content: createChatContext(question_topic),
+    content: getChatContext(),
   };
 
-  const response = await openai.chat.completions.create({
-    model: CHAT_MODEL,
-    messages: [systemMessage, ...conversation.slice(-10)],
-  });
+  try {
+    const response = await openai.chat.completions.create({
+      model: CHAT_MODEL,
+      messages: [systemMessage, ...conversation.slice(-10)],
+    });
 
-  return {
-    role: "assistant",
-    content:
-      response.choices[0].message.content ??
-      "I'm sorry, I couldn't generate a response.",
-  };
+    return {
+      reply: {
+        role: "assistant",
+        content:
+          response.choices[0].message.content ??
+          "I'm sorry, I couldn't generate a response.",
+      },
+    };
+  } catch (error) {
+    return { error: `${error}` };
+  }
 };

@@ -6,6 +6,9 @@ interface IMarkdown {
   text?: string;
 }
 
+const cleanMarkdown = (text: string = "") =>
+  text.replace(/(\d+\..+)\n\s*\n(?=\d+\.)/g, "$1\n");
+
 const Markdown = ({ text }: IMarkdown) => {
   return (
     <ReactMarkdown
@@ -21,7 +24,7 @@ const Markdown = ({ text }: IMarkdown) => {
         ),
       }}
     >
-      {text}
+      {cleanMarkdown(text)}
     </ReactMarkdown>
   );
 };

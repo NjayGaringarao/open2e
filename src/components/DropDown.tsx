@@ -5,9 +5,14 @@ import React, { useRef, useState, useEffect } from "react";
 interface IDropDown {
   headerElement: React.ReactNode;
   children: React.ReactNode;
+  containerClassName?: string;
 }
 
-const DropDown = ({ headerElement, children }: IDropDown) => {
+const DropDown = ({
+  headerElement,
+  children,
+  containerClassName,
+}: IDropDown) => {
   const [isOpen, setIsOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -34,7 +39,7 @@ const DropDown = ({ headerElement, children }: IDropDown) => {
   }, [isOpen]);
 
   return (
-    <div className="flex flex-col w-full border-y border-uGrayLightLight py-4">
+    <div className={clsx("flex flex-col", containerClassName)}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className={clsx("flex flex-row gap-4 items-center text-uGray")}

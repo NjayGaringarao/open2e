@@ -23,7 +23,9 @@ const LearnerContent = () => {
         <div
           className={clsx(
             "flex flex-col gap-4",
-            question.committed === question.tracked ? "block" : "hidden"
+            question.committed === question.tracked && articleList.length
+              ? "block"
+              : "hidden"
           )}
         >
           <p className="text-xl font-semibold">Explore Further</p>

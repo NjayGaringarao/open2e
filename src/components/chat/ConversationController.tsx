@@ -18,12 +18,12 @@ const ConversationController = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState("");
 
-  const handleStart = () => {
-    updateActiveConversation(null);
+  const handleStart = async () => {
+    await updateActiveConversation(null);
   };
 
-  const handleSelect = (convo: Conversation) => {
-    updateActiveConversation(convo);
+  const handleSelect = async (convo: Conversation) => {
+    await updateActiveConversation(convo);
   };
 
   const handleDelete = async (convo: Conversation) => {

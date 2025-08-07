@@ -79,7 +79,7 @@ const QuestionBox = () => {
         setValue={(e) => updateQuestion((prev) => ({ ...prev, tracked: e }))}
         placeholder="Type the question here..."
         withVoiceInput
-        inputClassName="p-4 text-lg"
+        inputClassName="p-4 text-base"
         disabled={isLoading}
         onFocus={() => setIsFocus(true)}
         onBlur={handleOnBlur}

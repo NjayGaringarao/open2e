@@ -57,8 +57,10 @@ const AnswerSheet = () => {
           disabled={isLoading}
           placeholder="Type the answer here..."
           containerClassname="flex-1"
+          inputClassName="h-64 py-4 text-base"
           handleClear={clearSheet}
           withVoiceInput
+          withClearButton
           rows={7}
         />
 

@@ -24,7 +24,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Auto-load existing conversations on mount
   useEffect(() => {
-    loadConversations();
+    loadConversations(true);
   }, []);
 
   const loadConversations = async (setFirstAsActive?: boolean) => {
@@ -32,8 +32,10 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const { conversations, error } = await convoDB.getAll();
     if (!error && conversations) {
       setConversations(conversations);
-      if (conversations.length && setFirstAsActive)
+      if (conversations.length && setFirstAsActive) {
         setActiveConversation(conversations[0]);
+        loadMessages(conversations[0]);
+      }
     }
     setIsLoading(false);
   };
@@ -67,18 +69,21 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     setMessages([]);
 
     // Update conversation list
-    loadConversations();
+    await loadConversations();
 
     return conversation;
   };
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (
+    content: string,
+    fromOtherPage: boolean = false
+  ) => {
     let conversation = activeConversation;
     const now = new Date().toISOString();
 
     if (!content.trim()) return;
 
-    if (!conversation) {
+    if (!conversation || fromOtherPage) {
       conversation = await startConversation();
       if (!conversation) return;
     }

@@ -49,7 +49,7 @@ const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
         <p className="text-sm text-uRed">Error: {error}</p>
       ) : (
         <>
-          {sheet.detectedAI && (
+          {/* {sheet.detectedAI && (
             <div className="w-full bg-gray-200 h-6 rounded overflow-hidden">
               <div
                 className={`h-full text-background text-sm font-semibold flex items-center justify-center transition-all duration-300 ${
@@ -66,8 +66,8 @@ const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
                 {sheet.detectedAI}%
               </div>
             </div>
-          )}
-          {message && (
+          )} */}
+          {message && sheet.committedAnswer === sheet.trackedAnswer && (
             <p className="text-sm text-uGrayLight italic">{message}</p>
           )}
         </>

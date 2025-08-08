@@ -6,9 +6,10 @@ import {
   LEARNER_MODE_INSTRUCTION,
   EVALUATOR_MODE_INSTRUCTION,
 } from "../context/instruction";
-import { zodTextFormat } from "openai/helpers/zod";
+import { zodResponseFormat, zodTextFormat } from "openai/helpers/zod";
 import { ResponseToEvaluatorSchema, ResponseToLearnerSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
+import { evaluationExamples } from "../context/instruction/examples";
 
 interface IEvaluateInput {
   question: string;
@@ -65,20 +66,28 @@ const evaluateLearner = async (
   openai: OpenAI,
   input: string
 ): Promise<LearnerResult> => {
-  const response = await openai.responses.create({
+  const raw = await openai.chat.completions.create({
     model: EVALUATION_MODEL,
-    instructions: LEARNER_MODE_INSTRUCTION(),
-    input,
     temperature: 0,
-    text: {
-      format: zodTextFormat(ResponseToLearnerSchema, "EvaluationToLearner"),
-    },
+    response_format: zodResponseFormat(
+      ResponseToLearnerSchema,
+      "EvaluationToLearner"
+    ),
+    messages: [
+      { role: "system", content: LEARNER_MODE_INSTRUCTION() },
+      ...evaluationExamples,
+      { role: "user", content: input },
+    ],
   });
 
-  const raw = response.output_text?.trim();
-  if (!raw) throw new Error("No content returned from OpenAI");
+  if (!raw || !raw.choices?.[0].message.content)
+    throw new Error("No response returned from OpenAI");
 
-  return ResponseToLearnerSchema.parse(JSON.parse(raw));
+  console.log(JSON.stringify(raw.usage, null, 2));
+
+  return ResponseToLearnerSchema.parse(
+    JSON.parse(raw.choices[0].message.content)
+  );
 };
 
 const evaluateEvaluator = async (

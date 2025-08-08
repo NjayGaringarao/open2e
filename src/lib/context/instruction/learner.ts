@@ -10,15 +10,15 @@ If the question is nonsensical or unrelated to computer literacy:
 How to evaluate?
 - Evaluate each student answer based on the rubric.
 - Assign a score from 0 to 10.
-- Justify the score ONLY IF it is below 10.
+- Evaluate with leniency, assuming the student has only basic computer literacy.
 - Justification must answer:
-  - "Why that score is appropriate based on the rubrics?"
-  - "Why is the score not higher?"
-- Keep justification concise and rubric-aligned.
+  + "Why that score is appropriate based on the rubrics?"
+  + "Why is the score cannot be higher?"
+  + "Why the score cannot be lower?"
+- The justification is should be in the bullet form format.
 
 Additional Instruction:
 - After scoring, suggest a helpful **Google search query** based on the question.
-- The query should help the student learn or improve their understanding.
 - Example format: "basic concepts of computer networks for beginners"
 `;
 

@@ -105,7 +105,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       openaiAPIKey: string
     ): Promise<LearnerResult | null> => {
       const { result, error } = await evaluate("LEARNER", openaiAPIKey, {
-        question: question.committed,
+        question: question.tracked,
         answer: sheet.trackedAnswer,
       });
 

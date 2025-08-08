@@ -1,3 +1,4 @@
+import { normalize } from "@/utils/string";
 import { openLearnerDatabase } from "../sqlite";
 import Database from "@tauri-apps/plugin-sql";
 
@@ -9,14 +10,6 @@ interface IAdd {
   llm_model: string;
   detected_ai?: number;
 }
-
-// Utility function to normalize the question text
-const normalizeQuestion = (q: string) =>
-  q
-    .replace(/[^\w\s]/g, "") // remove symbols
-    .replace(/\s+/g, " ") // collapse spaces
-    .trim()
-    .toLowerCase();
 
 export const add = async ({
   question,
@@ -30,7 +23,7 @@ export const add = async ({
   try {
     db = await openLearnerDatabase();
 
-    const normalized = normalizeQuestion(question);
+    const normalized = normalize(question);
 
     // Step 1: Check if question already exists (normalized)
     const existing = await db.select<{ id: number }[]>(

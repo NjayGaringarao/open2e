@@ -21,7 +21,7 @@ const ChatPanel = () => {
         ref={scrollRef}
         className="flex-1 flex flex-col items-center w-full overflow-y-auto"
       >
-        <div className="flex flex-col w-full min-w-3xl max-w-4xl py-4">
+        <div className="flex flex-col w-full min-w-3xl max-w-4xl p-8">
           <div className="h-20" />
           {messages.map((msg) => (
             <MessageBubble key={msg.id} message={msg} />

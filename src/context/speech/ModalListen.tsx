@@ -7,6 +7,7 @@ import {
 } from "@headlessui/react";
 import { VoiceVisualizer } from "react-voice-visualizer";
 import Button from "@/components/Button";
+import clsx from "clsx";
 interface prop {
   isListening: boolean;
   recorderControls: any;
@@ -57,25 +58,33 @@ export function ModalListen({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <DialogPanel className=" relative w-[26rem] transform overflow-hidden rounded-lg bg-background text-left align-middle shadow-xl transition-all flex flex-col pt-4 gap-4 items-center">
+            <DialogPanel
+              className={clsx(
+                "relative w-[26rem] transform overflow-hidden",
+                "rounded-lg bg-background text-left align-middle shadow-xl transition-all ",
+                "flex flex-col gap-4 items-center py-6"
+              )}
+            >
               {/* Voice Visualizer active only while listening */}
 
-              {isListening && (
-                <VoiceVisualizer
-                  controls={recorderControls}
-                  height={150}
-                  barWidth={4}
-                  mainBarColor={primaryColor}
-                  secondaryBarColor={grayColor}
-                />
-              )}
-
-              <div className="bottom-8 absolute bg-background py-8 w-full flex flex-col items-center border">
-                <Button
-                  title="Stop Listening"
-                  onClick={stopListening}
-                  className="bg-uRed py-2"
-                />
+              <div className="relative border">
+                {isListening && (
+                  <VoiceVisualizer
+                    controls={recorderControls}
+                    height={150}
+                    width={370}
+                    barWidth={4}
+                    mainBarColor={primaryColor}
+                    secondaryBarColor={grayColor}
+                  />
+                )}
+                <div className="bottom-0 absolute bg-background py-8 w-full flex flex-col items-center border">
+                  <Button
+                    title="Stop Listening"
+                    onClick={stopListening}
+                    className="bg-uRed py-2"
+                  />
+                </div>
               </div>
             </DialogPanel>
           </TransitionChild>

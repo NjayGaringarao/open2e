@@ -16,6 +16,7 @@ import {
   useEffect,
 } from "react";
 import { AlertTriangle, CheckCircle2, Info } from "lucide-react";
+import clsx from "clsx";
 import Button from "@/components/Button";
 import {
   AlertMode,
@@ -31,15 +32,18 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
   const [confirmOptions, setConfirmOptions] = useState<ConfirmOptions | null>(
     null
   );
+
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const [resolveConfirm, setResolveConfirm] = useState<
     (value: boolean) => void
   >(() => () => {});
   const [resolveAlert, setResolveAlert] = useState<() => void>(() => () => {});
+
   const autoDismissTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // ALERT FUNCTIONS
+  /** ALERT HANDLERS **/
   const alert = useCallback((opts: AlertOptions): Promise<void> => {
     return new Promise((resolve) => {
       setAlertOptions(opts);
@@ -59,23 +63,24 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const getAlertIcon = (mode: AlertMode = "INFO") => {
+    const iconClass = clsx(
+      "w-16 h-16 border rounded bg-opacity-5 flex-shrink-0",
+      mode === "SUCCESS" && "text-background bg-uGreen",
+      mode === "ERROR" && "text-background bg-uRed",
+      mode === "INFO" && "text-background bg-primary"
+    );
+
     switch (mode) {
       case "SUCCESS":
-        return (
-          <CheckCircle2 className="text-uGreen w-24 h-24 border border-uGreen rounded bg-uGreen bg-opacity-5" />
-        );
+        return <CheckCircle2 className={iconClass} />;
       case "ERROR":
-        return (
-          <AlertTriangle className="text-uRed w-24 h-24 border border-uRed rounded bg-uRed bg-opacity-5" />
-        );
+        return <AlertTriangle className={iconClass} />;
       default:
-        return (
-          <Info className="text-primary w-24 h-24 border border-primary rounded bg-primary bg-opacity-5" />
-        );
+        return <Info className={iconClass} />;
     }
   };
 
-  // CONFIRM FUNCTIONS
+  /** CONFIRM HANDLERS **/
   const confirm = useCallback((opts: ConfirmOptions): Promise<boolean> => {
     return new Promise((resolve) => {
       setConfirmOptions(opts);
@@ -99,18 +104,16 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
     closeConfirm();
   };
 
+  /** AUTO-DISMISS ALERT **/
   useEffect(() => {
     if (isAlertOpen && typeof alertOptions?.displayTime === "number") {
       autoDismissTimeout.current = setTimeout(() => {
-        resolveAlert(); // resolve the promise silently
+        resolveAlert();
         closeAlert();
       }, alertOptions.displayTime);
     }
-
     return () => {
-      if (autoDismissTimeout.current) {
-        clearTimeout(autoDismissTimeout.current);
-      }
+      if (autoDismissTimeout.current) clearTimeout(autoDismissTimeout.current);
     };
   }, [isAlertOpen, alertOptions]);
 
@@ -130,6 +133,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
             }
           }}
         >
+          {/* Backdrop */}
           <TransitionChild
             as={Fragment}
             enter="ease-out duration-200"
@@ -139,16 +143,10 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                opacity: "90%",
-                background: "black",
-              }}
-            ></div>
+            <div className="fixed inset-0 bg-black opacity-90" />
           </TransitionChild>
 
+          {/* Panel */}
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <TransitionChild
               as={Fragment}
@@ -159,25 +157,27 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-[26rem] transform overflow-hidden rounded-lg bg-background text-left align-middle shadow-xl transition-all flex flex-row p-6 gap-4">
-                {getAlertIcon(alertOptions?.mode)}
-                <div className="flex flex-col flex-1 gap-2">
-                  <DialogTitle
-                    className={`text-xl font-semibold ${getAlertTextColor(
-                      alertOptions?.mode
-                    )}`}
+              <DialogPanel className="w-[28rem] max-w-full transform overflow-hidden rounded-lg bg-background shadow-xl transition-all flex gap-2 p-4">
+                <div>{getAlertIcon(alertOptions?.mode)}</div>
+                <div className="flex flex-col flex-1">
+                  <p
+                    className={clsx(
+                      "font-bold",
+                      "text-xl md:text-2xl",
+                      getAlertTextColor(alertOptions?.mode)
+                    )}
                   >
                     {alertOptions?.title}
-                  </DialogTitle>
+                  </p>
                   {alertOptions?.description && (
-                    <p className="text-uGrayLight text-lg mb-4 leading-snug">
+                    <p className="text-uGrayLight text-base md:text-lg leading-snug">
                       {alertOptions.description}
                     </p>
                   )}
                   <Button
                     title={alertOptions?.confirmText || "Okay"}
                     onClick={handleAlertConfirm}
-                    className="w-full"
+                    className="w-full py-2.5 text-base mt-4"
                   />
                 </div>
               </DialogPanel>
@@ -189,6 +189,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
       {/* CONFIRM MODAL */}
       <Transition appear show={isConfirmOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={() => {}}>
+          {/* Backdrop */}
           <TransitionChild
             as={Fragment}
             enter="ease-out duration-200"
@@ -198,16 +199,10 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                opacity: "90%",
-                background: "black",
-              }}
-            ></div>
+            <div className="fixed inset-0 bg-black opacity-90" />
           </TransitionChild>
 
+          {/* Panel */}
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <TransitionChild
               as={Fragment}
@@ -218,29 +213,30 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-[26rem] transform overflow-hidden rounded-lg bg-background text-left align-middle shadow-xl transition-all p-6">
-                <DialogTitle className="text-2xl font-semibold text-primary mb-2">
+              <DialogPanel className="w-[26rem] transform overflow-hidden rounded-lg bg-background shadow-xl transition-all p-4 gap-2 flex flex-col">
+                <DialogTitle className="text-xl md:text-2xl font-bold text-primary">
                   {confirmOptions?.title}
                 </DialogTitle>
                 {confirmOptions?.description && (
-                  <p className="text-uGrayLight text-base mb-6 leading-snug">
+                  <p className="text-uGrayLight text-base md:text-lg leading-snug">
                     {confirmOptions.description}
                   </p>
                 )}
-                <div className="flex flex-row gap-3 justify-end">
+                <div className="flex flex-row gap-4 justify-end mt-4">
                   <Button
                     title={confirmOptions?.confirmText || "Confirm"}
-                    className={
+                    className={clsx(
+                      "py-2.5 px-5 text-base",
                       confirmOptions?.mode === "CRITICAL"
                         ? "bg-uRed"
                         : "bg-primary"
-                    }
+                    )}
                     onClick={handleConfirm}
                   />
-
                   <Button
                     title={confirmOptions?.cancelText || "Cancel"}
-                    secondary={true}
+                    secondary
+                    className="py-2.5 px-5 text-base"
                     onClick={handleCancel}
                   />
                 </div>
@@ -253,7 +249,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Helper
+/** Helper **/
 function getAlertTextColor(mode: AlertMode = "INFO") {
   switch (mode) {
     case "SUCCESS":

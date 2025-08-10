@@ -1,40 +1,23 @@
 export const detectAI = async (
-  answer: string,
-  apiKey?: string
+  answer: string
 ): Promise<{ percent: number; error?: string; message?: string }> => {
   try {
-    const res = await fetch("https://api.sapling.ai/api/v1/aidetect", {
+    const res = await fetch(`${OPEN2E_BACKEND}/api/detectAI/v1`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        key: apiKey ?? "U8G04K0JL0FRHDXNSCMQM95AKJWUYSKN", // Development api key
-        text: answer,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answer }),
     });
 
     if (!res.ok) {
-      const errorText = await res.text();
-      return {
-        percent: 0,
-        error: `API error ${res.status}: ${errorText}`,
-      };
+      return { percent: 0, error: await res.text(), message: "" };
     }
 
-    const data = await res.json();
-
-    console.log(data);
-    return {
-      percent: Math.round((data.score ?? 0) * 100),
-      message: `We are ${(data.score * 100).toFixed(
-        2
-      )}% certain that the answer is AI generated.`,
-    };
-  } catch (err: any) {
+    return await res.json();
+  } catch (error: any) {
     return {
       percent: 0,
-      error: err.message || "Failed to connect to Sapling API.",
+      error: error.message || "Network error",
+      message: "",
     };
   }
 };

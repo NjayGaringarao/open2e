@@ -1,111 +1,27 @@
-import { EvaluatorResult } from "@/types/evaluation/evaluator";
 import { LearnerResult } from "@/types/evaluation/learner";
-import { UserRole } from "@/types/config";
-import { OpenAI } from "openai";
-import {
-  LEARNER_MODE_INSTRUCTION,
-  EVALUATOR_MODE_INSTRUCTION,
-} from "../context/instruction";
-import { zodResponseFormat, zodTextFormat } from "openai/helpers/zod";
-import { ResponseToEvaluatorSchema, ResponseToLearnerSchema } from "../schema";
-import { EVALUATION_MODEL } from "./models";
-import { evaluationExamples } from "../context/instruction/examples";
 
-interface IEvaluateInput {
+interface IEvaluate {
   question: string;
   answer: string;
 }
 
-//#region Overloads
-
-//#region Overloads
-export function evaluate(
-  userRole: "LEARNER",
-  apiKey: string,
-  input: IEvaluateInput
-): Promise<{ result: LearnerResult | null; error?: string }>;
-
-export function evaluate(
-  userRole: "EVALUATOR",
-  apiKey: string,
-  input: IEvaluateInput
-): Promise<{ result: EvaluatorResult | null; error?: string }>;
-
-// Implementation signature (must be compatible with both above)
-export async function evaluate(
-  userRole: Exclude<UserRole, undefined>,
-  apiKey: string,
-  { question, answer }: IEvaluateInput
-): Promise<{
-  result: LearnerResult | EvaluatorResult | null;
-  error?: string;
-}> {
-  const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
-
-  const input = `
-  QUESTION: ${question}
-  ANSWERS: ${answer}
-  `;
-
+export const evaluate = async ({
+  question,
+  answer,
+}: IEvaluate): Promise<{ result: LearnerResult | null; error?: string }> => {
   try {
-    if (userRole === "LEARNER") {
-      const result = await evaluateLearner(openai, input);
-      return { result };
-    } else {
-      const result = await evaluateEvaluator(openai, input);
-      return { result };
+    const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, answer }),
+    });
+
+    if (!res.ok) {
+      return { result: null, error: await res.text() };
     }
-  } catch (error) {
-    console.error("lib.openai.evaluate :: Error occurred:", error);
-    return { result: null, error: `${error}` };
+
+    return await res.json();
+  } catch (error: any) {
+    return { result: null, error: error.message || "Network error" };
   }
-}
-
-//#region Main Logic
-const evaluateLearner = async (
-  openai: OpenAI,
-  input: string
-): Promise<LearnerResult> => {
-  const raw = await openai.chat.completions.create({
-    model: EVALUATION_MODEL,
-    temperature: 0,
-    response_format: zodResponseFormat(
-      ResponseToLearnerSchema,
-      "EvaluationToLearner"
-    ),
-    messages: [
-      { role: "system", content: LEARNER_MODE_INSTRUCTION() },
-      ...evaluationExamples,
-      { role: "user", content: input },
-    ],
-  });
-
-  if (!raw || !raw.choices?.[0].message.content)
-    throw new Error("No response returned from OpenAI");
-
-  console.log(JSON.stringify(raw.usage, null, 2));
-
-  return ResponseToLearnerSchema.parse(
-    JSON.parse(raw.choices[0].message.content)
-  );
-};
-
-const evaluateEvaluator = async (
-  openai: OpenAI,
-  input: string
-): Promise<EvaluatorResult> => {
-  const response = await openai.responses.create({
-    model: EVALUATION_MODEL,
-    instructions: EVALUATOR_MODE_INSTRUCTION(),
-    input,
-    temperature: 0,
-    text: {
-      format: zodTextFormat(ResponseToEvaluatorSchema, "EvaluationToEvaluator"),
-    },
-  });
-
-  const raw = response.output_text?.trim();
-  if (!raw) throw new Error("No content returned from OpenAI");
-
-  return ResponseToEvaluatorSchema.parse(JSON.parse(raw));
 };

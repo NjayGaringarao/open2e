@@ -1,11 +1,9 @@
 import DropDown from "@/components/DropDown";
 import UserInformation from "@/components/settings/UserInformation";
-import UserRole from "@/components/settings/UserRole";
 import { SettingsIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
 import { LocalSetupProvider } from "@/context/setup/local";
-import AIDetection from "@/components/settings/AIDetection";
 import TTS from "@/components/settings/TTS";
 
 export default function Settings() {
@@ -25,11 +23,7 @@ export default function Settings() {
           >
             <UserInformation />
           </DropDown>
-          <DropDown
-            headerElement={<p className="text-uGray text-lg">UI Mode</p>}
-          >
-            <UserRole />
-          </DropDown>
+
           <DropDown
             headerElement={<p className="text-uGray text-lg">LLM Source</p>}
           >
@@ -37,13 +31,7 @@ export default function Settings() {
               <LLMSource />
             </LocalSetupProvider>
           </DropDown>
-          <DropDown
-            headerElement={<p className="text-uGray text-lg">AI Detection</p>}
-          >
-            <LocalSetupProvider>
-              <AIDetection />
-            </LocalSetupProvider>
-          </DropDown>
+
           <DropDown
             headerElement={<p className="text-uGray text-lg">Text to Speech</p>}
           >

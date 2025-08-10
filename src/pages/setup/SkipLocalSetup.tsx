@@ -2,7 +2,7 @@ import StepContainer from "@/components/setup/StepContainer";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
 
-const OnlineSetup = () => {
+const SkipLocalSetup = () => {
   const { step, totalSteps } = useSetupNavigation();
   const { finishSetup } = useSetupProcedure();
   return (
@@ -22,4 +22,4 @@ const OnlineSetup = () => {
   );
 };
 
-export default OnlineSetup;
+export default SkipLocalSetup;

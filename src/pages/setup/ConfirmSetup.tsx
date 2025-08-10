@@ -6,7 +6,7 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
-  const { username, llmSource, userRole, gptZeroApiKey } = useSetupProcedure();
+  const { username, systemMemory } = useSetupProcedure();
   const { startInstallation } = useLocalSetup();
   const { confirm } = useDialog();
 
@@ -20,10 +20,10 @@ const ConfirmSetup = () => {
 
     if (!isConfirmed) return;
 
-    if (llmSource === "INTERNET") {
+    if (systemMemory >= 8) {
+      startInstallation();
       navigate.next();
     } else {
-      startInstallation();
       navigate.next();
     }
   };
@@ -40,9 +40,9 @@ const ConfirmSetup = () => {
           Hello {username.first}!
         </h1>
         <p className="text-uGrayLight text-lg">
-          {llmSource === "INTERNET"
-            ? "You're almost done! Confirm your setup below to complete the initialization."
-            : "You're almost there! Confirm your setup below to proceed with installing the necessary application dependencies."}
+          {systemMemory >= 8
+            ? "You're almost there! Confirm your setup below to proceed with installing the necessary application dependencies"
+            : "You're almost done! Confirm your setup below to complete the initialization."}
         </p>
         <table className="bg-panel text-uGray rounded-md overflow-hidden mt-8">
           <tbody>
@@ -56,46 +56,17 @@ const ConfirmSetup = () => {
                   : `${username.first} ${username.last}`}
               </td>
             </tr>
-            <tr>
-              <td className="border border-uGrayLightLight px-4 py-2 ">ROLE</td>
-              <td className="border border-uGrayLightLight px-4 py-2 text-uGray text-base font-semibold">
-                {userRole === "EVALUATOR"
-                  ? "Evaluator (Teacher, Instructor, and etc.)"
-                  : "Learner (Student and Self-learner)"}
-              </td>
-            </tr>
+
             <tr>
               <td className="border border-uGrayLightLight px-4 py-2 ">
                 AVAILABLE TOOLS
               </td>
               <td className="border border-uGrayLightLight px-4 py-2">
-                {userRole === "EVALUATOR" ? (
-                  <ul className=" text-uGray text-base font-semibold list-disc list-inside">
-                    <li>Batch Evaluation</li>
-                    <li>Student Management</li>
-                    <li>Performance Analytics</li>
-                    <li>
-                      AI Detection (
-                      {gptZeroApiKey.length
-                        ? "With API key"
-                        : "Without API Key"}
-                      )
-                    </li>
-                  </ul>
-                ) : (
-                  <ul className=" text-uGray text-base font-semibold list-disc list-inside">
-                    <li>Question & Answer Evaluation</li>
-                    <li>AI Chat</li>
-                    <li>Performance Analytics</li>
-                    <li>
-                      AI Detection (
-                      {gptZeroApiKey.length
-                        ? "With API key"
-                        : "Without API Key"}
-                      )
-                    </li>
-                  </ul>
-                )}
+                <ul className=" text-uGray text-base font-semibold list-disc list-inside">
+                  <li>Question & Answer Evaluation</li>
+                  <li>AI Chat</li>
+                  <li>Performance Analytics</li>
+                </ul>
               </td>
             </tr>
             <tr>
@@ -103,9 +74,12 @@ const ConfirmSetup = () => {
                 RESOURCES
               </td>
               <td className="border border-uGrayLightLight px-4 py-2 font-semibold">
-                {llmSource === "INTERNET"
-                  ? "OpenAI's GPT4o (Internet Required)"
-                  : "Microsoft's Phi4-mini (Uses system resources)"}
+                <ul className=" text-uGray text-base font-semibold list-disc list-inside">
+                  <li>Cloud Service (Openai's GPT4o)</li>
+                  {systemMemory >= 8 && (
+                    <li>Local Resources (Microsoft's Phi4-mini)</li>
+                  )}
+                </ul>
               </td>
             </tr>
           </tbody>

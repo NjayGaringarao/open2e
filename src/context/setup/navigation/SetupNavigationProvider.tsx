@@ -8,7 +8,7 @@ export const SetupNavigationProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const TOTAL_STEPS = 8;
+  const TOTAL_STEPS = 5;
   const [step, setStep] = useState(0);
 
   // Navigation handlers

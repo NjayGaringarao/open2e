@@ -28,9 +28,9 @@ const InputBox = ({
   ...inputProp
 }: IInputBox) => {
   const [isHidden, setIsHidden] = useState(false);
-  const { listen } = useSpeech();
 
   const handleVoiceInput = async () => {
+    const { listen } = useSpeech();
     const result = await listen();
     const newValue = value.concat(" ").concat(result);
     setValue(newValue);

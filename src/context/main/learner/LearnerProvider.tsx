@@ -160,8 +160,9 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const saveSheet = async () => {
-    if (!sheet.score) return;
+    if (sheet.score === null) return;
     setIsLoading(true);
+
     const { error } = await add({
       question: question.committed,
       answer: sheet.committedAnswer,

@@ -25,16 +25,17 @@ export const add = async ({
 
     const normalized = normalize(question);
 
-    // Step 1: Check if question already exists (normalized)
-    const existing = await db.select<{ id: number }[]>(
-      `SELECT id FROM question WHERE REPLACE(LOWER(TRIM(content)), '[^\\w\\s]', '') = $1`,
-      [normalized]
+    // Step 1: Get all questions and normalize in JS
+    const allQuestions = await db.select<{ id: number; content: string }[]>(
+      `SELECT id, content FROM question`
     );
+
+    const match = allQuestions.find((q) => normalize(q.content) === normalized);
 
     let question_id: number;
 
-    if (existing.length > 0) {
-      question_id = existing[0].id;
+    if (match) {
+      question_id = match.id;
     } else {
       // Insert new question
       await db.execute(`INSERT INTO question (content) VALUES ($1)`, [

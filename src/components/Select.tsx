@@ -7,6 +7,7 @@ const Select = ({ className, ...props }: ISelect) => {
   return (
     <select
       className={clsx(
+        "bg-transparent",
         "w-auto min-w-44",
         "p-1 px-4 text-base font-semibold rounded-md shadow-base",
         "transition-all transform hover:brightness-110 hover:shadow-uGrayLight",

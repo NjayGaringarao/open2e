@@ -41,10 +41,14 @@ const LLMSource = () => {
   return (
     <div className="flex flex-col w-full gap-4">
       {status === "OFFLINE" && (
-        <div className="flex flex-col gap-1 items-center">
-          <div className="shadow-md rounded-md w-full flex flex-row gap-2 p-4 items-center">
+        <div className="flex flex-col gap-1 items-center shadow-uGrayLightLight">
+          <div className="shadow-md rounded-md w-full flex flex-row gap-4 p-4 items-center">
             <div className="flex flex-row gap-2 items-center flex-1">
-              <img src={icon.microsoft} alt="ms-logo" className="h-12 w-12" />
+              <img
+                src={icon.microsoft}
+                alt="ms-logo"
+                className="h-12 w-12 bg-uGray p-1 rounded"
+              />
               <div className="flex flex-col">
                 <p className="text-xl text-uGray font-semibold">
                   Microsoft Phi4-mini
@@ -83,9 +87,13 @@ const LLMSource = () => {
       )}
       {status === "ONLINE" ? (
         <div className="flex flex-col gap-1 items-center">
-          <div className="rounded-md shadow-md w-full flex flex-row gap-2 p-4 items-center">
-            <div className="flex flex-row gap-2 items-center flex-1">
-              <img src={icon.openai} alt="ms-logo" className="h-12 w-12" />
+          <div className="rounded-md shadow-md shadow-uGrayLightLight w-full flex flex-row gap-2 p-4 items-center">
+            <div className="flex flex-row gap-4 items-center flex-1">
+              <img
+                src={icon.openai}
+                alt="ms-logo"
+                className="h-12 w-12 bg-uGray p-1 rounded"
+              />
               <div className="flex flex-col">
                 <p className="text-xl text-uGray font-semibold">
                   Openai GPT-4o

@@ -55,7 +55,7 @@ const ParagraphBox = ({
 
       <textarea
         className={clsx(
-          "bg-panel w-full rounded-md pl-4 pr-12 py-2",
+          "bg-transparent w-full rounded-md pl-4 pr-12 py-2",
           "resize-none break-all break-words whitespace-pre-wrap",
           "text-base lg:text-lg text-uGrayLight font-mono",
           "hover:border hover:border-primary",

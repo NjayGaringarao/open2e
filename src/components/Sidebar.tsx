@@ -12,11 +12,9 @@ import {
   Settings,
   MessageSquareText,
   ClipboardCheck,
-  User,
   LucideProps,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
-import { useSettings } from "@/context/main/settings";
 
 type Tab = {
   name: string;
@@ -28,30 +26,19 @@ type Tab = {
 
 export default function Sidebar() {
   const screenSize = useScreenSize();
-  const { userRole } = useSettings();
+
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
   const [tabList, setTabList] = useState<Tab[]>([]);
 
   useEffect(() => {
-    if (!userRole) return;
-
-    if (userRole === "EVALUATOR") {
-      setTabList([
-        { name: "Home", path: "/home", icon: Home },
-        { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
-        { name: "Student", path: "/student", icon: User },
-        { name: "Settings", path: "/settings", icon: Settings },
-      ]);
-    } else {
-      setTabList([
-        { name: "Home", path: "/home", icon: Home },
-        { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
-        { name: "Chat", path: "/chat", icon: MessageSquareText },
-        { name: "Settings", path: "/settings", icon: Settings },
-      ]);
-    }
-  }, [userRole]);
+    setTabList([
+      { name: "Home", path: "/home", icon: Home },
+      { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
+      { name: "Chat", path: "/chat", icon: MessageSquareText },
+      { name: "Settings", path: "/settings", icon: Settings },
+    ]);
+  }, []);
 
   return (
     <aside

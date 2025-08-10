@@ -6,14 +6,16 @@ interface IDropDown {
   headerElement: React.ReactNode;
   children: React.ReactNode;
   containerClassName?: string;
+  isDefaultOpen?: boolean;
 }
 
 const DropDown = ({
   headerElement,
   children,
   containerClassName,
+  isDefaultOpen = false,
 }: IDropDown) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(isDefaultOpen);
   const [height, setHeight] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
 

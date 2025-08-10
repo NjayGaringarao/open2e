@@ -17,7 +17,7 @@ const Slider = ({
 }: SliderProps) => {
   return (
     <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium">{label}</label>
+      <label className="text-sm">{label}</label>
       <input
         type="range"
         min={min}

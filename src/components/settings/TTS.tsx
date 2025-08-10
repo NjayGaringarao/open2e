@@ -86,19 +86,19 @@ const TTS = () => {
 
   return (
     <div className="flex flex-col w-full gap-4">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-4">
+        <Select
+          value={selection}
+          onChange={(e) => setSelection(Number(e.target.value))}
+          className=" text-lg line-clamp-2 mb-4 text-wrap"
+        >
+          {voices.map((voice, i) => (
+            <option key={voice.name} value={i}>
+              {voice.name} ({voice.lang})
+            </option>
+          ))}
+        </Select>
         <div className="col-span-2">
-          <Select
-            value={selection}
-            onChange={(e) => setSelection(Number(e.target.value))}
-            className=" text-lg"
-          >
-            {voices.map((voice, i) => (
-              <option key={voice.name} value={i}>
-                {voice.name} ({voice.lang})
-              </option>
-            ))}
-          </Select>
           <Slider
             label="Rate"
             value={rate}

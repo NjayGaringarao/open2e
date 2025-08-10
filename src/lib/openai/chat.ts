@@ -1,4 +1,6 @@
 import { InputMessage, OutputMessage } from "@/types/chat";
+import { fetch } from "@tauri-apps/plugin-http";
+import { OPEN2E_BACKEND } from "@/constant/hostname";
 
 export const chat = async (
   conversation: InputMessage[]

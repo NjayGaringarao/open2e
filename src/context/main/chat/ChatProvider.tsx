@@ -10,11 +10,12 @@ import {
   fetchMessagesByConversationFromDB,
   updateMessageDB,
 } from "./utils";
-import { useSettings } from "../settings";
+
 import { chat } from "@/lib/openai/chat";
+import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
-  const { openaiAPIKey, llmSource } = useSettings();
+  const status = useConnectionStatus();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] =
     useState<Conversation | null>(null);
@@ -120,8 +121,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     const now = new Date().toISOString();
     let replyFromLLM: Message | null = null;
 
-    if (llmSource === "INTERNET" && openaiAPIKey) {
-      const { reply: rpl, error } = await chat(openaiAPIKey, messages);
+    if (status === "ONLINE") {
+      const { reply: rpl, error } = await chat(messages);
       if (!error && rpl) {
         replyFromLLM = {
           id: nanoid(),

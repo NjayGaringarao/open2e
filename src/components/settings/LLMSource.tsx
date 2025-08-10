@@ -1,17 +1,17 @@
-import { useState } from "react";
 import { useDialog } from "@/context/dialog";
 import { toaster } from "@/components/ui/toaster";
-import InputBox from "../InputBox";
 import clsx from "clsx";
 import Loading from "../Loading";
 import { Check } from "lucide-react";
 import { useLocalSetup } from "@/context/setup/local";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
+import icon from "@/constant/icon";
+import { useSettings } from "@/context/main/settings";
 
 const LLMSource = () => {
   const status = useConnectionStatus();
+  const { systemMemory } = useSettings();
   const { confirm } = useDialog();
-  const [form, setForm] = useState<string | undefined>();
   const { percent, startInstallation, isInstalling } = useLocalSetup();
 
   const handleReinstallDependencies = async () => {
@@ -40,42 +40,64 @@ const LLMSource = () => {
 
   return (
     <div className="flex flex-col w-full gap-4">
-      <div className="grid grid-cols-3 gap-2">
-        {status === "OFFLINE" && (
-          <div className="col-span-3 flex flex-row gap-1 items-center">
-            <p className="text-lg text-uGrayLight">
-              Encountering an issue using LLM? Try
+      {status === "OFFLINE" && (
+        <div className="flex flex-col gap-1 items-center">
+          <div className="shadow-md rounded-md w-full flex flex-row gap-2 p-4 items-center">
+            <div className="flex flex-row gap-2 items-center flex-1">
+              <img src={icon.microsoft} alt="ms-logo" className="h-12 w-12" />
+              <div className="flex flex-col">
+                <p className="text-xl text-uGray font-semibold">
+                  Microsoft Phi4-mini
+                </p>
+                <p className="text-sm">Requires system resources.</p>
+              </div>
+            </div>
+
+            {systemMemory >= 8 ? (
+              <p className="bg-uGreen py-1 px-2 text-xs text-background rounded-md">
+                Operational
+              </p>
+            ) : (
+              <p className="bg-uRed py-1 px-2 text-xs text-background rounded-md">
+                Not Compatible
+              </p>
+            )}
+          </div>
+          <div className="flex flex-row gap-1 self-end">
+            <p className="text-base">
+              Encountering an issue while using local LLM?
             </p>
             <button
               onClick={handleReinstallDependencies}
               className={clsx(
-                "text-lg text-primary",
-                "hover:underline hover:underline-offset-2 hover:font-semibold"
+                "text-base text-primary",
+                "hover:underline hover:underline-offset-2 hover:font-semibold",
+                "self-end"
               )}
               disabled={isInstalling}
             >
-              Reinstalling Dependencies
+              Reinstalling LLM.
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {status === "ONLINE" ? (
-        <div className="pl-8 flex flex-col gap-2">
-          <p className="text-lg text-uGrayLight ">
-            Openai's API Key is required to continue.
-          </p>
-          <InputBox
-            id="api-key"
-            isPassword
-            value={form ?? ""}
-            setValue={setForm}
-            placeholder="sk-..."
-            inputClassName={clsx(
-              "py-1 px-3 w-full",
-              "border border-panel",
-              "text-base font-mono"
-            )}
-          />
+        <div className="flex flex-col gap-1 items-center">
+          <div className="rounded-md shadow-md w-full flex flex-row gap-2 p-4 items-center">
+            <div className="flex flex-row gap-2 items-center flex-1">
+              <img src={icon.openai} alt="ms-logo" className="h-12 w-12" />
+              <div className="flex flex-col">
+                <p className="text-xl text-uGray font-semibold">
+                  Openai GPT-4o
+                </p>
+                <p className="text-sm">Requires internet connection.</p>
+              </div>
+            </div>
+
+            <p className="bg-uGreen py-1 px-2 text-xs text-background rounded-md">
+              Operational
+            </p>
+          </div>
         </div>
       ) : (
         isInstalling && (

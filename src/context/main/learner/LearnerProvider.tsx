@@ -7,12 +7,12 @@ import {
 } from "@/types/evaluation/learner";
 import { DEFAULT_LEARNERSHEET } from "@/constant/default";
 import { useSettings } from "../settings";
-import { fetchArticles } from "@/lib/openai/articles";
+import { getArticles } from "@/lib/openai/article";
 import { evaluate } from "@/lib/openai/evaluate";
 import { useDialog } from "@/context/dialog";
-import { EVALUATION_MODEL as OE_MODEL } from "@/lib/openai/models";
-import { EVALUATION_MODEL as LE_MODEL } from "@/lib/ollama/models";
 import { add } from "@/database/evaluation/learner";
+import { useConnectionStatus } from "@/hooks/useConnectionStatus";
+import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 
 const MOCK_ARTICLE: Article[] = [
   {
@@ -42,7 +42,8 @@ const MOCK_ARTICLE: Article[] = [
 ];
 
 export const LearnerProvider = ({ children }: { children: ReactNode }) => {
-  const { openaiAPIKey, llmSource } = useSettings();
+  const status = useConnectionStatus();
+  const { systemMemory } = useSettings();
   const { alert } = useDialog();
   const [isLoading, setIsLoading] = useState(false);
   const [articleList, setArticleList] = useState<Article[]>([]);
@@ -54,11 +55,8 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
 
   const loadArticles = async (suggestedQuery: string) => {
     // Implementation of article query using Openai
-    const fetchArticlesUsingOpenai = async (openaiAPIKey: string) => {
-      const { articles, error } = await fetchArticles(
-        openaiAPIKey,
-        suggestedQuery
-      );
+    const fetchArticlesUsingOpenai = async () => {
+      const { articles, error } = await getArticles(suggestedQuery);
 
       if (error || articles.length === 0) {
         const query = suggestedQuery;
@@ -87,8 +85,8 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
     };
 
     if (question.committed !== question.tracked || articleList.length === 0) {
-      if (llmSource === "INTERNET" && openaiAPIKey) {
-        await fetchArticlesUsingOpenai(openaiAPIKey);
+      if (status === "ONLINE") {
+        await fetchArticlesUsingOpenai();
       } else {
         await fetchArticlesUsingOllama();
       }
@@ -101,10 +99,8 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
     let evaluation: LearnerResult | null = null;
 
     // Implementation of evaluation using openai
-    const evaluateUsingOpenai = async (
-      openaiAPIKey: string
-    ): Promise<LearnerResult | null> => {
-      const { result, error } = await evaluate("LEARNER", openaiAPIKey, {
+    const evaluateUsingOpenai = async (): Promise<LearnerResult | null> => {
+      const { result, error } = await evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
       });
@@ -127,6 +123,14 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
     // TODO: Implement evaluation using ollama api
     // FOR NOW: Mock Evaluation:
     const evaluateUsingOllama = async (): Promise<LearnerResult> => {
+      // Check system memory before proceeding
+      if (systemMemory < 8) {
+        alert({
+          title: "Evaluation Failed",
+          description:
+            "Not enough system memory. Please connect to the internet.",
+        });
+      }
       await new Promise((r) => setTimeout(r, 200));
       return {
         result: {
@@ -137,8 +141,8 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       };
     };
 
-    if (llmSource === "INTERNET" && openaiAPIKey) {
-      evaluation = await evaluateUsingOpenai(openaiAPIKey);
+    if (status === "ONLINE") {
+      evaluation = await evaluateUsingOpenai();
     } else {
       evaluation = await evaluateUsingOllama();
     }
@@ -168,7 +172,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       answer: sheet.committedAnswer,
       score: sheet.score,
       justification: sheet.justification,
-      llm_model: llmSource === "INTERNET" ? OE_MODEL : LE_MODEL,
+      llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
       detected_ai: sheet.detectedAI,
     });
 

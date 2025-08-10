@@ -1,4 +1,6 @@
 import { LearnerResult } from "@/types/evaluation/learner";
+import { fetch } from "@tauri-apps/plugin-http";
+import { OPEN2E_BACKEND } from "@/constant/hostname";
 
 interface IEvaluate {
   question: string;
@@ -22,6 +24,7 @@ export const evaluate = async ({
 
     return await res.json();
   } catch (error: any) {
+    console.log(error);
     return { result: null, error: error.message || "Network error" };
   }
 };

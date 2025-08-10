@@ -1,10 +1,13 @@
 import { Article } from "@/types/evaluation/learner";
+import { fetch } from "@tauri-apps/plugin-http";
+import { OPEN2E_BACKEND } from "@/constant/hostname";
 
 export const getArticles = async (
   suggestedQuery: string
 ): Promise<{ articles: Article[]; error?: string }> => {
   try {
-    const res = await fetch(`${OPEN2E_BACKEND}/api/articles/v1`, {
+    alert("triggered");
+    const res = await fetch(`${OPEN2E_BACKEND}/api/article/v1`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ suggestedQuery }),
@@ -13,6 +16,7 @@ export const getArticles = async (
     if (!res.ok) {
       return { articles: [], error: await res.text() };
     }
+    alert("fetched");
 
     return await res.json();
   } catch (error: any) {

@@ -70,7 +70,7 @@ const UserInformation = () => {
           value={form.first ?? ""}
           setValue={(e) => setForm((prev) => ({ ...prev, first: e }))}
           disabled={isLoading}
-          inputClassName="py-1 px-2"
+          inputClassName="py-1 px-2 text-lg"
         />
 
         <InputBox
@@ -78,7 +78,7 @@ const UserInformation = () => {
           value={form.middle ?? ""}
           setValue={(e) => setForm((prev) => ({ ...prev, middle: e }))}
           disabled={isLoading}
-          inputClassName="py-1 px-2"
+          inputClassName="py-1 px-2 text-lg"
         />
 
         <InputBox
@@ -86,7 +86,7 @@ const UserInformation = () => {
           value={form.last ?? ""}
           setValue={(e) => setForm((prev) => ({ ...prev, last: e }))}
           disabled={isLoading}
-          inputClassName="py-1 px-2"
+          inputClassName="py-1 px-2 text-lg"
         />
       </div>
       {isModified && (

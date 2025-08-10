@@ -4,36 +4,22 @@ import Home from "./home";
 import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
-import Student from "./student";
-import { useSettings } from "@/context/main/settings";
 import { ReactNode, useEffect, useState } from "react";
 
 export default function Layout() {
   const location = useLocation();
-  const { userRole } = useSettings();
   const [pageComponents, setPageComponents] = useState<
     Record<string, ReactNode>
   >({});
 
   useEffect(() => {
-    if (!userRole) return;
-
-    if (userRole === "EVALUATOR") {
-      setPageComponents({
-        "/home": <Home />,
-        "/evaluate": <Evaluate />,
-        "/settings": <Settings />,
-        "/student": <Student />,
-      });
-    } else {
-      setPageComponents({
-        "/home": <Home />,
-        "/evaluate": <Evaluate />,
-        "/settings": <Settings />,
-        "/chat": <Chat />,
-      });
-    }
-  }, [userRole]);
+    setPageComponents({
+      "/home": <Home />,
+      "/evaluate": <Evaluate />,
+      "/settings": <Settings />,
+      "/chat": <Chat />,
+    });
+  }, []);
 
   return (
     <div className="flex h-screen bg-background text-uGrayLight">

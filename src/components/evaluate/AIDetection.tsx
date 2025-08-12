@@ -1,4 +1,3 @@
-import { useSettings } from "@/context/main/settings";
 import React, { useEffect, useState } from "react";
 import { detectAI } from "@/lib/sapling/detection"; // adjust path if needed
 import clsx from "clsx";
@@ -12,7 +11,6 @@ interface IAIDetection {
 }
 
 const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
-  const { saplingAPIKey } = useSettings();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,13 +21,14 @@ const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
     setSheet((prev) => ({ ...prev, detectedAI: undefined }));
     setMessage("");
 
-    const result = await detectAI(text, saplingAPIKey);
+    const { percent, message, error } = await detectAI(text);
 
-    if (result.error) {
-      setError(result.error);
+    console.log({ percent, message, error });
+    if (error) {
+      setError(error);
     } else {
-      setSheet((prev) => ({ ...prev, detectedAI: result.percent }));
-      if (result.message) setMessage(result.message);
+      setSheet((prev) => ({ ...prev, detectedAI: percent }));
+      if (message) setMessage(message);
     }
 
     setLoading(false);

@@ -6,7 +6,6 @@ export const getArticles = async (
   suggestedQuery: string
 ): Promise<{ articles: Article[]; error?: string }> => {
   try {
-    alert("triggered");
     const res = await fetch(`${OPEN2E_BACKEND}/api/article/v1`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -16,7 +15,6 @@ export const getArticles = async (
     if (!res.ok) {
       return { articles: [], error: await res.text() };
     }
-    alert("fetched");
 
     return await res.json();
   } catch (error: any) {

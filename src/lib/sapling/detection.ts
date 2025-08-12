@@ -18,7 +18,12 @@ export const detectAI = async (
       };
     }
 
-    return await res.json();
+    const data = await res.json();
+
+    return {
+      percent: data.percent,
+      message: data.message,
+    };
   } catch (error: any) {
     console.warn(error.message);
 

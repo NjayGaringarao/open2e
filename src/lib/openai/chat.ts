@@ -1,10 +1,10 @@
-import { InputMessage, OutputMessage } from "@/types/chat";
 import { fetch } from "@tauri-apps/plugin-http";
 import { OPEN2E_BACKEND } from "@/constant/hostname";
+import { Message } from "@/models";
+import { nanoid } from "nanoid";
 
-export const chat = async (
-  conversation: InputMessage[]
-): Promise<{ reply?: OutputMessage; error?: string }> => {
+export const chat = async (conversation: Message[]): Promise<Message> => {
+  const now = new Date().toISOString();
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/chat/v1`, {
       method: "POST",
@@ -13,11 +13,40 @@ export const chat = async (
     });
 
     if (!res.ok) {
-      return { error: await res.text() };
+      return {
+        id: nanoid(),
+        conversation_id: conversation[0].conversation_id,
+        role: "assistant",
+        status: "FAILED",
+        content:
+          "Failed to connect to the service. Please check you internet connection.",
+        created_at: now,
+        updated_at: now,
+      };
     }
 
-    return await res.json();
+    const { reply } = await res.json();
+
+    return {
+      id: nanoid(),
+      conversation_id: conversation[0].conversation_id,
+      role: "assistant",
+      status: "SUCCESS",
+      content: reply?.content,
+      created_at: now,
+      updated_at: now,
+    };
   } catch (error: any) {
-    return { error: error.message || "Network error" };
+    console.warn(error);
+    return {
+      id: nanoid(),
+      conversation_id: conversation[0].conversation_id,
+      role: "assistant",
+      status: "FAILED",
+      content:
+        "Failed to connect to the service. Please check you internet connection.",
+      created_at: now,
+      updated_at: now,
+    };
   }
 };

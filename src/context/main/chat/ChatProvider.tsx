@@ -122,18 +122,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     let replyFromLLM: Message | null = null;
 
     if (status === "ONLINE") {
-      const { reply: rpl, error } = await chat(messages);
-      if (!error && rpl) {
-        replyFromLLM = {
-          id: nanoid(),
-          conversation_id: activeConversation.id,
-          role: "assistant",
-          status: "SUCCESS", // type-safe
-          content: rpl.content,
-          created_at: now,
-          updated_at: now,
-        };
-      }
+      replyFromLLM = await chat(messages);
     } else {
       await new Promise((r) => setTimeout(r, 200));
       replyFromLLM = {

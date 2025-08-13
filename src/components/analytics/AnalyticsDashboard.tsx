@@ -10,8 +10,7 @@ import { ExportButton } from './ExportButton';
 import { PerformanceMetrics } from './PerformanceMetrics';
 import { ComparativeAnalysis } from './ComparativeAnalysis';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { BarChart3, TrendingUp, Users, Award, Filter, Download, BarChart as BarChartIcon, PieChart as PieChartIcon, Database } from 'lucide-react';
-import { generateSampleData } from '@/database/analytics/sampleData';
+import { BarChart3, TrendingUp, Users, Award, Filter, Download, BarChart as BarChartIcon, PieChart as PieChartIcon } from 'lucide-react';
 
 export const AnalyticsDashboard: React.FC = () => {
   const { analyticsData, evaluationsData, loading, error, refreshData } = useAnalytics();
@@ -20,7 +19,6 @@ export const AnalyticsDashboard: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'comparison' | 'charts'>('overview');
-  const [isGeneratingData, setIsGeneratingData] = useState(false);
 
   if (loading) {
     return (
@@ -59,35 +57,10 @@ export const AnalyticsDashboard: React.FC = () => {
     );
   }
 
-  const handleGenerateSampleData = async () => {
-    setIsGeneratingData(true);
-    try {
-      const result = await generateSampleData();
-      if (result.success) {
-        refreshData();
-        alert(`Successfully generated ${result.count} sample evaluations!`);
-      } else {
-        alert(`Error generating sample data: ${result.error}`);
-      }
-    } catch (error) {
-      alert(`Error generating sample data: ${error}`);
-    } finally {
-      setIsGeneratingData(false);
-    }
-  };
-
   if (!analyticsData) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500 mb-4">No analytics data available</p>
-        <button
-          onClick={handleGenerateSampleData}
-          disabled={isGeneratingData}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2 mx-auto disabled:opacity-50"
-        >
-          <Database className="h-4 w-4" />
-          <span>{isGeneratingData ? 'Generating...' : 'Generate Sample Data'}</span>
-        </button>
+        <p className="text-gray-500">No analytics data available</p>
       </div>
     );
   }
@@ -98,14 +71,6 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
         <div className="flex space-x-2">
-          <button
-            onClick={handleGenerateSampleData}
-            disabled={isGeneratingData}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-          >
-            <Database className="h-4 w-4" />
-            <span>{isGeneratingData ? 'Generating...' : 'Sample Data'}</span>
-          </button>
           <button
             onClick={() => setShowDateFilter(!showDateFilter)}
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center space-x-2"

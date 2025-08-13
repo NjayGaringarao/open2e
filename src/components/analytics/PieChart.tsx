@@ -33,11 +33,6 @@ export const PieChart: React.FC<PieChartProps> = ({
     return text.substring(0, maxLength) + '...';
   };
 
-  const calculatePercent = (value: number) => {
-    const total = data.reduce((sum, item) => sum + (item[dataKey as keyof QuestionScore] as number || 0), 0);
-    return total > 0 ? ((value / total) * 100).toFixed(0) : '0';
-  };
-
   if (data.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
@@ -59,10 +54,9 @@ export const PieChart: React.FC<PieChartProps> = ({
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ questionContent, ...rest }) => {
-              const value = rest[dataKey as keyof QuestionScore] as number;
-              return `${truncateText(questionContent)} ${calculatePercent(value)}%`;
-            }}
+            label={({ questionContent, percent }) => 
+              `${truncateText(questionContent)} ${(percent * 100).toFixed(0)}%`
+            }
             outerRadius={80}
             fill="#8884d8"
             dataKey={dataKey}

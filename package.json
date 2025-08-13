@@ -33,6 +33,7 @@
     "react-router": "^7.6.3",
     "react-speech-recognition": "^4.0.1",
     "react-voice-visualizer": "^2.0.8",
+    "recharts": "^3.1.2",
     "remark-gfm": "^4.0.1",
     "zod": "^3.25.76"
   },

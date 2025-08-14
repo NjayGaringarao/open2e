@@ -17,9 +17,9 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div className="reltive flex h-screen flex-row">
+    <div className="relative h-screen flex flex-row">
       {/* Chat layout */}
-      <div className="flex-1 h-full flex flex-col items-center justify-center">
+      <div className="w-full h-full flex flex-col items-center justify-center">
         {!!activeConversation && <ChatTitle />}
 
         <ChatPanel />

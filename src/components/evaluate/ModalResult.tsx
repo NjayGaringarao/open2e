@@ -7,7 +7,6 @@ import {
 } from "@headlessui/react";
 import { ArrowRight, VolumeOff, Volume2, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
-import Markdown from "../Markdown";
 import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
 import DropDown from "../DropDown";
@@ -166,7 +165,7 @@ const ModalResult = ({
                         </Button>
                       </div>
                       <div className="px-4">
-                        <Markdown text={justification} />
+                        {justification}
                         <div className="h-8" />
                       </div>
                     </div>

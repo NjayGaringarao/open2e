@@ -70,7 +70,7 @@ const MessageBubble = ({ message, onRetry }: Props) => {
             isFailed && "opacity-60"
           )}
         >
-          <div>
+          <div className="w-full flex flex-col">
             <Markdown text={message.content} />
           </div>
         </div>

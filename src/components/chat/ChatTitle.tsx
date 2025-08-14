@@ -33,16 +33,16 @@ export default function ChatTitle() {
   };
 
   return (
-    <div className="absolute w-full z-30 flex flex-col items-center px-6 top-6">
+    <div className="absolute w-full z-30 flex flex-col items-center px-6 top-4">
       <div
         className={clsx(
-          "w-full min-w-3xl max-w-4xl p-4 z-30",
+          "w-full max-w-5xl p-4 z-30",
           "bg-white/90 dark:bg-black/70 backdrop-blur-sm",
           "rounded-md shadow-md",
           "flex flex-col items-center"
         )}
       >
-        <div className=" relative w-full min-w-3xl max-w-4xl flex gap-4 items-center">
+        <div className=" relative w-full flex gap-4 items-center">
           <Menu as="div" className="relative ml-2">
             <MenuButton>
               <EllipsisVertical className="text-uGrayLight w-5 h-5" />

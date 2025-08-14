@@ -21,7 +21,7 @@ const ConversationPanel = () => {
       {/* Floating button for mobile */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-10 right-10 z-40 2xl:hidden bg-primary text-background p-3 rounded-full shadow-lg hover:scale-105 transition"
+        className="fixed top-8 right-10 z-40 2xl:hidden bg-primary text-background p-3 rounded-full shadow-lg hover:scale-105 transition"
         aria-label="Open conversations"
       >
         <Menu className="w-6 h-6" />

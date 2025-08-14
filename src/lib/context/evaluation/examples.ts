@@ -3,7 +3,7 @@ export interface EvaluationExample {
   content: string; // contains both QUESTION and ANSWER
 }
 
-export const evaluationExamples: EvaluationExample[] = [
+export const EVALUATION_EXAMPLES: EvaluationExample[] = [
   // Example 1
   {
     role: "user",

@@ -157,7 +157,7 @@ export const DialogProvider = ({ children }: { children: React.ReactNode }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-[28rem] max-w-full transform overflow-hidden rounded-lg bg-background shadow-xl transition-all flex gap-2 p-4">
+              <DialogPanel className="w-[26rem] transform overflow-hidden rounded-lg bg-background shadow-xl transition-all flex gap-4 p-4">
                 <div>{getAlertIcon(alertOptions?.mode)}</div>
                 <div className="flex flex-col flex-1">
                   <p

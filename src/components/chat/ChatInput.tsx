@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useChat } from "@/context/main/chat/useChat";
 import { SendHorizonal } from "lucide-react";
 import ParagraphBox from "../ParagraphBox";
@@ -6,6 +6,7 @@ import clsx from "clsx";
 
 const ChatInput = () => {
   const { sendMessage, isLoading, isGenerating } = useChat();
+  const [isDisabled, setIsDisabled] = useState(false);
   const [input, setInput] = useState("");
 
   const handleSend = async () => {
@@ -21,7 +22,9 @@ const ChatInput = () => {
     }
   };
 
-  const isDisabled = isLoading || isGenerating;
+  useEffect(() => {
+    setIsDisabled(isLoading || isGenerating);
+  }, [isLoading, isGenerating]);
 
   return (
     <div className="absolute w-full z-30 flex flex-col items-center px-6 bottom-6">

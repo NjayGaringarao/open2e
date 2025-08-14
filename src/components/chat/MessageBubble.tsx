@@ -14,7 +14,11 @@ const MessageBubble = ({ message, onRetry }: Props) => {
   if (!message) {
     // Loading dots bubble
     return (
-      <div className="animate-fadeIn mb-2 w-full flex-col gap-1 relative group items-start flex">
+      <div className={clsx("flex flex-row gap-2 mb-4")}>
+        {/** System Image */}
+        <div className="h-8 w-8 rounded-full overflow-hidden border bg-uGray text-balance">
+          <img src={icon.logo} alt="logo" />
+        </div>
         <div className="py-3 px-3 rounded-xl max-w-[70%] bg-uGrayLightLight whitespace-pre-wrap flex flex-row items-center gap-1">
           <div className="h-2 w-2 rounded-full bg-background animate-bounce [animation-delay:0s]" />
           <div className="h-2 w-2 rounded-full bg-background animate-bounce [animation-delay:0.2s]" />

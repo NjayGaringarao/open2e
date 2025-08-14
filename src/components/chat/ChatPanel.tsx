@@ -13,7 +13,7 @@ const ChatPanel = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isGenerating]);
 
   if (messages.length > 0) {
     return (

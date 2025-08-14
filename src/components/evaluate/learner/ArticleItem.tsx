@@ -1,4 +1,5 @@
 import icon from "@/constant/icon";
+import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { Article } from "@/types/evaluation/learner"; // adjust path if needed
 import { openUrl } from "@tauri-apps/plugin-opener"; // opens default browser
 import clsx from "clsx";
@@ -10,7 +11,7 @@ interface Props {
 
 export default function ArticleItem({ article }: Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-
+  const status = useConnectionStatus();
   useEffect(() => {
     const fetchPreview = async () => {
       try {
@@ -41,8 +42,9 @@ export default function ArticleItem({ article }: Props) {
         "shadow-uGrayLight shadow-sm"
       )}
     >
+      {}
       <img
-        src={previewImage ?? icon.logo}
+        src={status === "ONLINE" && previewImage ? previewImage : icon.google}
         alt="preview"
         className="w-16 h-16 object-cover rounded-md flex-shrink-0 bg-uGrayLightLight p-2"
       />

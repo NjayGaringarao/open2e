@@ -47,7 +47,8 @@
        "src/scripts/windows/install_ollama.ps1",
        "src/scripts/windows/download_ollama.ps1",
        "src/scripts/windows/pull_llm.ps1",
-       "src/scripts/windows/clean_ollama.ps1"
+       "src/scripts/windows/clean_ollama.ps1",
+       "src/scripts/windows/initialize_ollama.ps1"
     ]
   }
 }

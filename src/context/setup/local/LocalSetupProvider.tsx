@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { IStartInstallation, LocalSetupContext } from "./LocalSetupContext";
 import { listen } from "@tauri-apps/api/event";
+import { useDialog } from "@/context/dialog";
 
 // const TOTAL_PROGRESS = 100;
 const STEP_WEIGHTS = [30, 30, 30, 10]; // 4 steps
@@ -11,6 +12,7 @@ export const LocalSetupProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { alert } = useDialog();
   const [currentStep, setCurrentStep] = useState(0);
   const [percent, setPercent] = useState(0);
   const [isInstalling, setIsInstalling] = useState(false);
@@ -81,6 +83,13 @@ export const LocalSetupProvider = ({
       );
 
       setIsInstalled(true);
+
+      await alert({
+        title: "Reinstallation Successful",
+        description:
+          "Please restart your computer before using open2e offline. This is necessary only for once.",
+        mode: "SUCCESS",
+      });
     } catch (err) {
       console.error("Installation error:", err);
       throw err;

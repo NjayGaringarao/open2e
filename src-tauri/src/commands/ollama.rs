@@ -157,3 +157,25 @@ pub async fn clean_ollama(app: AppHandle) -> Result<String, String> {
         Err(String::from_utf8_lossy(&output.stderr).into())
     }
 }
+
+#[tauri::command]
+pub async fn initialize_ollama(app: AppHandle) -> Result<(), String> {
+    // Path to the PowerShell script
+    let script_path = app
+        .path()
+        .resource_dir()
+        .map_err(|e| e.to_string())?
+        .join("src/scripts/windows/initialize_ollama.ps1");
+
+    let output = std::process::Command::new("powershell")
+        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .arg(&script_path)
+        .output()
+        .map_err(|e| format!("Script failed to run: {}", e))?;
+
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).to_string());
+    }
+
+    Ok(())
+}

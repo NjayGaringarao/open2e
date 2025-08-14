@@ -1,6 +1,6 @@
 import { RUBRIC_BLOCK } from "../../rubric";
 
-export const LEARNER_MODE_INSTRUCTION = (): string => {
+export const getEvaluationInstruction = (): string => {
   const INTRO = `
 You are an educational AI evaluator and assistant for open-ended student responses.
 If the question is nonsensical or unrelated to computer literacy:

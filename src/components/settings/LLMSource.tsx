@@ -1,8 +1,6 @@
 import { useDialog } from "@/context/dialog";
 import { toaster } from "@/components/ui/toaster";
 import clsx from "clsx";
-import Loading from "../Loading";
-import { Check } from "lucide-react";
 import { useLocalSetup } from "@/context/setup/local";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import icon from "@/constant/icon";
@@ -11,10 +9,20 @@ import { useSettings } from "@/context/main/settings";
 const LLMSource = () => {
   const status = useConnectionStatus();
   const { systemMemory } = useSettings();
-  const { confirm } = useDialog();
+  const { confirm, alert } = useDialog();
   const { percent, startInstallation, isInstalling } = useLocalSetup();
 
   const handleReinstallDependencies = async () => {
+    if (status === "OFFLINE") {
+      await alert({
+        title: "No Intenet Connection",
+        description:
+          "Please connect to the internet to reinstall LLM Dependency.",
+        mode: "ERROR",
+      });
+      return;
+    }
+
     const isConfirmed = await confirm({
       title: "Confirm Reinstall",
       description:
@@ -24,11 +32,6 @@ const LLMSource = () => {
     if (!isConfirmed) return;
     try {
       await startInstallation({ isCleanInstall: true });
-      toaster.create({
-        title: "Installed Succesfully",
-        description: "Succesfully Installed dependency.",
-        type: "success",
-      });
     } catch (error) {
       toaster.create({
         title: "Installation Failed",
@@ -41,8 +44,8 @@ const LLMSource = () => {
   return (
     <div className="flex flex-col w-full gap-4">
       {status === "OFFLINE" && (
-        <div className="flex flex-col gap-1 items-center shadow-uGrayLightLight">
-          <div className="shadow-md rounded-md w-full flex flex-row gap-4 p-4 items-center">
+        <div className="flex flex-col gap-2 items-center ">
+          <div className="shadow-md shadow-uGrayLightLight rounded-md w-full flex flex-row gap-4 p-4 items-center">
             <div className="flex flex-row gap-2 items-center flex-1">
               <img
                 src={icon.microsoft}
@@ -67,7 +70,12 @@ const LLMSource = () => {
               </p>
             )}
           </div>
-          <div className="flex flex-row gap-1 self-end">
+          <div
+            className={clsx(
+              "flex flex-row gap-1 self-end",
+              isInstalling && "hidden"
+            )}
+          >
             <p className="text-base">
               Encountering an issue while using local LLM?
             </p>
@@ -80,13 +88,13 @@ const LLMSource = () => {
               )}
               disabled={isInstalling}
             >
-              Reinstalling LLM.
+              Reinstall LLM.
             </button>
           </div>
         </div>
       )}
-      {status === "ONLINE" ? (
-        <div className="flex flex-col gap-1 items-center">
+      {status === "ONLINE" && (
+        <div className="flex flex-col gap-2 items-center">
           <div className="rounded-md shadow-md shadow-uGrayLightLight w-full flex flex-row gap-2 p-4 items-center">
             <div className="flex flex-row gap-4 items-center flex-1">
               <img
@@ -106,43 +114,54 @@ const LLMSource = () => {
               Operational
             </p>
           </div>
-        </div>
-      ) : (
-        isInstalling && (
-          <div className="flex flex-col gap-4 pl-8 mt-4">
-            {/** Loading Bar */}
-            <div className=" flex flex-row items-center gap-2 w-full">
-              <p className="w-10 text-primary text-center font-mono">
-                {percent}%
-              </p>
-
-              <div className="h-3 w-full bg-gray-300 rounded-md overflow-hidden">
-                <div
-                  className="h-full bg-primary transition-all duration-500"
-                  style={{
-                    width: `${percent}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-
-            {/** Prompt */}
-            <div className="flex flex-row items-center">
-              <div className="w-10 rounded-full">
-                {percent === 100 ? (
-                  <Check className="text-primary" />
-                ) : (
-                  <Loading size="small" />
-                )}
-              </div>
-              <p className="text-uGrayLight text-sm font-semibold">
-                {percent !== 100
-                  ? "Setting up dependency, Please wait..."
-                  : "Finish setup."}
-              </p>
-            </div>
+          <div
+            className={clsx(
+              "flex flex-row gap-1 self-end",
+              isInstalling && "hidden"
+            )}
+          >
+            <p className="text-base">
+              Encountering an issue while using local LLM?
+            </p>
+            <button
+              onClick={handleReinstallDependencies}
+              className={clsx(
+                "text-base text-primary",
+                "hover:underline hover:underline-offset-2 hover:font-semibold",
+                "self-end"
+              )}
+              disabled={isInstalling}
+            >
+              Reinstall Local LLM.
+            </button>
           </div>
-        )
+        </div>
+      )}
+      {isInstalling && (
+        <div className="flex flex-col gap-1 mt-2">
+          {/** Prompt */}
+
+          <p className="text-uGrayLight text-base font-semibold">
+            {percent !== 100
+              ? "Reinstalling local LLM, Please wait..."
+              : "Finish setup."}
+          </p>
+
+          {/** Loading Bar */}
+          <div className=" flex flex-row items-center gap-2 w-full">
+            <div className="h-3 w-full bg-uGrayLightLight rounded-md overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-500"
+                style={{
+                  width: `${percent}%`,
+                }}
+              ></div>
+            </div>{" "}
+            <p className="w-10 text-primary text-center font-mono">
+              {percent}%
+            </p>
+          </div>
+        </div>
       )}
     </div>
   );

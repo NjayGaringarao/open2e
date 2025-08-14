@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { nanoid } from "nanoid";
-
 import * as convoDB from "@/database/chat/conversation";
 import type { Conversation, Message } from "@/models";
 import { ChatContext } from "./ChatContext";
@@ -11,7 +10,8 @@ import {
   updateMessageDB,
 } from "./utils";
 
-import { chat } from "@/lib/openai/chat";
+import * as openai from "@/lib/openai";
+import * as ollama from "@/lib/ollama";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
@@ -118,22 +118,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
     setIsGenerating(true);
 
-    const now = new Date().toISOString();
     let replyFromLLM: Message | null = null;
 
     if (status === "ONLINE") {
-      replyFromLLM = await chat(messages);
+      replyFromLLM = await openai.chat(messages);
     } else {
-      await new Promise((r) => setTimeout(r, 200));
-      replyFromLLM = {
-        id: nanoid(),
-        conversation_id: activeConversation.id,
-        role: "assistant",
-        status: "SUCCESS", // type-safe
-        content: "This is a dummy reply",
-        created_at: now,
-        updated_at: now,
-      };
+      replyFromLLM = await ollama.chat(messages);
     }
 
     if (replyFromLLM && lastMessage) {

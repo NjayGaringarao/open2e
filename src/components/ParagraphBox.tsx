@@ -66,6 +66,7 @@ const ParagraphBox = ({
         )}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
+        disabled={disabled}
         {...textAreaProp}
       />
       <div

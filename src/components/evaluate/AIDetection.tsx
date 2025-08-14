@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { detectAI } from "@/lib/sapling/detection"; // adjust path if needed
 import clsx from "clsx";
 import { LearnerSheetData } from "@/types/evaluation/learner";
+import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 interface IAIDetection {
   text: string;
@@ -11,11 +12,16 @@ interface IAIDetection {
 }
 
 const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
+  const status = useConnectionStatus();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const runDetection = async () => {
+    if (status === "OFFLINE") {
+      setMessage("");
+      return;
+    }
     setLoading(true);
     setError("");
     setSheet((prev) => ({ ...prev, detectedAI: undefined }));
@@ -41,7 +47,13 @@ const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
   }, [text]);
 
   return (
-    <div className={clsx("flex flex-col gap-2 w-full", className)}>
+    <div
+      className={clsx(
+        "flex flex-col gap-2 w-full",
+        className,
+        status === "OFFLINE" && "hidden"
+      )}
+    >
       {loading ? (
         <p className="text-sm text-uGrayLight">Detecting AI usage...</p>
       ) : error ? (

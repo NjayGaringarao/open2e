@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
-import { Name, TTSConfig } from "@/types/config";
+import { TTSConfig } from "@/types/config";
 import { load, Store } from "@tauri-apps/plugin-store";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -13,11 +13,6 @@ export const SetupProcedureProvider = ({
   // Setup data
   const [systemMemory, setSystemMemory] = useState(0);
   const [isEulaAgreed, setIsEulaAgreed] = useState(false);
-  const [username, setUsername] = useState<Name>({
-    first: "",
-    middle: "",
-    last: "",
-  });
 
   // SaveSetup
   const finishSetup = async () => {
@@ -25,12 +20,6 @@ export const SetupProcedureProvider = ({
 
     try {
       configStore = await load("store.config", { autoSave: false });
-
-      await configStore.set("user_name", {
-        first: username.first,
-        middle: username.middle,
-        last: username.last,
-      });
       await configStore.set("is_initialized", true);
 
       const ttsConfig: TTSConfig = {
@@ -65,12 +54,8 @@ export const SetupProcedureProvider = ({
     <SetupProcedureContext.Provider
       value={{
         systemMemory,
-
         isEulaAgreed,
         setIsEulaAgreed,
-
-        username,
-        setUsername,
         finishSetup,
       }}
     >

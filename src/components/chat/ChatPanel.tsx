@@ -1,11 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useChat } from "@/context/main/chat/useChat";
 import MessageBubble from "./MessageBubble";
-import { useSettings } from "@/context/main/settings";
 
 const ChatPanel = () => {
   const { messages, isGenerating } = useChat();
-  const { userName } = useSettings();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +33,7 @@ const ChatPanel = () => {
     return (
       <div className="py-6 max-w-3xl">
         <p className="text-uGray text-2xl">
-          Hello {userName.first}, Let's talk about Computers!
+          Hello, Let's talk about Computers!
         </p>
       </div>
     );

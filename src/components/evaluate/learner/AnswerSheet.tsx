@@ -2,15 +2,12 @@ import { useEffect, useState } from "react";
 import ParagraphBox from "../../ParagraphBox";
 import Loading from "../../Loading";
 import ModalResult from "../ModalResult";
-import { Save, User } from "lucide-react";
+import { Save } from "lucide-react";
 import clsx from "clsx";
-import { useSettings } from "@/context/main/settings";
 import { useLearner } from "@/context/main/learner/useLearner";
 import AIDetection from "../AIDetection";
 
 const AnswerSheet = () => {
-  const { userName } = useSettings();
-
   const {
     question,
     sheet,
@@ -48,7 +45,7 @@ const AnswerSheet = () => {
 
   return (
     <div className="flex flex-col w-full relative">
-      <div className="flex flex-row justify-center w-full gap-4 mt-4">
+      <div className="flex flex-row justify-center w-full gap-4">
         <ParagraphBox
           value={sheet.trackedAnswer}
           setValue={(e) =>
@@ -124,20 +121,6 @@ const AnswerSheet = () => {
         setSheet={updateSheet}
       />
 
-      {/** Floating UserName */}
-      <div
-        className={clsx(
-          "absolute ml-4 bg-background border border-uGrayLight rounded-md px-4 resize-none",
-          "text-base lg:text-lg text-uGrayLight font-mono",
-          "hover:border hover:border-primary group",
-          "flex flex-row gap-4 items-center"
-        )}
-      >
-        <User className="text-uGrayLight w-4 h-4 group-hover:text-primary -mr-3" />
-        {userName.middle.length
-          ? `${userName.first} ${userName.middle} ${userName.last}`
-          : `${userName.first} ${userName.last}`}
-      </div>
       {/* UI Debug */}
       {/* <p className="text-xs text-gray-400 break-all">
         {JSON.stringify(

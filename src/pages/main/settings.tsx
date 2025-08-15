@@ -1,5 +1,4 @@
 import DropDown from "@/components/DropDown";
-import UserInformation from "@/components/settings/UserInformation";
 import { SettingsIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
@@ -16,16 +15,6 @@ export default function Settings() {
             <SettingsIcon className="h-10 w-10" />
             Configuration
           </div>
-          <DropDown
-            headerElement={
-              <p className="text-uGray text-xl font-semibold">
-                User Information
-              </p>
-            }
-            isDefaultOpen
-          >
-            <UserInformation />
-          </DropDown>
 
           <DropDown
             headerElement={

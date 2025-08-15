@@ -1,5 +1,4 @@
 import LocalSetup from "./LocalSetup";
-import Name from "./Name";
 import Welcome from "./Welcome";
 import Eula from "./Eula";
 import ConfirmSetup from "./ConfirmSetup";
@@ -16,9 +15,8 @@ const Layout = () => {
       {/* Step content */}
       {step === 0 && <Welcome />}
       {step === 1 && <Eula />}
-      {step === 2 && <Name />}
-      {step === 3 && <ConfirmSetup />}
-      {step === 4 && (systemMemory >= 8 ? <LocalSetup /> : <SkipLocalSetup />)}
+      {step === 2 && <ConfirmSetup />}
+      {step === 3 && (systemMemory >= 8 ? <LocalSetup /> : <SkipLocalSetup />)}
     </div>
   );
 };

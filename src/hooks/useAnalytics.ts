@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getAnalyticsSummary, getAllEvaluations } from '@/database/analytics/queries';
 import type { AnalyticsSummary, EvaluationData } from '@/database/analytics/types';
+import { useAnalyticsContext } from '@/context/main/analytics/AnalyticsContext';
 
 interface UseAnalyticsReturn {
   analyticsData: AnalyticsSummary | null;
@@ -11,6 +12,7 @@ interface UseAnalyticsReturn {
 }
 
 export const useAnalytics = (): UseAnalyticsReturn => {
+  const { refreshTrigger } = useAnalyticsContext();
   const [analyticsData, setAnalyticsData] = useState<AnalyticsSummary | null>(null);
   const [evaluationsData, setEvaluationsData] = useState<EvaluationData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,9 +42,17 @@ export const useAnalytics = (): UseAnalyticsReturn => {
     await fetchData();
   }, [fetchData]);
 
+  // Initial data fetch
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Listen for refresh triggers (when new evaluations are added)
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      fetchData();
+    }
+  }, [refreshTrigger, fetchData]);
 
   return {
     analyticsData,

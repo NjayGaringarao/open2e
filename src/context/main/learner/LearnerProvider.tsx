@@ -13,13 +13,15 @@ import { useDialog } from "@/context/dialog";
 import { add } from "@/database/evaluation/learner";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
+import { useAnalyticsContext } from "../analytics/AnalyticsContext";
 
 export const LearnerProvider = ({ children }: { children: ReactNode }) => {
   const status = useConnectionStatus();
+  const { triggerRefresh } = useAnalyticsContext();
   const { systemMemory } = useSettings();
   const { alert } = useDialog();
   const [isLoading, setIsLoading] = useState(false);
-  const [articleList, setArticleList] = useState<Article[]>([]);
+  const [articleList, setArticleList] = useState<Article[]>(MOCK_ARTICLE);
   const [question, setQuestion] = useState<Question>({
     tracked: "",
     committed: "",
@@ -162,6 +164,12 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       });
     } else {
       setSheet((prev) => ({ ...prev, isEvaluationSaved: true }));
+      triggerRefresh();
+      alert({
+        title: "Evaluation Saved",
+        description: "Your evaluation has been saved and analytics updated.",
+        mode: "SUCCESS",
+      });
     }
     setIsLoading(false);
   };

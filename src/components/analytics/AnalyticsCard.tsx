@@ -16,13 +16,13 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 ${className}`}>
+    <div className={`bg-background rounded-lg shadow-md p-6 border border-uGrayLight ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm font-medium text-uGrayLight mb-1">{title}</p>
+          <p className="text-3xl font-bold text-uGray">{value}</p>
           {subtitle && (
-            <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
+            <p className="text-sm text-uGrayLightLight mt-1">{subtitle}</p>
           )}
         </div>
         {icon && (

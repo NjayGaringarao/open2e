@@ -6,6 +6,23 @@ import type {
   EvaluationData 
 } from "./types";
 
+// Function to clear existing evaluation data
+export async function clearExistingData(): Promise<{ error?: string }> {
+  const db = await openLearnerDatabase();
+  
+  try {
+    // Clear all existing evaluations
+    await db.execute("DELETE FROM evaluation");
+    
+    // Clear all existing questions
+    await db.execute("DELETE FROM question");
+    
+    return {};
+  } catch (error) {
+    return { error: `${error}` };
+  }
+}
+
 export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   const db = await openLearnerDatabase();
   

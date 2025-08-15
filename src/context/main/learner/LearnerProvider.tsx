@@ -21,7 +21,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
   const { systemMemory } = useSettings();
   const { alert } = useDialog();
   const [isLoading, setIsLoading] = useState(false);
-  const [articleList, setArticleList] = useState<Article[]>(MOCK_ARTICLE);
+  const [articleList, setArticleList] = useState<Article[]>([]);
   const [question, setQuestion] = useState<Question>({
     tracked: "",
     committed: "",

@@ -54,36 +54,36 @@ const Index = () => {
   return (
     <div
       className={clsx(
-        "h-screen w-screen bg-background p-4 sm:p-8 border-4 border-primary",
-        "flex flex-col items-center justify-center",
-        "dark:bg-backgroundDark dark:border-primaryDark",
-        "animate-fadeIn"
+        "h-screen w-screen bg-background text-uGray flex items-center justify-center overflow-hidden",
+        "relative p-6"
       )}
       data-tauri-drag-region
     >
-      <div className="flex flex-row gap-4 justify-center items-center">
+      <div className="absolute inset-0 pointer-events-none bg-radial-glow" />
+      <div className="absolute inset-0 opacity-[0.25] [background-size:24px_24px] bg-grid" />
+
+      <div className="flex flex-row gap-8 items-center">
         <img
           src={icon.logo}
-          className="h-44 w-44 rounded-full shadow-[0_0_24px_var(--primary)] animate-bounce"
+          className="h-44 w-44 rounded-full animate-float shadow-glow"
         />
         <div className="flex flex-col">
-          <p className="text-8xl lg:text-9xl 2xl:text-[10rem] font-bold text-primary">
+          <p className="text-7xl lg:text-8xl 2xl:text-9xl font-extrabold tracking-tight text-primary drop-shadow">
             Open2E
           </p>
-          <p className="text-uGrayLight text-base w-96 bg-background font-mono">
+          <p className="mt-2 text-uGrayLight text-base w-[28rem] max-w-[80vw] font-mono/relaxed">
             {displayedText}
-            <span className="w-[0.5ch] h-[1.2em] ml-[1px] bg-uGrayLight animate-blink">
-              |
-            </span>
+            <span className="w-[0.5ch] h-[1.2em] ml-[1px] bg-uGrayLight animate-blink align-baseline">|</span>
           </p>
-        </div>
-        <Loading classname="absolute bottom-8 right-8" size="small" />
-        <div className="absolute bottom-8 left-8 text-uGrayLight text-base font-mono">
-          {rotatingNames[nameIndex]}
         </div>
       </div>
 
-      <div data-tauri-drag-region className="absolute h-screen w-screen" />
+      <Loading classname="absolute bottom-6 right-6" size="small" />
+      <div className="absolute bottom-6 left-6 text-uGrayLight text-sm font-mono">
+        {rotatingNames[nameIndex]}
+      </div>
+
+      <div data-tauri-drag-region className="absolute inset-0" />
     </div>
   );
 };

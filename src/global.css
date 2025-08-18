@@ -14,7 +14,8 @@
 }
 
 @layer base {
-  :root {
+  :root,
+  .dark {
     --primary: #e6a91d;
     --background: #fafcfd;
     --secondary: #00abbf28;
@@ -40,8 +41,7 @@
     --score-10: #34d159;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
+  .dark {
       --primary: #ffc131;
       --background: #202020;
       --secondary: #00abbf28;
@@ -65,7 +65,6 @@
       --score-8: #9ee66c;
       --score-9: #6be66c;
       --score-10: #34d17c;
-    }
   }
 }
 

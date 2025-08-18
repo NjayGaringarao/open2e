@@ -11,7 +11,7 @@ export default function Home() {
       </div>
 
       {/* Sidebar for usage info */}
-      <div className="hidden 2xl:block bg-panel w-96 transition-all duration-500"></div>
+      <div className="hidden 2xl:block bg-panel/60 backdrop-blur w-96 border-l border-white/10 transition-all duration-500"></div>
     </div>
   );
 }

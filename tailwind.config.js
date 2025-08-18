@@ -5,7 +5,7 @@ export default {
     "./src/pages/**/*.{ts,tsx,jsx,js}",
     "./src/components/**/*.{ts,tsx,jsx,js}",
   ],
-  darkMode: "media",
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -34,14 +34,33 @@ export default {
           10: "var(--score-10)",
         },
       },
+      backgroundImage: {
+        "grid":
+          "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0)",
+        "radial-glow":
+          "radial-gradient(600px 300px at 0% 0%, rgba(255,193,49,0.10), transparent 60%), radial-gradient(600px 300px at 100% 100%, rgba(255,193,49,0.10), transparent 60%)",
+      },
       animation: {
         fadeIn: "fadeIn 0.2s ease-in-out",
+        float: "float 6s ease-in-out infinite",
+        pulseGlow: "pulseGlow 2.4s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 0 0px rgba(255,193,49,0.0), 0 0 0px rgba(255,193,49,0.0)' },
+          '50%': { boxShadow: '0 0 24px rgba(255,193,49,0.35), 0 0 60px rgba(255,193,49,0.10)' },
+        },
+      },
+      boxShadow: {
+        glow: '0 0 24px rgba(255,193,49,0.35)',
       },
     },
   },

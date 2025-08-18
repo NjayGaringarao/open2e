@@ -101,16 +101,16 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
   };
 
   return (
-    <div className={`bg-white rounded-lg shadow-md p-6 border border-gray-200 ${className}`}>
+    <div className={`bg-panel rounded-lg shadow-md p-6 border border-uGrayLight ${className}`}>
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Comparative Analysis</h3>
+        <h3 className="text-lg font-semibold text-uGray">Comparative Analysis</h3>
         <div className="flex space-x-2">
           <button
             onClick={() => setComparisonType('time')}
             className={`px-3 py-1 rounded text-sm font-medium ${
               comparisonType === 'time'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-uBlue text-background'
+                : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
             }`}
           >
             <Calendar className="h-4 w-4 inline mr-1" />
@@ -120,8 +120,8 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
             onClick={() => setComparisonType('questions')}
             className={`px-3 py-1 rounded text-sm font-medium ${
               comparisonType === 'questions'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-uBlue text-background'
+                : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
             }`}
           >
             <BarChart3 className="h-4 w-4 inline mr-1" />
@@ -139,8 +139,8 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
                 onClick={() => setTimeRange('week')}
                 className={`px-3 py-1 rounded text-sm font-medium ${
                   timeRange === 'week'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-uGreen text-background'
+                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
                 }`}
               >
                 Week
@@ -149,8 +149,8 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
                 onClick={() => setTimeRange('month')}
                 className={`px-3 py-1 rounded text-sm font-medium ${
                   timeRange === 'month'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-uGreen text-background'
+                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
                 }`}
               >
                 Month
@@ -159,8 +159,8 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
                 onClick={() => setTimeRange('quarter')}
                 className={`px-3 py-1 rounded text-sm font-medium ${
                   timeRange === 'quarter'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ? 'bg-uGreen text-background'
+                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
                 }`}
               >
                 Quarter
@@ -170,17 +170,17 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
 
           {/* Comparison Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-gray-600">Period 1 Average</p>
-              <p className="text-2xl font-bold text-blue-600">{timeData.period1Avg}</p>
+            <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
+              <p className="text-sm text-uGrayLight">Period 1 Average</p>
+              <p className="text-2xl font-bold text-uBlue">{timeData.period1Avg}</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Period 2 Average</p>
-              <p className="text-2xl font-bold text-green-600">{timeData.period2Avg}</p>
+            <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
+              <p className="text-sm text-uGrayLight">Period 2 Average</p>
+              <p className="text-2xl font-bold text-uGreen">{timeData.period2Avg}</p>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <p className="text-sm text-gray-600">Improvement</p>
-              <p className={`text-2xl font-bold ${parseFloat(timeData.improvement) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
+              <p className="text-sm text-uGrayLight">Improvement</p>
+              <p className={`text-2xl font-bold ${parseFloat(timeData.improvement) >= 0 ? 'text-uGreen' : 'text-uRed'}`}>
                 {parseFloat(timeData.improvement) >= 0 ? '+' : ''}{timeData.improvement}%
               </p>
             </div>
@@ -189,13 +189,13 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
           {/* Time Comparison Chart */}
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={[...timeData.period1, ...timeData.period2]}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGrayLight').trim()} />
               <XAxis 
                 dataKey="date" 
                 tickFormatter={formatDate}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }}
               />
-              <YAxis tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }} />
               <Tooltip 
                 formatter={formatTooltip}
                 labelFormatter={formatDate}
@@ -204,7 +204,7 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
               <Line
                 type="monotone"
                 dataKey="averageScore"
-                stroke="#8884d8"
+                stroke={getComputedStyle(document.documentElement).getPropertyValue('--uBlue').trim()}
                 strokeWidth={2}
                 name="Period 1"
                 connectNulls={false}
@@ -212,7 +212,7 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
               <Line
                 type="monotone"
                 dataKey="averageScore"
-                stroke="#82ca9d"
+                stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGreen').trim()}
                 strokeWidth={2}
                 name="Period 2"
                 connectNulls={false}
@@ -226,33 +226,33 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
         <div>
           {/* Question Comparison Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Top Performers Average</p>
-              <p className="text-2xl font-bold text-green-600">{questionData.topAvg}</p>
+            <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
+              <p className="text-sm text-uGrayLight">Top Performers Average</p>
+              <p className="text-2xl font-bold text-uGreen">{questionData.topAvg}</p>
             </div>
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <p className="text-sm text-gray-600">Needs Improvement Average</p>
-              <p className="text-2xl font-bold text-red-600">{questionData.bottomAvg}</p>
+            <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
+              <p className="text-sm text-uGrayLight">Needs Improvement Average</p>
+              <p className="text-2xl font-bold text-uRed">{questionData.bottomAvg}</p>
             </div>
           </div>
 
           {/* Question Comparison Chart */}
           <ResponsiveContainer width="100%" height={300}>
             <RechartsBarChart data={[...questionData.topQuestions, ...questionData.bottomQuestions]}>
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="3 3" stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGrayLight').trim()} />
               <XAxis 
                 dataKey="questionContent" 
-                tick={{ fontSize: 10 }}
+                tick={{ fontSize: 10, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
-              <YAxis tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }} />
               <Tooltip formatter={formatTooltip} />
               <Legend />
               <Bar 
                 dataKey="averageScore" 
-                fill="#8884d8"
+                fill={getComputedStyle(document.documentElement).getPropertyValue('--uBlue').trim()}
                 radius={[4, 4, 0, 0]}
               />
             </RechartsBarChart>

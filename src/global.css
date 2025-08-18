@@ -14,16 +14,16 @@
 }
 
 @layer base {
-  :root,
-  .dark {
+  :root {
+    /* Light theme (kept subtle; app defaults to dark) */
     --primary: #e6a91d;
-    --background: #fafcfd;
-    --secondary: #00abbf28;
-    --panel: #f1f1f1;
-    --uBlack: #2c2413;
-    --uGray: #434343;
-    --uGrayLight: #666666;
-    --uGrayLightLight: #999999;
+    --background: #f7f7f8;
+    --secondary: rgba(0, 171, 191, 0.14);
+    --panel: #efeff1;
+    --uBlack: #121419;
+    --uGray: #3b3f4a;
+    --uGrayLight: #666a75;
+    --uGrayLightLight: #9aa0ad;
     --uRed: #dc2626;
     --uGreen: #22c55e;
     --uBlue: #2563eb;
@@ -42,29 +42,30 @@
   }
 
   .dark {
-      --primary: #ffc131;
-      --background: #202020;
-      --secondary: #00abbf28;
-      --panel: #393939;
-      --uBlack: #0A0F18;
-      --uGray: #e7e7e7;
-      --uGrayLight: #bebebe;
-      --uGrayLightLight: #434343;
-      --uRed: #ef4444;
-      --uGreen: #7bf1a8;
-      --uBlue: #60a5fa;
-      /* Scores */
-      --score-0: #ef4444;
-      --score-1: #ff5c5c;
-      --score-2: #ff765c;
-      --score-3: #ff956c;
-      --score-4: #ffb66c;
-      --score-5: #ffd26c;
-      --score-6: #e6dd6c;
-      --score-7: #c1e66c;
-      --score-8: #9ee66c;
-      --score-9: #6be66c;
-      --score-10: #34d17c;
+    /* Dark theme aligned to logo: rich charcoal + warm gold accent */
+    --primary: #ffc131;
+    --background: #0d1117;    /* deep navy-charcoal improved contrast */
+    --secondary: rgba(255, 193, 49, 0.12);
+    --panel: #151b23;         /* slightly lighter panel for cards/tables */
+    --uBlack: #0a0f18;
+    --uGray: #eaeef4;         /* main foreground, brighter */
+    --uGrayLight: #c5cad3;    /* secondary text, brighter */
+    --uGrayLightLight: #2a313c; /* muted borders, darker */
+    --uRed: #ef4444;
+    --uGreen: #34d17c;
+    --uBlue: #60a5fa;
+    /* Scores tuned for dark backgrounds */
+    --score-0: #ef4444;
+    --score-1: #ff5c5c;
+    --score-2: #ff7b5c;
+    --score-3: #ff9a6c;
+    --score-4: #ffb86c;
+    --score-5: #ffd26c;
+    --score-6: #e6dd6c;
+    --score-7: #c5e66c;
+    --score-8: #a2e66c;
+    --score-9: #74e66c;
+    --score-10: #34d17c;
   }
 }
 
@@ -98,17 +99,17 @@ textarea {
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--background);
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #888;
+  background-color: rgba(255,255,255,0.12);
   border-radius: 10px;
-  border: 2px solid #f1f1f1;
+  border: 2px solid rgba(255,255,255,0.06);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+  background-color: rgba(255,255,255,0.24);
 }
 
 .prose li > p {

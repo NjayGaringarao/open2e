@@ -29,7 +29,7 @@ export const QuestionScoresTable: React.FC<QuestionScoresTableProps> = ({
       <h3 className="text-lg font-semibold text-uGray mb-4">{title}</h3>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-uGrayLight">
-          <thead className="bg-uGrayLight">
+          <thead className="bg-panel">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-uGray uppercase tracking-wider">
                 Question ID
@@ -47,7 +47,7 @@ export const QuestionScoresTable: React.FC<QuestionScoresTableProps> = ({
           </thead>
           <tbody className="bg-background divide-y divide-uGrayLight">
             {data.map((question, index) => (
-              <tr key={question.questionId || index} className="hover:bg-uGrayLight">
+              <tr key={question.questionId || index} className="hover:bg-panel">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-uGray">
                   {question.questionId}
                 </td>

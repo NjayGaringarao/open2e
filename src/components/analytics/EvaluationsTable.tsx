@@ -49,7 +49,7 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
       <h3 className="text-lg font-semibold text-uGray mb-4">{title}</h3>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-uGrayLight">
-          <thead className="bg-uGrayLight">
+          <thead className="bg-panel">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-uGray uppercase tracking-wider">
                 ID
@@ -73,7 +73,7 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
           </thead>
           <tbody className="bg-background divide-y divide-uGrayLight">
             {displayData.map((evaluation) => (
-              <tr key={evaluation.id} className="hover:bg-uGrayLight">
+              <tr key={evaluation.id} className="hover:bg-panel">
                 <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-uGray">
                   {evaluation.id}
                 </td>
@@ -112,7 +112,7 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
         <div className="mt-4 text-center">
           <button
             onClick={() => setShowAll(!showAll)}
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            className="text-uBlue hover:brightness-125 text-sm font-medium"
           >
             {showAll ? `Show less` : `Show all ${data.length} evaluations`}
           </button>

@@ -22,7 +22,7 @@ export const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
           <p className="text-sm font-medium text-uGrayLight mb-1">{title}</p>
           <p className="text-3xl font-bold text-uGray">{value}</p>
           {subtitle && (
-            <p className="text-sm text-uGrayLightLight mt-1">{subtitle}</p>
+            <p className="text-sm text-uGrayLight mt-1">{subtitle}</p>
           )}
         </div>
         {icon && (

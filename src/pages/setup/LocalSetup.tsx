@@ -55,7 +55,7 @@ const LocalSetup = () => {
                 {percent}%
               </p>
 
-              <div className="h-3 w-full bg-gray-300 rounded-md overflow-hidden">
+              <div className="h-3 w-full bg-uGrayLightLight rounded-md overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-500"
                   style={{

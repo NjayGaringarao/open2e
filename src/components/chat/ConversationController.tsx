@@ -38,7 +38,7 @@ const ConversationController = () => {
   };
 
   return (
-    <aside className="w-full px-4 py-16 flex flex-col gap-4 border-r border-gray-200">
+    <aside className="w-full px-4 py-16 flex flex-col gap-4 border-r border-uGrayLight">
       <p className="text-xl text-uGray *:font-semibold">Chat Menu</p>
       <Button
         onClick={handleStart}
@@ -51,7 +51,7 @@ const ConversationController = () => {
       <p className="text-uGray text-lg">Conversations</p>
 
       {!conversations.length && (
-        <div className="py-4 w-full text-gray shadow-md rounded-md flex flex-col items-center">
+        <div className="py-4 w-full text-uGrayLightLight shadow-md rounded-md flex flex-col items-center">
           [ None ]
         </div>
       )}

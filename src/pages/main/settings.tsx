@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
 import { LocalSetupProvider } from "@/context/setup/local";
 import TTS from "@/components/settings/TTS";
+import ThemeToggle from "@/components/settings/ThemeToggle";
 
 export default function Settings() {
   return (
@@ -15,6 +16,15 @@ export default function Settings() {
             <SettingsIcon className="h-10 w-10" />
             Configuration
           </div>
+
+          <DropDown
+            headerElement={
+              <p className="text-uGray text-xl font-semibold">Appearance</p>
+            }
+            isDefaultOpen
+          >
+            <ThemeToggle />
+          </DropDown>
 
           <DropDown
             headerElement={

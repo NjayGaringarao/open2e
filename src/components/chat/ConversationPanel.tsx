@@ -14,7 +14,7 @@ const ConversationPanel = () => {
   return (
     <>
       {/* Desktop view */}
-      <div className="hidden 2xl:block h-full overflow-y-auto bg-panel w-96 border-r border-gray-200">
+      <div className="hidden 2xl:block h-full overflow-y-auto bg-panel w-96 border-r border-uGrayLight">
         <ConversationController />
       </div>
 
@@ -43,7 +43,7 @@ const ConversationPanel = () => {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <DialogPanel className="fixed inset-y-0 right-0 w-80 max-w-full bg-background shadow-lg border-l z-50 flex flex-col">
+            <DialogPanel className="fixed inset-y-0 right-0 w-80 max-w-full bg-background shadow-lg border-l border-uGrayLight z-50 flex flex-col">
               <div className="overflow-y-auto flex-1">
                 <ConversationController />
               </div>

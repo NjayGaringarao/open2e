@@ -43,7 +43,7 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "h-full transition-all duration-300 ease-in-out bg-panel/60 backdrop-blur p-4 flex flex-col border-r border-white/10",
+        "h-full transition-all duration-300 ease-in-out bg-panel/60 backdrop-blur p-4 flex flex-col border-r border-uGrayLight",
         expanded || screenSize === "extralarge" ? "w-60" : "w-20"
       )}
       onMouseEnter={() => setExpanded(true)}

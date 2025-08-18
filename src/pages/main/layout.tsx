@@ -24,7 +24,7 @@ export default function Layout() {
   return (
     <div className="flex h-screen bg-background text-uGrayLight relative">
       <div className="absolute inset-0 pointer-events-none bg-radial-glow" />
-      <div className="absolute inset-0 opacity-[0.15] [background-size:24px_24px] bg-grid" />
+      <div className="absolute inset-0 opacity-[0.06] [background-size:24px_24px] bg-grid" />
       <Sidebar />
 
       <main className="flex-1 overflow-auto relative">

@@ -106,7 +106,7 @@ const ModalResult = ({
                 "w-full max-w-4xl",
                 "transform overflow-hidden rounded-xl bg-background",
                 "flex flex-col p-6 gap-4 text-left align-middle shadow-2xl transition-all",
-                "border border-uGray/20"
+                "border border-uGrayLight"
               )}
             >
               {/* Header */}
@@ -151,7 +151,7 @@ const ModalResult = ({
                       <div
                         className={clsx(
                           "sticky top-0 z-10 py-4 px-4",
-                          "bg-gray-200/50 dark:bg-gray-800/40 backdrop-blur-sm",
+                          "bg-panel/80 backdrop-blur-sm border-b border-uGrayLight",
                           "flex flex-row gap-1 items-center"
                         )}
                       >

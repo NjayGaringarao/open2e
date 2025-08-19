@@ -13,6 +13,7 @@ import DropDown from "../DropDown";
 import { useChat } from "@/context/main/chat";
 import { useNavigate } from "react-router";
 import Button from "../Button";
+import Markdown from "../Markdown";
 
 interface IModalResult {
   score: number;
@@ -165,7 +166,7 @@ const ModalResult = ({
                         </Button>
                       </div>
                       <div className="px-4">
-                        {justification}
+                        <Markdown text={justification} />
                         <div className="h-8" />
                       </div>
                     </div>

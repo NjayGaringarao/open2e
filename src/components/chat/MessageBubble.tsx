@@ -63,7 +63,7 @@ const MessageBubble = ({ message, onRetry }: Props) => {
         {/** Message Bubble */}
         <div
           className={clsx(
-            "py-2 px-3 rounded-xl max-w-[70%] whitespace-pre-wrap flex gap-2 items-center",
+            "py-2 px-3 rounded-xl max-w-[70%] whitespace-pre-wrap break-words flex gap-2 items-center",
             isUser
               ? "bg-primary text-background"
               : "bg-uGrayLight text-background",

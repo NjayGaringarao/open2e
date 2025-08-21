@@ -11,7 +11,7 @@ interface IMarkdown {
 
 const Markdown = ({ text = "", className = "" }: IMarkdown) => {
   return (
-    <div className={className}>
+    <div className={`whitespace-pre-wrap break-words ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
@@ -44,19 +44,21 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
 
           /* Paragraphs & lists: reduced bottom margin */
           p: ({ children }) => (
-            <p className="text-base text-panel -mb-2">{children}</p>
+            <p className="text-base text-panel mb-2 last:mb-0 whitespace-pre-wrap break-words">{children}</p>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc list-inside `">{children}</ul>
+            <ul className="list-disc list-inside mb-2 last:mb-0">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-inside">{children}</ol>
+            <ol className="list-decimal list-inside mb-2 last:mb-0">{children}</ol>
           ),
-          li: ({ children }) => <li className="text-base">{children}</li>,
+          li: ({ children }) => (
+            <li className="text-base whitespace-pre-wrap break-words">{children}</li>
+          ),
 
           /* Blockquote: subtle left border + light background */
           blockquote: ({ children }) => (
-            <blockquote className=" pl-4 italic text-base text-panel bg-uGray rounded-sm py-2">
+            <blockquote className=" pl-4 italic text-base text-panel bg-uGray rounded-sm py-2 mb-2 last:mb-0 whitespace-pre-wrap break-words">
               {children}
             </blockquote>
           ),
@@ -91,7 +93,7 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
                 {children}
               </code>
             ) : (
-              <pre className=" p-3 rounded-md overflow-x-auto text-base">
+              <pre className=" p-3 rounded-md overflow-x-auto text-base max-w-full whitespace-pre">
                 <code className={className}>{children}</code>
               </pre>
             );

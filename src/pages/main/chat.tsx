@@ -4,6 +4,7 @@ import { useChat } from "@/context/main/chat";
 import { useEffect, useRef } from "react";
 import ConversationPanel from "@/components/chat/ConversationPanel";
 import ChatTitle from "@/components/chat/ChatTitle";
+import HowToUseButton from "@/components/HowToUseButton";
 
 export default function Chat() {
   const { messages, activeConversation } = useChat();
@@ -30,6 +31,9 @@ export default function Chat() {
       {/* Sidebar for conversation list */}
 
       <ConversationPanel />
+
+      {/* How to Use Button */}
+      <HowToUseButton page="chat" />
     </div>
   );
 }

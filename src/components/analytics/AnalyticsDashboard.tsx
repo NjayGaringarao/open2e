@@ -36,7 +36,7 @@ export const AnalyticsDashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col w-full max-w-5xl p-6 overflow-y-auto">
+      <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-uBlue mx-auto mb-4"></div>
@@ -58,10 +58,10 @@ export const AnalyticsDashboard: React.FC = () => {
   // Show empty state if no data
   if (!hasData) {
     return (
-      <div className="flex flex-col w-full max-w-5xl p-6 overflow-y-auto">
+      <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-uGray">Dashboard</h2>
+          <h2 className="text-3xl font-bold text-uGray">Analytics Dashboard</h2>
           <div className="flex space-x-3">
             <button
               onClick={handleClearData}
@@ -80,24 +80,37 @@ export const AnalyticsDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Empty State */}
-        <div className="bg-background rounded-lg shadow-md p-12 border border-uGrayLight text-center">
-          <div className="mx-auto w-24 h-24 bg-uGrayLight rounded-full flex items-center justify-center mb-6">
-            <BarChart3 className="h-12 w-12 text-uGray" />
-          </div>
-          <h3 className="text-xl font-semibold text-uGray mb-2">No Analytics Data Available</h3>
-          <p className="text-uGrayLight mb-6 max-w-md mx-auto">
-            Start evaluating answers in the evaluation page to see analytics data here. 
-            The dashboard will display total answers evaluated, average scores, and performance trends.
-          </p>
-          <div className="text-sm text-uGrayLightLight">
-            <p>Analytics will show:</p>
-            <ul className="mt-2 space-y-1">
-              <li>• Total number of answers evaluated</li>
-              <li>• Overall average score</li>
-              <li>• Average score per question</li>
-              <li>• Evaluations over time (line/area chart)</li>
-            </ul>
+        {/* Empty State - Enhanced with more content */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="bg-background rounded-xl shadow-lg p-16 border border-uGrayLight text-center max-w-2xl">
+            <div className="mx-auto w-32 h-32 bg-gradient-to-br from-uBlue to-uGreen rounded-full flex items-center justify-center mb-8">
+              <BarChart3 className="h-16 w-16 text-white" />
+            </div>
+            <h3 className="text-3xl font-bold text-uGray mb-4">Welcome to Analytics</h3>
+            <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
+              Start evaluating answers in the evaluation page to see comprehensive analytics data here. 
+              The dashboard will display detailed insights about your evaluation performance.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              <div className="bg-uGrayLight/20 rounded-lg p-4">
+                <h4 className="font-semibold text-uGray mb-2">📊 Key Metrics</h4>
+                <ul className="text-sm text-uGrayLight space-y-1">
+                  <li>• Total answers evaluated</li>
+                  <li>• Overall average score</li>
+                  <li>• Performance trends</li>
+                  <li>• Question-wise analysis</li>
+                </ul>
+              </div>
+              <div className="bg-uGrayLight/20 rounded-lg p-4">
+                <h4 className="font-semibold text-uGray mb-2">📈 Visual Insights</h4>
+                <ul className="text-sm text-uGrayLight space-y-1">
+                  <li>• Interactive charts</li>
+                  <li>• Score distributions</li>
+                  <li>• Time-based analysis</li>
+                  <li>• Comparative data</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -105,10 +118,10 @@ export const AnalyticsDashboard: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-full max-w-5xl p-6 overflow-y-auto">
+    <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold text-uGray">Dashboard</h2>
+        <h2 className="text-3xl font-bold text-uGray">Analytics Dashboard</h2>
         <div className="flex space-x-3">
           <button
             onClick={handleClearData}
@@ -189,7 +202,7 @@ export const AnalyticsDashboard: React.FC = () => {
           {/* Main Chart */}
           <div className="mb-10">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-semibold text-uGray">Evaluations Over Time</h3>
+              <h3 className="text-xl font-semibold text-uGray">Evaluations Over Time</h3>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setChartType('line')}
@@ -213,16 +226,22 @@ export const AnalyticsDashboard: React.FC = () => {
                 </button>
               </div>
             </div>
-            <ScoreChart
-              data={analyticsData.evaluationsOverTime}
-              type={chartType}
-            />
+            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+              <ScoreChart
+                data={analyticsData.evaluationsOverTime}
+                type={chartType}
+              />
+            </div>
           </div>
 
           {/* Tables Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <QuestionScoresTable data={analyticsData.averageScorePerQuestion} />
-            <EvaluationsTable data={evaluationsData} maxRows={5} />
+            <div className="bg-background rounded-lg shadow-md border border-uGrayLight">
+              <QuestionScoresTable data={analyticsData.averageScorePerQuestion} />
+            </div>
+            <div className="bg-background rounded-lg shadow-md border border-uGrayLight">
+              <EvaluationsTable data={evaluationsData} maxRows={5} />
+            </div>
           </div>
         </>
       )}
@@ -230,16 +249,20 @@ export const AnalyticsDashboard: React.FC = () => {
       {activeTab === 'charts' && (
         <div className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <BarChart 
-              data={analyticsData.averageScorePerQuestion}
-              title="Question Performance (Bar Chart)"
-              dataKey="averageScore"
-            />
-            <PieChart 
-              data={analyticsData.averageScorePerQuestion}
-              title="Score Distribution (Pie Chart)"
-              dataKey="totalEvaluations"
-            />
+            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+              <BarChart 
+                data={analyticsData.averageScorePerQuestion}
+                title="Question Performance (Bar Chart)"
+                dataKey="averageScore"
+              />
+            </div>
+            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+              <PieChart 
+                data={analyticsData.averageScorePerQuestion}
+                title="Score Distribution (Pie Chart)"
+                dataKey="totalEvaluations"
+              />
+            </div>
           </div>
         </div>
       )}

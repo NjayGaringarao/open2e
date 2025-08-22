@@ -1,6 +1,7 @@
 import Learner from "@/components/evaluate/learner/Learner";
 import { LearnerProvider } from "@/context/main/learner/LearnerProvider";
 import { ClipboardCheck } from "lucide-react";
+import HowToUseButton from "@/components/HowToUseButton";
 
 export default function Evaluate() {
   return (
@@ -20,6 +21,9 @@ export default function Evaluate() {
 
       {/* Sidebar for usage info */}
       <div className="hidden 2xl:block bg-panel w-96 transition-all duration-500"></div>
+
+      {/* How to Use Button */}
+      <HowToUseButton page="evaluate" />
     </div>
   );
 }

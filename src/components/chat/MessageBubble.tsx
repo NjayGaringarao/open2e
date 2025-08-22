@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { User, XCircle } from "lucide-react";
 import Markdown from "../Markdown";
 import icon from "@/constant/icon";
+import { useColorMode } from "@/components/ui/color-mode";
 
 interface Props {
   message?: Message;
@@ -11,6 +12,8 @@ interface Props {
 }
 
 const MessageBubble = ({ message, onRetry }: Props) => {
+  const { colorMode } = useColorMode();
+  
   if (!message) {
     // Loading dots bubble
     return (
@@ -71,7 +74,10 @@ const MessageBubble = ({ message, onRetry }: Props) => {
           )}
         >
           <div className="w-full flex flex-col">
-            <Markdown text={message.content} />
+            <Markdown 
+              text={message.content} 
+              className={isAssistant ? (colorMode === 'dark' ? "ai-response-dark" : "text-white") : ""}
+            />
           </div>
         </div>
 

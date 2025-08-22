@@ -80,7 +80,7 @@ const HowToUseButton = ({ page }: HowToUseButtonProps) => {
         {isFullScreen ? (
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-background hover:bg-primary/90 shadow-lg text-sm sm:text-base"
+            className="bg-gradient-to-r from-primary to-primary/90 text-background hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl text-sm sm:text-base transition-all duration-300"
           >
             <HelpCircle className="h-4 w-4" />
             How to use
@@ -88,7 +88,7 @@ const HowToUseButton = ({ page }: HowToUseButtonProps) => {
         ) : (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="p-2 sm:p-3 bg-primary text-background rounded-full hover:bg-primary/90 transition-all shadow-lg"
+            className="p-2 sm:p-3 bg-gradient-to-r from-primary to-primary/90 text-background rounded-full hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-110"
             title="How to use"
           >
             <HelpCircle className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -96,44 +96,47 @@ const HowToUseButton = ({ page }: HowToUseButtonProps) => {
         )}
       </div>
 
-             {/* Modal */}
-       {isModalOpen && (
-         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4">
-           <div className="bg-background rounded-lg shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden border border-uGrayLight flex flex-col">
-             {/* Header */}
-             <div className="flex items-center justify-between p-4 sm:p-6 border-b border-uGrayLight bg-panel flex-shrink-0">
-               <h2 className={`text-lg sm:text-2xl font-bold ${
-                 colorMode === 'dark' ? 'text-background font-light' : 'text-uBlack font-semibold'
-               }`}>
-                 {page === "evaluate" ? "Evaluation" : "AI Chat"}
-               </h2>
-               <button
-                 onClick={() => setIsModalOpen(false)}
-                 className="p-2 hover:bg-uGrayLight rounded-full transition-colors"
-               >
-                 <X className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                   colorMode === 'dark' ? 'text-background' : 'text-uBlack'
-                 }`} />
-               </button>
-             </div>
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="relative bg-gradient-to-br from-background via-background/95 to-background/90 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden border border-uGrayLight/30 flex flex-col backdrop-blur-sm">
+            {/* Background gradient effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-emerald-500/5 rounded-2xl" />
+            
+            {/* Header */}
+            <div className="relative z-10 flex items-center justify-between p-4 sm:p-6 border-b border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60 backdrop-blur-sm">
+              <h2 className={`text-lg sm:text-2xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent ${
+                colorMode === 'dark' ? 'font-light' : 'font-semibold'
+              }`}>
+                {page === "evaluate" ? "Evaluation" : "AI Chat"}
+              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 hover:bg-gradient-to-r hover:from-uGrayLight/20 hover:to-uGrayLight/10 rounded-full transition-all duration-300"
+              >
+                <X className={`h-5 w-5 sm:h-6 sm:w-6 ${
+                  colorMode === 'dark' ? 'text-background' : 'text-uBlack'
+                }`} />
+              </button>
+            </div>
 
-             {/* Content */}
-             <div className="p-4 sm:p-6 overflow-y-auto flex-1 bg-background">
-               <Markdown text={instructions} className={colorMode === 'dark' ? "text-white" : "text-black"} />
-             </div>
+            {/* Content */}
+            <div className="relative z-10 p-4 sm:p-6 overflow-y-auto flex-1 bg-gradient-to-br from-background/50 via-background/30 to-background/50">
+              <Markdown text={instructions} className={colorMode === 'dark' ? "text-white" : "text-black"} />
+            </div>
 
-             {/* Footer */}
-             <div className="flex justify-end p-4 sm:p-6 border-t border-uGrayLight bg-panel flex-shrink-0">
-               <Button
-                 onClick={() => setIsModalOpen(false)}
-                 className="bg-primary text-background hover:bg-primary/90 px-4 sm:px-6 py-2"
-               >
-                 Got it!
-               </Button>
-             </div>
-           </div>
-         </div>
-       )}
+            {/* Footer */}
+            <div className="relative z-10 flex justify-end p-4 sm:p-6 border-t border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60 backdrop-blur-sm">
+              <Button
+                onClick={() => setIsModalOpen(false)}
+                className="bg-gradient-to-r from-primary to-primary/90 text-background hover:from-primary/90 hover:to-primary px-4 sm:px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                Got it!
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

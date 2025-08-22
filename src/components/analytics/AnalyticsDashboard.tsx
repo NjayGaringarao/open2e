@@ -39,8 +39,11 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-uBlue mx-auto mb-4"></div>
-            <p className="text-uGrayLight">Loading analytics...</p>
+            <div className="relative">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-uBlue/20 mx-auto mb-6"></div>
+              <div className="absolute inset-0 animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-uBlue mx-auto"></div>
+            </div>
+            <p className="text-uGrayLight text-lg">Loading analytics...</p>
           </div>
         </div>
       </div>
@@ -61,19 +64,24 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-uGray">Analytics Dashboard</h2>
+          <div className="relative">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent">
+              Analytics Dashboard
+            </h2>
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-50" />
+          </div>
           <div className="flex space-x-3">
             <button
               onClick={handleClearData}
               disabled={isClearing}
-              className="px-4 py-2 bg-uRed text-background rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+              className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
             >
               <Trash2 className="h-4 w-4" />
               <span>{isClearing ? 'Clearing...' : 'Clear Data'}</span>
             </button>
             <button
               onClick={refreshData}
-              className="px-4 py-2 bg-uBlue text-background rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-uBlue to-blue-600 text-background rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Refresh Data
             </button>
@@ -82,33 +90,45 @@ export const AnalyticsDashboard: React.FC = () => {
 
         {/* Empty State - Enhanced with more content */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="bg-background rounded-xl shadow-lg p-16 border border-uGrayLight text-center max-w-2xl">
-            <div className="mx-auto w-32 h-32 bg-gradient-to-br from-uBlue to-uGreen rounded-full flex items-center justify-center mb-8">
-              <BarChart3 className="h-16 w-16 text-white" />
-            </div>
-            <h3 className="text-3xl font-bold text-uGray mb-4">Welcome to Analytics</h3>
-            <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
-              Start evaluating answers in the evaluation page to see comprehensive analytics data here. 
-              The dashboard will display detailed insights about your evaluation performance.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-              <div className="bg-uGrayLight/20 rounded-lg p-4">
-                <h4 className="font-semibold text-uGray mb-2">📊 Key Metrics</h4>
-                <ul className="text-sm text-uGrayLight space-y-1">
-                  <li>• Total answers evaluated</li>
-                  <li>• Overall average score</li>
-                  <li>• Performance trends</li>
-                  <li>• Question-wise analysis</li>
-                </ul>
+          <div className="relative bg-gradient-to-br from-background via-background/95 to-background/90 rounded-2xl shadow-2xl p-16 border border-uGrayLight/30 text-center max-w-2xl backdrop-blur-sm">
+            {/* Background gradient effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-emerald-500/5 rounded-2xl" />
+            <div className="relative z-10">
+              <div className="mx-auto w-32 h-32 bg-gradient-to-br from-uBlue via-primary to-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-2xl">
+                <BarChart3 className="h-16 w-16 text-white" />
               </div>
-              <div className="bg-uGrayLight/20 rounded-lg p-4">
-                <h4 className="font-semibold text-uGray mb-2">📈 Visual Insights</h4>
-                <ul className="text-sm text-uGrayLight space-y-1">
-                  <li>• Interactive charts</li>
-                  <li>• Score distributions</li>
-                  <li>• Time-based analysis</li>
-                  <li>• Comparative data</li>
-                </ul>
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent mb-4">
+                Welcome to Analytics
+              </h3>
+              <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
+                Start evaluating answers in the evaluation page to see comprehensive analytics data here. 
+                The dashboard will display detailed insights about your evaluation performance.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div className="bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-blue-700/10 rounded-xl p-6 border border-blue-500/20">
+                  <h4 className="font-semibold text-uGray mb-3 flex items-center">
+                    <span className="text-2xl mr-2">📊</span>
+                    Key Metrics
+                  </h4>
+                  <ul className="text-sm text-uGrayLight space-y-2">
+                    <li>• Total answers evaluated</li>
+                    <li>• Overall average score</li>
+                    <li>• Performance trends</li>
+                    <li>• Question-wise analysis</li>
+                  </ul>
+                </div>
+                <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-emerald-700/10 rounded-xl p-6 border border-emerald-500/20">
+                  <h4 className="font-semibold text-uGray mb-3 flex items-center">
+                    <span className="text-2xl mr-2">📈</span>
+                    Visual Insights
+                  </h4>
+                  <ul className="text-sm text-uGrayLight space-y-2">
+                    <li>• Interactive charts</li>
+                    <li>• Score distributions</li>
+                    <li>• Time-based analysis</li>
+                    <li>• Comparative data</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -121,19 +141,24 @@ export const AnalyticsDashboard: React.FC = () => {
     <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold text-uGray">Analytics Dashboard</h2>
+        <div className="relative">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent">
+            Analytics Dashboard
+          </h2>
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-50" />
+        </div>
         <div className="flex space-x-3">
           <button
             onClick={handleClearData}
             disabled={isClearing}
-            className="px-4 py-2 bg-uRed text-background rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+            className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
           >
             <Trash2 className="h-4 w-4" />
             <span>{isClearing ? 'Clearing...' : 'Clear Data'}</span>
           </button>
           <button
             onClick={refreshData}
-            className="px-4 py-2 bg-uBlue text-background rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-gradient-to-r from-uBlue to-blue-600 text-background rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Refresh Data
           </button>
@@ -141,13 +166,13 @@ export const AnalyticsDashboard: React.FC = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-uGrayLight mb-8">
+      <div className="border-b border-uGrayLight/30 mb-8">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
               activeTab === 'overview'
-                ? 'border-uBlue text-uBlue'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight'
             }`}
           >
@@ -155,9 +180,9 @@ export const AnalyticsDashboard: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('charts')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
               activeTab === 'charts'
-                ? 'border-uBlue text-uBlue'
+                ? 'border-primary text-primary'
                 : 'border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight'
             }`}
           >
@@ -206,27 +231,27 @@ export const AnalyticsDashboard: React.FC = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => setChartType('line')}
-                  className={`px-3 py-1 rounded text-sm font-medium ${
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
                     chartType === 'line'
-                      ? 'bg-uBlue text-background'
-                      : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+                      ? 'bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg'
+                      : 'bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight'
                   }`}
                 >
                   Line Chart
                 </button>
                 <button
                   onClick={() => setChartType('area')}
-                  className={`px-3 py-1 rounded text-sm font-medium ${
+                  className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
                     chartType === 'area'
-                      ? 'bg-uBlue text-background'
-                      : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+                      ? 'bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg'
+                      : 'bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight'
                   }`}
                 >
                   Area Chart
                 </button>
               </div>
             </div>
-            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+            <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl p-6 border border-uGrayLight/30 backdrop-blur-sm">
               <ScoreChart
                 data={analyticsData.evaluationsOverTime}
                 type={chartType}
@@ -236,10 +261,10 @@ export const AnalyticsDashboard: React.FC = () => {
 
           {/* Tables Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-background rounded-lg shadow-md border border-uGrayLight">
+            <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl border border-uGrayLight/30 backdrop-blur-sm">
               <QuestionScoresTable data={analyticsData.averageScorePerQuestion} />
             </div>
-            <div className="bg-background rounded-lg shadow-md border border-uGrayLight">
+            <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl border border-uGrayLight/30 backdrop-blur-sm">
               <EvaluationsTable data={evaluationsData} maxRows={5} />
             </div>
           </div>
@@ -249,14 +274,14 @@ export const AnalyticsDashboard: React.FC = () => {
       {activeTab === 'charts' && (
         <div className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+            <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl p-6 border border-uGrayLight/30 backdrop-blur-sm">
               <BarChart 
                 data={analyticsData.averageScorePerQuestion}
                 title="Question Performance (Bar Chart)"
                 dataKey="averageScore"
               />
             </div>
-            <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
+            <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl p-6 border border-uGrayLight/30 backdrop-blur-sm">
               <PieChart 
                 data={analyticsData.averageScorePerQuestion}
                 title="Score Distribution (Pie Chart)"

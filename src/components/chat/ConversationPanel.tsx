@@ -14,14 +14,14 @@ const ConversationPanel = () => {
   return (
     <>
       {/* Desktop view */}
-      <div className="hidden 2xl:block h-full overflow-y-auto bg-panel w-96 border-r border-uGrayLight">
+      <div className="hidden 2xl:block h-full overflow-y-auto bg-gradient-to-b from-panel/80 to-panel/60 backdrop-blur-sm w-96 border-r border-uGrayLight/30">
         <ConversationController />
       </div>
 
       {/* Floating button for mobile */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-6 right-20 sm:top-8 sm:right-24 z-40 2xl:hidden bg-primary text-background p-3 rounded-full shadow-lg hover:scale-105 transition"
+        className="fixed top-6 right-20 sm:top-8 sm:right-24 z-40 2xl:hidden bg-gradient-to-r from-primary to-primary/90 text-background p-3 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:from-primary/90 hover:to-primary"
         aria-label="Open conversations"
       >
         <Menu className="w-6 h-6" />
@@ -43,7 +43,7 @@ const ConversationPanel = () => {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <DialogPanel className="fixed inset-y-0 right-0 w-80 max-w-full bg-background shadow-lg border-l border-uGrayLight z-50 flex flex-col">
+            <DialogPanel className="fixed inset-y-0 right-0 w-80 max-w-full bg-gradient-to-b from-background via-background/95 to-background/90 shadow-2xl border-l border-uGrayLight/30 z-50 flex flex-col backdrop-blur-sm">
               <div className="overflow-y-auto flex-1">
                 <ConversationController />
               </div>
@@ -60,7 +60,7 @@ const ConversationPanel = () => {
             leaveTo="opacity-0"
           >
             <div
-              className="fixed inset-0 bg-black/40"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm"
               onClick={() => setIsOpen(false)}
             />
           </TransitionChild>

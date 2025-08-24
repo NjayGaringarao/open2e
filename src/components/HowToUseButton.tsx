@@ -95,25 +95,23 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60">
-              <h2 className={`text-base font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent ${
-                colorMode === 'dark' ? 'font-light' : 'font-semibold'
+              <h2 className={`text-base font-bold ${
+                colorMode === 'dark' 
+                  ? 'text-white' 
+                  : 'text-uBlack'
               }`}>
                 How to Use
               </h2>
-              <button
-                onClick={() => handleRightPanelToggle(false)}
-                className="p-1.5 hover:bg-gradient-to-r hover:from-uGrayLight/20 hover:to-uGrayLight/10 rounded-full transition-all duration-300"
-              >
-                <X className={`h-4 w-4 ${
-                  colorMode === 'dark' ? 'text-background' : 'text-uBlack'
-                }`} />
-              </button>
             </div>
 
             {/* Content */}
             <div className="flex-1 p-3 overflow-y-auto bg-gradient-to-br from-background/50 via-background/30 to-background/50">
               <div className="prose prose-xs max-w-none">
-                <Markdown text={instructions} className={`${colorMode === 'dark' ? "text-white" : "text-black"} text-xs leading-tight`} />
+                <Markdown text={instructions} className={`${
+                  colorMode === 'dark' 
+                    ? "text-gray-200" 
+                    : "text-gray-800"
+                } text-xs leading-tight`} />
               </div>
             </div>
           </div>
@@ -125,7 +123,11 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
         <div className="hidden lg:block fixed top-6 right-6 z-40">
           <button
             onClick={() => handleRightPanelToggle(!isRightPanelVisible)}
-            className="bg-gradient-to-r from-primary to-primary/90 text-background hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl p-3 rounded-full transition-all duration-300"
+            className={`${
+              colorMode === 'dark'
+                ? 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl'
+                : 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl'
+            } p-3 rounded-full transition-all duration-300`}
             title="How to use"
           >
             <HelpCircle className="h-5 w-5" />
@@ -136,7 +138,11 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
       {/* Floating button for mobile/tablet */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-6 right-6 sm:top-8 sm:right-8 z-40 lg:hidden bg-gradient-to-r from-primary to-primary/90 text-background p-3 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:from-primary/90 hover:to-primary"
+        className={`fixed top-6 right-6 sm:top-8 sm:right-8 z-40 lg:hidden ${
+          colorMode === 'dark'
+            ? 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl'
+            : 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl'
+        } p-3 rounded-full hover:scale-105 transition-all duration-300`}
         aria-label="How to use"
       >
         <HelpCircle className="w-6 h-6" />
@@ -162,17 +168,23 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
               <div className="flex flex-col h-full">
                 {/* Header */}
                 <div className="flex items-center justify-between p-3 border-b border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60">
-                  <h2 className={`text-base font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent ${
-                    colorMode === 'dark' ? 'font-light' : 'font-semibold'
+                  <h2 className={`text-base font-bold ${
+                    colorMode === 'dark' 
+                      ? 'text-white' 
+                      : 'text-uBlack'
                   }`}>
                     How to Use
                   </h2>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1.5 hover:bg-gradient-to-r hover:from-uGrayLight/20 hover:to-uGrayLight/10 rounded-full transition-all duration-300"
+                    className={`p-1.5 hover:bg-gradient-to-r hover:from-uGrayLight/20 hover:to-uGrayLight/10 rounded-full transition-all duration-300 ${
+                      colorMode === 'dark' 
+                        ? 'hover:bg-white/10' 
+                        : 'hover:bg-black/10'
+                    }`}
                   >
                     <X className={`h-4 w-4 ${
-                      colorMode === 'dark' ? 'text-background' : 'text-uBlack'
+                      colorMode === 'dark' ? 'text-white' : 'text-uBlack'
                     }`} />
                   </button>
                 </div>
@@ -180,7 +192,11 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
                 {/* Content */}
                 <div className="flex-1 p-3 overflow-y-auto bg-gradient-to-br from-background/50 via-background/30 to-background/50">
                   <div className="prose prose-xs max-w-none">
-                    <Markdown text={instructions} className={`${colorMode === 'dark' ? "text-white" : "text-black"} text-xs leading-tight`} />
+                    <Markdown text={instructions} className={`${
+                      colorMode === 'dark' 
+                        ? "text-gray-200" 
+                        : "text-gray-800"
+                    } text-xs leading-tight`} />
                   </div>
                 </div>
               </div>

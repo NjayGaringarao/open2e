@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,9 +10,12 @@ import {
   ResponsiveContainer,
   BarChart as RechartsBarChart,
   Bar,
-} from 'recharts';
-import type { EvaluationTimeData, QuestionScore } from '@/database/analytics/types';
-import { Calendar, TrendingUp, BarChart3 } from 'lucide-react';
+} from "recharts";
+import type {
+  EvaluationTimeData,
+  QuestionScore,
+} from "@/database/analytics/types";
+import { Calendar, BarChart3 } from "lucide-react";
 
 interface ComparativeAnalysisProps {
   evaluationsOverTime: EvaluationTimeData[];
@@ -25,29 +28,33 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
   questionScores,
   className = "",
 }) => {
-  const [comparisonType, setComparisonType] = useState<'time' | 'questions'>('time');
-  const [timeRange, setTimeRange] = useState<'week' | 'month' | 'quarter'>('month');
+  const [comparisonType, setComparisonType] = useState<"time" | "questions">(
+    "time"
+  );
+  const [timeRange, setTimeRange] = useState<"week" | "month" | "quarter">(
+    "month"
+  );
 
   const getTimeComparisonData = () => {
     const now = new Date();
     let startDate: Date;
-    
+
     switch (timeRange) {
-      case 'week':
+      case "week":
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
-      case 'month':
+      case "month":
         startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         break;
-      case 'quarter':
+      case "quarter":
         startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
         break;
       default:
         startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     }
 
-    const filteredData = evaluationsOverTime.filter(item => 
-      new Date(item.date) >= startDate
+    const filteredData = evaluationsOverTime.filter(
+      (item) => new Date(item.date) >= startDate
     );
 
     // Split data into two periods for comparison
@@ -55,32 +62,50 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
     const period1 = filteredData.slice(0, midPoint);
     const period2 = filteredData.slice(midPoint);
 
-    const period1Avg = period1.length > 0 
-      ? period1.reduce((sum, item) => sum + item.averageScore, 0) / period1.length 
-      : 0;
-    const period2Avg = period2.length > 0 
-      ? period2.reduce((sum, item) => sum + item.averageScore, 0) / period2.length 
-      : 0;
+    const period1Avg =
+      period1.length > 0
+        ? period1.reduce((sum, item) => sum + item.averageScore, 0) /
+          period1.length
+        : 0;
+    const period2Avg =
+      period2.length > 0
+        ? period2.reduce((sum, item) => sum + item.averageScore, 0) /
+          period2.length
+        : 0;
 
     return {
-      period1: period1.map(item => ({ ...item, period: 'Period 1' })),
-      period2: period2.map(item => ({ ...item, period: 'Period 2' })),
+      period1: period1.map((item) => ({ ...item, period: "Period 1" })),
+      period2: period2.map((item) => ({ ...item, period: "Period 2" })),
       period1Avg: period1Avg.toFixed(2),
       period2Avg: period2Avg.toFixed(2),
-      improvement: ((period2Avg - period1Avg) / period1Avg * 100).toFixed(1)
+      improvement: (((period2Avg - period1Avg) / period1Avg) * 100).toFixed(1),
     };
   };
 
   const getQuestionComparisonData = () => {
-    const sortedQuestions = [...questionScores].sort((a, b) => b.averageScore - a.averageScore);
+    const sortedQuestions = [...questionScores].sort(
+      (a, b) => b.averageScore - a.averageScore
+    );
     const topQuestions = sortedQuestions.slice(0, 5);
     const bottomQuestions = sortedQuestions.slice(-5).reverse();
 
     return {
-      topQuestions: topQuestions.map(q => ({ ...q, category: 'Top Performers' })),
-      bottomQuestions: bottomQuestions.map(q => ({ ...q, category: 'Needs Improvement' })),
-      topAvg: (topQuestions.reduce((sum, q) => sum + q.averageScore, 0) / topQuestions.length).toFixed(2),
-      bottomAvg: (bottomQuestions.reduce((sum, q) => sum + q.averageScore, 0) / bottomQuestions.length).toFixed(2)
+      topQuestions: topQuestions.map((q) => ({
+        ...q,
+        category: "Top Performers",
+      })),
+      bottomQuestions: bottomQuestions.map((q) => ({
+        ...q,
+        category: "Needs Improvement",
+      })),
+      topAvg: (
+        topQuestions.reduce((sum, q) => sum + q.averageScore, 0) /
+        topQuestions.length
+      ).toFixed(2),
+      bottomAvg: (
+        bottomQuestions.reduce((sum, q) => sum + q.averageScore, 0) /
+        bottomQuestions.length
+      ).toFixed(2),
     };
   };
 
@@ -88,40 +113,45 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
   const questionData = getQuestionComparisonData();
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
     });
   };
 
   const formatTooltip = (value: any, name: string) => {
-    if (name === 'averageScore') return [`${value.toFixed(2)}`, 'Average Score'];
-    if (name === 'count') return [`${value}`, 'Count'];
+    if (name === "averageScore")
+      return [`${value.toFixed(2)}`, "Average Score"];
+    if (name === "count") return [`${value}`, "Count"];
     return [value, name];
   };
 
   return (
-    <div className={`bg-panel rounded-lg shadow-md p-6 border border-uGrayLight ${className}`}>
+    <div
+      className={`bg-panel rounded-lg shadow-md p-6 border border-uGrayLight ${className}`}
+    >
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold text-uGray">Comparative Analysis</h3>
+        <h3 className="text-lg font-semibold text-uGray">
+          Comparative Analysis
+        </h3>
         <div className="flex space-x-2">
           <button
-            onClick={() => setComparisonType('time')}
+            onClick={() => setComparisonType("time")}
             className={`px-3 py-1 rounded text-sm font-medium ${
-              comparisonType === 'time'
-                ? 'bg-uBlue text-background'
-                : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+              comparisonType === "time"
+                ? "bg-uBlue text-background"
+                : "bg-uGrayLight text-uGray hover:bg-uGrayLightLight"
             }`}
           >
             <Calendar className="h-4 w-4 inline mr-1" />
             Time
           </button>
           <button
-            onClick={() => setComparisonType('questions')}
+            onClick={() => setComparisonType("questions")}
             className={`px-3 py-1 rounded text-sm font-medium ${
-              comparisonType === 'questions'
-                ? 'bg-uBlue text-background'
-                : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+              comparisonType === "questions"
+                ? "bg-uBlue text-background"
+                : "bg-uGrayLight text-uGray hover:bg-uGrayLightLight"
             }`}
           >
             <BarChart3 className="h-4 w-4 inline mr-1" />
@@ -130,37 +160,37 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
         </div>
       </div>
 
-      {comparisonType === 'time' && (
+      {comparisonType === "time" && (
         <div>
           {/* Time Range Selector */}
           <div className="mb-4">
             <div className="flex space-x-2">
               <button
-                onClick={() => setTimeRange('week')}
+                onClick={() => setTimeRange("week")}
                 className={`px-3 py-1 rounded text-sm font-medium ${
-                  timeRange === 'week'
-                    ? 'bg-uGreen text-background'
-                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+                  timeRange === "week"
+                    ? "bg-uGreen text-background"
+                    : "bg-uGrayLight text-uGray hover:bg-uGrayLightLight"
                 }`}
               >
                 Week
               </button>
               <button
-                onClick={() => setTimeRange('month')}
+                onClick={() => setTimeRange("month")}
                 className={`px-3 py-1 rounded text-sm font-medium ${
-                  timeRange === 'month'
-                    ? 'bg-uGreen text-background'
-                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+                  timeRange === "month"
+                    ? "bg-uGreen text-background"
+                    : "bg-uGrayLight text-uGray hover:bg-uGrayLightLight"
                 }`}
               >
                 Month
               </button>
               <button
-                onClick={() => setTimeRange('quarter')}
+                onClick={() => setTimeRange("quarter")}
                 className={`px-3 py-1 rounded text-sm font-medium ${
-                  timeRange === 'quarter'
-                    ? 'bg-uGreen text-background'
-                    : 'bg-uGrayLight text-uGray hover:bg-uGrayLightLight'
+                  timeRange === "quarter"
+                    ? "bg-uGreen text-background"
+                    : "bg-uGrayLight text-uGray hover:bg-uGrayLightLight"
                 }`}
               >
                 Quarter
@@ -172,16 +202,27 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
               <p className="text-sm text-uGrayLight">Period 1 Average</p>
-              <p className="text-2xl font-bold text-uBlue">{timeData.period1Avg}</p>
+              <p className="text-2xl font-bold text-uBlue">
+                {timeData.period1Avg}
+              </p>
             </div>
             <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
               <p className="text-sm text-uGrayLight">Period 2 Average</p>
-              <p className="text-2xl font-bold text-uGreen">{timeData.period2Avg}</p>
+              <p className="text-2xl font-bold text-uGreen">
+                {timeData.period2Avg}
+              </p>
             </div>
             <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
               <p className="text-sm text-uGrayLight">Improvement</p>
-              <p className={`text-2xl font-bold ${parseFloat(timeData.improvement) >= 0 ? 'text-uGreen' : 'text-uRed'}`}>
-                {parseFloat(timeData.improvement) >= 0 ? '+' : ''}{timeData.improvement}%
+              <p
+                className={`text-2xl font-bold ${
+                  parseFloat(timeData.improvement) >= 0
+                    ? "text-uGreen"
+                    : "text-uRed"
+                }`}
+              >
+                {parseFloat(timeData.improvement) >= 0 ? "+" : ""}
+                {timeData.improvement}%
               </p>
             </div>
           </div>
@@ -189,22 +230,38 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
           {/* Time Comparison Chart */}
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={[...timeData.period1, ...timeData.period2]}>
-              <CartesianGrid strokeDasharray="3 3" stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGrayLight').trim()} />
-              <XAxis 
-                dataKey="date" 
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uGrayLight")
+                  .trim()}
+              />
+              <XAxis
+                dataKey="date"
                 tickFormatter={formatDate}
-                tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }}
+                tick={{
+                  fontSize: 12,
+                  fill: getComputedStyle(document.documentElement)
+                    .getPropertyValue("--uGray")
+                    .trim(),
+                }}
               />
-              <YAxis tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }} />
-              <Tooltip 
-                formatter={formatTooltip}
-                labelFormatter={formatDate}
+              <YAxis
+                tick={{
+                  fontSize: 12,
+                  fill: getComputedStyle(document.documentElement)
+                    .getPropertyValue("--uGray")
+                    .trim(),
+                }}
               />
+              <Tooltip formatter={formatTooltip} labelFormatter={formatDate} />
               <Legend />
               <Line
                 type="monotone"
                 dataKey="averageScore"
-                stroke={getComputedStyle(document.documentElement).getPropertyValue('--uBlue').trim()}
+                stroke={getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uBlue")
+                  .trim()}
                 strokeWidth={2}
                 name="Period 1"
                 connectNulls={false}
@@ -212,7 +269,9 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
               <Line
                 type="monotone"
                 dataKey="averageScore"
-                stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGreen').trim()}
+                stroke={getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uGreen")
+                  .trim()}
                 strokeWidth={2}
                 name="Period 2"
                 connectNulls={false}
@@ -222,37 +281,67 @@ export const ComparativeAnalysis: React.FC<ComparativeAnalysisProps> = ({
         </div>
       )}
 
-      {comparisonType === 'questions' && (
+      {comparisonType === "questions" && (
         <div>
           {/* Question Comparison Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
               <p className="text-sm text-uGrayLight">Top Performers Average</p>
-              <p className="text-2xl font-bold text-uGreen">{questionData.topAvg}</p>
+              <p className="text-2xl font-bold text-uGreen">
+                {questionData.topAvg}
+              </p>
             </div>
             <div className="text-center p-4 bg-panel rounded-lg border border-uGrayLight">
-              <p className="text-sm text-uGrayLight">Needs Improvement Average</p>
-              <p className="text-2xl font-bold text-uRed">{questionData.bottomAvg}</p>
+              <p className="text-sm text-uGrayLight">
+                Needs Improvement Average
+              </p>
+              <p className="text-2xl font-bold text-uRed">
+                {questionData.bottomAvg}
+              </p>
             </div>
           </div>
 
           {/* Question Comparison Chart */}
           <ResponsiveContainer width="100%" height={300}>
-            <RechartsBarChart data={[...questionData.topQuestions, ...questionData.bottomQuestions]}>
-              <CartesianGrid strokeDasharray="3 3" stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGrayLight').trim()} />
-              <XAxis 
-                dataKey="questionContent" 
-                tick={{ fontSize: 10, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }}
+            <RechartsBarChart
+              data={[
+                ...questionData.topQuestions,
+                ...questionData.bottomQuestions,
+              ]}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uGrayLight")
+                  .trim()}
+              />
+              <XAxis
+                dataKey="questionContent"
+                tick={{
+                  fontSize: 10,
+                  fill: getComputedStyle(document.documentElement)
+                    .getPropertyValue("--uGray")
+                    .trim(),
+                }}
                 angle={-45}
                 textAnchor="end"
                 height={80}
               />
-              <YAxis tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }} />
+              <YAxis
+                tick={{
+                  fontSize: 12,
+                  fill: getComputedStyle(document.documentElement)
+                    .getPropertyValue("--uGray")
+                    .trim(),
+                }}
+              />
               <Tooltip formatter={formatTooltip} />
               <Legend />
-              <Bar 
-                dataKey="averageScore" 
-                fill={getComputedStyle(document.documentElement).getPropertyValue('--uBlue').trim()}
+              <Bar
+                dataKey="averageScore"
+                fill={getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uBlue")
+                  .trim()}
                 radius={[4, 4, 0, 0]}
               />
             </RechartsBarChart>

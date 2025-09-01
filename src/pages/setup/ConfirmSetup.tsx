@@ -6,7 +6,7 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
-  const { username, systemMemory } = useSetupProcedure();
+  const { systemMemory } = useSetupProcedure();
   const { startInstallation } = useLocalSetup();
   const { confirm } = useDialog();
 
@@ -36,9 +36,7 @@ const ConfirmSetup = () => {
       nextLabel="Confirm"
     >
       <div className="flex-1 flex flex-col justify-center gap-4">
-        <h1 className="text-5xl font-semibold text-primary">
-          Hello {username.first}!
-        </h1>
+        <h1 className="text-5xl font-semibold text-primary">Hello!</h1>
         <p className="text-uGrayLight text-lg">
           {systemMemory >= 8
             ? "You're almost there! Confirm your setup below to proceed with installing the necessary application dependencies"
@@ -46,17 +44,6 @@ const ConfirmSetup = () => {
         </p>
         <table className="bg-panel text-uGray rounded-md overflow-hidden mt-8">
           <tbody>
-            <tr>
-              <td className="border border-uGrayLightLight px-4 py-2 ">
-                USERNAME
-              </td>
-              <td className="border border-uGrayLightLight px-4 py-2  text-uGray text-base font-semibold">
-                {username.middle
-                  ? `${username.first} ${username.middle} ${username.last}`
-                  : `${username.first} ${username.last}`}
-              </td>
-            </tr>
-
             <tr>
               <td className="border border-uGrayLightLight px-4 py-2 ">
                 AVAILABLE TOOLS

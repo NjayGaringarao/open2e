@@ -2,7 +2,6 @@ import { useState, Fragment } from "react";
 import { HelpCircle, X } from "lucide-react";
 import { useScreenSize } from "@/hooks/useScreenSIze";
 import { useColorMode } from "@/components/ui/color-mode";
-import Button from "./Button";
 import Markdown from "./Markdown";
 import {
   Dialog,
@@ -16,12 +15,15 @@ interface HowToUseButtonProps {
   onPanelVisibilityChange?: (isVisible: boolean) => void;
 }
 
-const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) => {
+const HowToUseButton = ({
+  page,
+  onPanelVisibilityChange,
+}: HowToUseButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRightPanelVisible, setIsRightPanelVisible] = useState(false);
   const screenSize = useScreenSize();
   const { colorMode } = useColorMode();
-  
+
   // Show right panel on large screens (768px and above)
   const showRightPanel = screenSize === "large" || screenSize === "extralarge";
 
@@ -85,7 +87,8 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
 - **Text-to-Speech**: Enable voice output if available
 `;
 
-  const instructions = page === "evaluate" ? evaluateInstructions : chatInstructions;
+  const instructions =
+    page === "evaluate" ? evaluateInstructions : chatInstructions;
 
   return (
     <>
@@ -95,11 +98,11 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
           <div className="flex flex-col h-full">
             {/* Header */}
             <div className="flex items-center justify-between p-3 border-b border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60">
-              <h2 className={`text-base font-bold ${
-                colorMode === 'dark' 
-                  ? 'text-white' 
-                  : 'text-uBlack'
-              }`}>
+              <h2
+                className={`text-base font-bold ${
+                  colorMode === "dark" ? "text-white" : "text-uBlack"
+                }`}
+              >
                 How to Use
               </h2>
             </div>
@@ -107,11 +110,12 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
             {/* Content */}
             <div className="flex-1 p-3 overflow-y-auto bg-gradient-to-br from-background/50 via-background/30 to-background/50">
               <div className="prose prose-xs max-w-none">
-                <Markdown text={instructions} className={`${
-                  colorMode === 'dark' 
-                    ? "text-gray-200" 
-                    : "text-gray-800"
-                } text-xs leading-tight`} />
+                <Markdown
+                  text={instructions}
+                  className={`${
+                    colorMode === "dark" ? "text-gray-200" : "text-gray-800"
+                  } text-xs leading-tight`}
+                />
               </div>
             </div>
           </div>
@@ -124,9 +128,9 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
           <button
             onClick={() => handleRightPanelToggle(!isRightPanelVisible)}
             className={`${
-              colorMode === 'dark'
-                ? 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl'
-                : 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl'
+              colorMode === "dark"
+                ? "bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl"
+                : "bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl"
             } p-3 rounded-full transition-all duration-300`}
             title="How to use"
           >
@@ -139,9 +143,9 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
       <button
         onClick={() => setIsOpen(true)}
         className={`fixed top-6 right-6 sm:top-8 sm:right-8 z-40 lg:hidden ${
-          colorMode === 'dark'
-            ? 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl'
-            : 'bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl'
+          colorMode === "dark"
+            ? "bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-xl hover:shadow-2xl"
+            : "bg-gradient-to-r from-primary to-primary/90 text-white hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl"
         } p-3 rounded-full hover:scale-105 transition-all duration-300`}
         aria-label="How to use"
       >
@@ -168,35 +172,38 @@ const HowToUseButton = ({ page, onPanelVisibilityChange }: HowToUseButtonProps) 
               <div className="flex flex-col h-full">
                 {/* Header */}
                 <div className="flex items-center justify-between p-3 border-b border-uGrayLight/30 bg-gradient-to-r from-panel/80 to-panel/60">
-                  <h2 className={`text-base font-bold ${
-                    colorMode === 'dark' 
-                      ? 'text-white' 
-                      : 'text-uBlack'
-                  }`}>
+                  <h2
+                    className={`text-base font-bold ${
+                      colorMode === "dark" ? "text-white" : "text-uBlack"
+                    }`}
+                  >
                     How to Use
                   </h2>
                   <button
                     onClick={() => setIsOpen(false)}
                     className={`p-1.5 hover:bg-gradient-to-r hover:from-uGrayLight/20 hover:to-uGrayLight/10 rounded-full transition-all duration-300 ${
-                      colorMode === 'dark' 
-                        ? 'hover:bg-white/10' 
-                        : 'hover:bg-black/10'
+                      colorMode === "dark"
+                        ? "hover:bg-white/10"
+                        : "hover:bg-black/10"
                     }`}
                   >
-                    <X className={`h-4 w-4 ${
-                      colorMode === 'dark' ? 'text-white' : 'text-uBlack'
-                    }`} />
+                    <X
+                      className={`h-4 w-4 ${
+                        colorMode === "dark" ? "text-white" : "text-uBlack"
+                      }`}
+                    />
                   </button>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 p-3 overflow-y-auto bg-gradient-to-br from-background/50 via-background/30 to-background/50">
                   <div className="prose prose-xs max-w-none">
-                    <Markdown text={instructions} className={`${
-                      colorMode === 'dark' 
-                        ? "text-gray-200" 
-                        : "text-gray-800"
-                    } text-xs leading-tight`} />
+                    <Markdown
+                      text={instructions}
+                      className={`${
+                        colorMode === "dark" ? "text-gray-200" : "text-gray-800"
+                      } text-xs leading-tight`}
+                    />
                   </div>
                 </div>
               </div>

@@ -1,33 +1,38 @@
-import React, { useState } from 'react';
-import { AnalyticsCard } from './AnalyticsCard';
-import { ScoreChart } from './ScoreChart';
-import { QuestionScoresTable } from './QuestionScoresTable';
-import { EvaluationsTable } from './EvaluationsTable';
-import { BarChart } from './BarChart';
-import { PieChart } from './PieChart';
-import { useAnalytics } from '@/hooks/useAnalytics';
-import { BarChart3, TrendingUp, Users, Award, Trash2 } from 'lucide-react';
-import { clearExistingData } from '@/database/analytics/queries';
+import React, { useState } from "react";
+import { AnalyticsCard } from "./AnalyticsCard";
+import { ScoreChart } from "./ScoreChart";
+import { QuestionScoresTable } from "./QuestionScoresTable";
+import { EvaluationsTable } from "./EvaluationsTable";
+import { BarChart } from "./BarChart";
+import { PieChart } from "./PieChart";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { BarChart3, TrendingUp, Users, Award, Trash2 } from "lucide-react";
+import { clearExistingData } from "@/database/analytics/queries";
 
 export const AnalyticsDashboard: React.FC = () => {
-  const { analyticsData, evaluationsData, loading, error, refreshData } = useAnalytics();
-  const [chartType, setChartType] = useState<'line' | 'area'>('line');
-  const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
+  const { analyticsData, evaluationsData, loading, refreshData } =
+    useAnalytics();
+  const [chartType, setChartType] = useState<"line" | "area">("line");
+  const [activeTab, setActiveTab] = useState<"overview" | "charts">("overview");
   const [isClearing, setIsClearing] = useState(false);
 
   const handleClearData = async () => {
-    if (window.confirm('Are you sure you want to clear all existing evaluation data? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all existing evaluation data? This action cannot be undone."
+      )
+    ) {
       setIsClearing(true);
       try {
         const { error } = await clearExistingData();
         if (error) {
-          alert('Failed to clear data: ' + error);
+          alert("Failed to clear data: " + error);
         } else {
           // Refresh data to show empty state
           await refreshData();
         }
       } catch (err) {
-        alert('Failed to clear data: ' + err);
+        alert("Failed to clear data: " + err);
       } finally {
         setIsClearing(false);
       }
@@ -52,11 +57,11 @@ export const AnalyticsDashboard: React.FC = () => {
 
   // Remove error state - just show empty state instead
   // Check if there's any data to show
-  const hasData = analyticsData && (
-    analyticsData.totalAnswers > 0 || 
-    analyticsData.averageScorePerQuestion.length > 0 || 
-    analyticsData.evaluationsOverTime.length > 0
-  );
+  const hasData =
+    analyticsData &&
+    (analyticsData.totalAnswers > 0 ||
+      analyticsData.averageScorePerQuestion.length > 0 ||
+      analyticsData.evaluationsOverTime.length > 0);
 
   // Show empty state if no data
   if (!hasData) {
@@ -77,7 +82,7 @@ export const AnalyticsDashboard: React.FC = () => {
               className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
             >
               <Trash2 className="h-4 w-4" />
-              <span>{isClearing ? 'Clearing...' : 'Clear Data'}</span>
+              <span>{isClearing ? "Clearing..." : "Clear Data"}</span>
             </button>
             <button
               onClick={refreshData}
@@ -101,8 +106,9 @@ export const AnalyticsDashboard: React.FC = () => {
                 Welcome to Analytics
               </h3>
               <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
-                Start evaluating answers in the evaluation page to see comprehensive analytics data here. 
-                The dashboard will display detailed insights about your evaluation performance.
+                Start evaluating answers in the evaluation page to see
+                comprehensive analytics data here. The dashboard will display
+                detailed insights about your evaluation performance.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                 <div className="bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-blue-700/10 rounded-xl p-6 border border-blue-500/20">
@@ -154,7 +160,7 @@ export const AnalyticsDashboard: React.FC = () => {
             className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
           >
             <Trash2 className="h-4 w-4" />
-            <span>{isClearing ? 'Clearing...' : 'Clear Data'}</span>
+            <span>{isClearing ? "Clearing..." : "Clear Data"}</span>
           </button>
           <button
             onClick={refreshData}
@@ -169,21 +175,21 @@ export const AnalyticsDashboard: React.FC = () => {
       <div className="border-b border-uGrayLight/30 mb-8">
         <nav className="-mb-px flex space-x-8">
           <button
-            onClick={() => setActiveTab('overview')}
+            onClick={() => setActiveTab("overview")}
             className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
-              activeTab === 'overview'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight'
+              activeTab === "overview"
+                ? "border-primary text-primary"
+                : "border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight"
             }`}
           >
             Overview
           </button>
           <button
-            onClick={() => setActiveTab('charts')}
+            onClick={() => setActiveTab("charts")}
             className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
-              activeTab === 'charts'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight'
+              activeTab === "charts"
+                ? "border-primary text-primary"
+                : "border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight"
             }`}
           >
             Charts
@@ -192,7 +198,7 @@ export const AnalyticsDashboard: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      {activeTab === 'overview' && (
+      {activeTab === "overview" && (
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -216,8 +222,12 @@ export const AnalyticsDashboard: React.FC = () => {
               title="Best Performing Question"
               value={
                 analyticsData.averageScorePerQuestion.length > 0
-                  ? Math.max(...analyticsData.averageScorePerQuestion.map(q => q.averageScore || 0)).toFixed(2)
-                  : 'N/A'
+                  ? Math.max(
+                      ...analyticsData.averageScorePerQuestion.map(
+                        (q) => q.averageScore || 0
+                      )
+                    ).toFixed(2)
+                  : "N/A"
               }
               subtitle="average score"
               icon={<Award className="h-8 w-8 text-primary" />}
@@ -227,24 +237,26 @@ export const AnalyticsDashboard: React.FC = () => {
           {/* Main Chart */}
           <div className="mb-10">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold text-uGray">Evaluations Over Time</h3>
+              <h3 className="text-xl font-semibold text-uGray">
+                Evaluations Over Time
+              </h3>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => setChartType('line')}
+                  onClick={() => setChartType("line")}
                   className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    chartType === 'line'
-                      ? 'bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg'
-                      : 'bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight'
+                    chartType === "line"
+                      ? "bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg"
+                      : "bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight"
                   }`}
                 >
                   Line Chart
                 </button>
                 <button
-                  onClick={() => setChartType('area')}
+                  onClick={() => setChartType("area")}
                   className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    chartType === 'area'
-                      ? 'bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg'
-                      : 'bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight'
+                    chartType === "area"
+                      ? "bg-gradient-to-r from-uBlue to-blue-600 text-background shadow-lg"
+                      : "bg-gradient-to-r from-uGrayLight to-uGrayLightLight text-uGray hover:from-uGrayLightLight hover:to-uGrayLight"
                   }`}
                 >
                   Area Chart
@@ -262,7 +274,9 @@ export const AnalyticsDashboard: React.FC = () => {
           {/* Tables Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl border border-uGrayLight/30 backdrop-blur-sm">
-              <QuestionScoresTable data={analyticsData.averageScorePerQuestion} />
+              <QuestionScoresTable
+                data={analyticsData.averageScorePerQuestion}
+              />
             </div>
             <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl border border-uGrayLight/30 backdrop-blur-sm">
               <EvaluationsTable data={evaluationsData} maxRows={5} />
@@ -271,18 +285,18 @@ export const AnalyticsDashboard: React.FC = () => {
         </>
       )}
 
-      {activeTab === 'charts' && (
+      {activeTab === "charts" && (
         <div className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl p-6 border border-uGrayLight/30 backdrop-blur-sm">
-              <BarChart 
+              <BarChart
                 data={analyticsData.averageScorePerQuestion}
                 title="Question Performance (Bar Chart)"
                 dataKey="averageScore"
               />
             </div>
             <div className="bg-gradient-to-br from-background via-background/95 to-background/90 rounded-xl shadow-xl p-6 border border-uGrayLight/30 backdrop-blur-sm">
-              <PieChart 
+              <PieChart
                 data={analyticsData.averageScorePerQuestion}
                 title="Score Distribution (Pie Chart)"
                 dataKey="totalEvaluations"

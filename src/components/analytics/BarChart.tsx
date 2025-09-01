@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   BarChart as RechartsBarChart,
   Bar,
@@ -8,8 +8,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from 'recharts';
-import type { QuestionScore } from '@/database/analytics/types';
+} from "recharts";
+import type { QuestionScore } from "@/database/analytics/types";
 
 interface BarChartProps {
   data: QuestionScore[];
@@ -22,17 +22,17 @@ export const BarChart: React.FC<BarChartProps> = ({
   data,
   title = "Question Performance",
   dataKey = "averageScore",
-  color = "#8884d8"
 }) => {
   const formatTooltip = (value: any, name: string) => {
-    if (name === 'averageScore') return [`${value.toFixed(2)}`, 'Average Score'];
-    if (name === 'totalEvaluations') return [`${value}`, 'Total Evaluations'];
+    if (name === "averageScore")
+      return [`${value.toFixed(2)}`, "Average Score"];
+    if (name === "totalEvaluations") return [`${value}`, "Total Evaluations"];
     return [value, name];
   };
 
   const truncateText = (text: string, maxLength: number = 30) => {
     if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + "...";
   };
 
   if (data.length === 0) {
@@ -42,7 +42,9 @@ export const BarChart: React.FC<BarChartProps> = ({
         <div className="flex items-center justify-center h-64 text-uGrayLight">
           <div className="text-center">
             <p className="mb-2">No question data available</p>
-            <p className="text-sm text-uGrayLightLight">Start evaluating answers to see question performance charts</p>
+            <p className="text-sm text-uGrayLightLight">
+              Start evaluating answers to see question performance charts
+            </p>
           </div>
         </div>
       </div>
@@ -55,21 +57,40 @@ export const BarChart: React.FC<BarChartProps> = ({
       <div className="w-full h-80">
         <ResponsiveContainer width="100%" height="100%">
           <RechartsBarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke={getComputedStyle(document.documentElement).getPropertyValue('--uGrayLight').trim()} />
-            <XAxis 
-              dataKey="questionContent" 
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke={getComputedStyle(document.documentElement)
+                .getPropertyValue("--uGrayLight")
+                .trim()}
+            />
+            <XAxis
+              dataKey="questionContent"
               tickFormatter={truncateText}
-              tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }}
+              tick={{
+                fontSize: 12,
+                fill: getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uGray")
+                  .trim(),
+              }}
               angle={-45}
               textAnchor="end"
               height={80}
             />
-            <YAxis tick={{ fontSize: 12, fill: getComputedStyle(document.documentElement).getPropertyValue('--uGray').trim() }} />
+            <YAxis
+              tick={{
+                fontSize: 12,
+                fill: getComputedStyle(document.documentElement)
+                  .getPropertyValue("--uGray")
+                  .trim(),
+              }}
+            />
             <Tooltip formatter={formatTooltip} />
             <Legend />
-            <Bar 
-              dataKey={dataKey} 
-              fill={getComputedStyle(document.documentElement).getPropertyValue('--uBlue').trim()}
+            <Bar
+              dataKey={dataKey}
+              fill={getComputedStyle(document.documentElement)
+                .getPropertyValue("--uBlue")
+                .trim()}
               radius={[4, 4, 0, 0]}
             />
           </RechartsBarChart>

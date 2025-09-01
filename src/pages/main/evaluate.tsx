@@ -1,15 +1,9 @@
 import Learner from "@/components/evaluate/learner/Learner";
 import { LearnerProvider } from "@/context/main/learner/LearnerProvider";
 import { ClipboardCheck } from "lucide-react";
-import HowToUseButton from "@/components/HowToUseButton";
-import { useScreenSize } from "@/hooks/useScreenSIze";
-import { useState } from "react";
+import { Panel as HowToUsePanel } from "@/components/evaluate/howToUse";
 
 export default function Evaluate() {
-  const screenSize = useScreenSize();
-  const showRightPanel = screenSize === "large" || screenSize === "extralarge";
-  const [isRightPanelVisible, setIsRightPanelVisible] = useState(false);
-
   return (
     <div className="flex h-screen flex-row gap-6">
       {/* Main Content */}
@@ -25,14 +19,8 @@ export default function Evaluate() {
         </div>
       </div>
 
-      {/* Sidebar for usage info */}
-      <div className="hidden 2xl:block bg-panel w-96 transition-all duration-500"></div>
-
-      {/* How to Use Button */}
-      <HowToUseButton 
-        page="evaluate" 
-        onPanelVisibilityChange={setIsRightPanelVisible}
-      />
+      {/* How to Use Panel */}
+      <HowToUsePanel />
     </div>
   );
 }

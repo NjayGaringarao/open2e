@@ -5,11 +5,11 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Menu } from "lucide-react";
-import ConversationController from "./ConversationController";
+import { HelpCircle } from "lucide-react";
 import clsx from "clsx";
+import Content from "./Content";
 
-const ConversationPanel = () => {
+export const Panel = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,20 +22,20 @@ const ConversationPanel = () => {
           "border-r border-uGrayLight/30"
         )}
       >
-        <ConversationController />
+        <Content />
       </div>
 
       {/* Floating button for mobile */}
       <button
         onClick={() => setIsOpen(true)}
         className={clsx(
-          "fixed top-8   right-12 z-40 2xl:hidden p-3 rounded-full",
+          "fixed top-12 right-6 2xl:hidden p-3 rounded-full",
           "bg-gradient-to-r from-primary to-primary/90 shadow-xl",
           "hover:shadow-2xl hover:scale-105 transition-all duration-300 hover:from-primary/90 hover:to-primary"
         )}
         aria-label="Open conversations"
       >
-        <Menu className="w-6 h-6" />
+        <HelpCircle className="h-6 w-6" />
       </button>
 
       {/* Slide-in drawer for mobile */}
@@ -62,7 +62,7 @@ const ConversationPanel = () => {
               )}
             >
               <div className="overflow-y-auto flex-1">
-                <ConversationController />
+                <Content />
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -86,5 +86,3 @@ const ConversationPanel = () => {
     </>
   );
 };
-
-export default ConversationPanel;

@@ -79,14 +79,8 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error || !result) {
-        alert({
-          title: "Evaluation Failed",
-          description: !result
-            ? "Evaluation Failed. Please try again."
-            : `${error}`,
-          mode: "ERROR",
-        });
-        return null;
+        // Use Offline evaluation instead
+        return evaluateOffline();
       }
 
       return result;

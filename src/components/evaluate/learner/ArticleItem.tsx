@@ -11,7 +11,7 @@ interface Props {
 
 export default function ArticleItem({ article }: Props) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const status = useConnectionStatus();
+  const { status } = useConnectionStatus();
   useEffect(() => {
     const fetchPreview = async () => {
       try {

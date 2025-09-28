@@ -6,6 +6,8 @@ import { EvaluationsTable } from "./EvaluationsTable";
 import { BarChart } from "./BarChart";
 import { PieChart } from "./PieChart";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { Ranking } from "./Ranking";
+import { Forecasting } from "./Forecasting";
 import { BarChart3, TrendingUp, Users, Award, Trash2 } from "lucide-react";
 import { clearExistingData } from "@/database/analytics/queries";
 
@@ -13,7 +15,9 @@ export const AnalyticsDashboard: React.FC = () => {
   const { analyticsData, evaluationsData, loading, refreshData } =
     useAnalytics();
   const [chartType, setChartType] = useState<"line" | "area">("line");
-  const [activeTab, setActiveTab] = useState<"overview" | "charts">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "charts" | "ranking" | "forecasting"
+  >("overview");
   const [isClearing, setIsClearing] = useState(false);
 
   const handleClearData = async () => {
@@ -194,6 +198,26 @@ export const AnalyticsDashboard: React.FC = () => {
           >
             Charts
           </button>
+          <button
+            onClick={() => setActiveTab("ranking")}
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
+              activeTab === "ranking"
+                ? "border-primary text-primary"
+                : "border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight"
+            }`}
+          >
+            Ranking
+          </button>
+          <button
+            onClick={() => setActiveTab("forecasting")}
+            className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
+              activeTab === "forecasting"
+                ? "border-primary text-primary"
+                : "border-transparent text-uGrayLight hover:text-uGray hover:border-uGrayLight"
+            }`}
+          >
+            Forecasting
+          </button>
         </nav>
       </div>
 
@@ -303,6 +327,16 @@ export const AnalyticsDashboard: React.FC = () => {
               />
             </div>
           </div>
+        </div>
+      )}
+      {activeTab === "ranking" && (
+        <div className="space-y-8">
+          <Ranking data={analyticsData.averageScorePerQuestion} />
+        </div>
+      )}
+      {activeTab === "forecasting" && (
+        <div className="space-y-8">
+          <Forecasting data={analyticsData.evaluationsOverTime} />
         </div>
       )}
     </div>

@@ -9,3 +9,5 @@ export * from './DateRangeFilter';
 export * from './ExportButton';
 export * from './PerformanceMetrics';
 export * from './ComparativeAnalysis';
+export * from './Ranking';
+export * from './Forecasting';

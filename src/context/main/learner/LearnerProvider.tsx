@@ -16,7 +16,7 @@ import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "../analytics/AnalyticsContext";
 
 export const LearnerProvider = ({ children }: { children: ReactNode }) => {
-  const status = useConnectionStatus();
+  const { status } = useConnectionStatus();
   const { triggerRefresh } = useAnalyticsContext();
   const { systemMemory } = useSettings();
   const { alert } = useDialog();

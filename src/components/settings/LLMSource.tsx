@@ -7,7 +7,7 @@ import icon from "@/constant/icon";
 import { useSettings } from "@/context/main/settings";
 
 const LLMSource = () => {
-  const status = useConnectionStatus();
+  const { status } = useConnectionStatus();
   const { systemMemory } = useSettings();
   const { confirm, alert } = useDialog();
   const { percent, startInstallation, isInstalling } = useLocalSetup();

@@ -15,7 +15,7 @@ import * as ollama from "@/lib/ollama";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
-  const status = useConnectionStatus();
+  const { status } = useConnectionStatus();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] =
     useState<Conversation | null>(null);

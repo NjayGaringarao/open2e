@@ -12,7 +12,7 @@ interface IAIDetection {
 }
 
 const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {
-  const status = useConnectionStatus();
+  const { status } = useConnectionStatus();
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

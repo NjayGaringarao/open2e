@@ -10,13 +10,15 @@ import { add } from "@/database/evaluation";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "./analytics/AnalyticsContext";
-import { getAllRubrics, Rubric } from "@/database/rubric";
+import { useRubric } from "./rubric";
+import { Rubric } from "@/database/rubric";
 
 export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   const { status } = useConnectionStatus();
   const { triggerRefresh } = useAnalyticsContext();
   const { systemMemory } = useSettings();
   const { alert } = useDialog();
+  const { rubrics } = useRubric();
   const [isLoading, setIsLoading] = useState(false);
   const [articleList, setArticleList] = useState<Article[]>([]);
   const [question, setQuestion] = useState<Question>({
@@ -28,15 +30,12 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
 
   // Load default rubric on mount
   useEffect(() => {
-    const loadDefaultRubric = async () => {
-      const { rubrics, error } = await getAllRubrics();
-      if (!error && rubrics.length > 0) {
-        // Set the first rubric (default) as selected
-        setSelectedRubric(rubrics[0]);
-      }
-    };
-    loadDefaultRubric();
-  }, []);
+    if (rubrics.length > 0 && !selectedRubric) {
+      // Set the first rubric (default) as selected
+      console.log("Setting default rubric:", rubrics[0].name);
+      setSelectedRubric(rubrics[0]);
+    }
+  }, [rubrics]);
 
   const loadArticles = async (suggestedQuery: string) => {
     // Implementation of article query using Openai
@@ -83,6 +82,12 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
 
     // Implementation of evaluation using openai
     const evaluateOnline = async (): Promise<Result | null> => {
+      console.log(
+        "Evaluating with rubric:",
+        selectedRubric?.name,
+        "Content:",
+        selectedRubric?.content?.substring(0, 100) + "..."
+      );
       const { result, error } = await openai.evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
@@ -107,6 +112,12 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
             "Not enough system memory. Please connect to the internet.",
         });
       }
+      console.log(
+        "Evaluating with rubric (Ollama):",
+        selectedRubric?.name,
+        "Content:",
+        selectedRubric?.content?.substring(0, 100) + "..."
+      );
       const { result, error } = await ollama.evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
@@ -198,7 +209,10 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         clearSheet,
         articleList,
         selectedRubric,
-        updateSelectedRubric: setSelectedRubric,
+        updateSelectedRubric: (rubric) => {
+          console.log("Rubric selection changed to:", rubric?.name);
+          setSelectedRubric(rubric);
+        },
       }}
     >
       {children}

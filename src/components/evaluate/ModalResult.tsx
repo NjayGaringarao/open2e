@@ -51,7 +51,9 @@ const ModalResult = ({
     if (justification) {
       setIsSpeeching(true);
       await talk(
-        `You've got ${score} over 10. It is because: `.concat(justification)
+        `You've got the score of ${score}. It is because: `.concat(
+          justification
+        )
       );
 
       const isCreateConversation = await ask(
@@ -136,7 +138,7 @@ const ModalResult = ({
                     " rounded-lg text-center shadow-sm"
                   )}
                 >
-                  {score}/10
+                  {score}
                 </div>
                 <ArrowRight className="hidden md:block h-10 w-10 text-uGrayLight" />
                 <div

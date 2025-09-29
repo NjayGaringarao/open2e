@@ -83,7 +83,7 @@ const AnswerSheet = () => {
               sheet.trackedAnswer !== "" ? (
               <div className="flex flex-col items-center">
                 <p className="text-background text-4xl font-semibold">
-                  {sheet.score}/10
+                  {sheet.score}
                 </p>
                 <p className="text-background text-base font-semibold">SCORE</p>
               </div>

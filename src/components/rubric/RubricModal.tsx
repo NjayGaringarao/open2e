@@ -9,6 +9,7 @@ import {
 import { Fragment } from "react";
 import { createRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
+import { useRubric } from "@/context/main/rubric";
 import Button from "@/components/Button";
 
 interface RubricModalProps {
@@ -22,6 +23,7 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const { alert } = useDialog();
+  const { addRubric } = useRubric();
 
   useEffect(() => {
     if (rubric) {
@@ -45,7 +47,7 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
     }
 
     setLoading(true);
-    const { error } = await createRubric({
+    const { rubric: newRubric, error } = await createRubric({
       name: name.trim(),
       content: content.trim(),
     });
@@ -58,6 +60,9 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
         mode: "ERROR",
       });
     } else {
+      if (newRubric) {
+        addRubric(newRubric);
+      }
       alert({
         title: "Success",
         description: "Rubric created successfully",

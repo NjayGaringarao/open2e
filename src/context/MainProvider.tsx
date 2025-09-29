@@ -5,6 +5,7 @@ import { SettingsProvider } from "./main/settings";
 import { SpeechProvider } from "./speech";
 import { ChatProvider } from "./main/chat/ChatProvider";
 import { AnalyticsProvider } from "./main/analytics/AnalyticsContext";
+import { RubricProvider } from "./main/rubric";
 
 export const MainProvider = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +14,9 @@ export const MainProvider = ({ children }: { children: ReactNode }) => {
         <SettingsProvider>
           <SpeechProvider>
             <ChatProvider>
-              <AnalyticsProvider>{children}</AnalyticsProvider>
+              <AnalyticsProvider>
+                <RubricProvider>{children}</RubricProvider>
+              </AnalyticsProvider>
             </ChatProvider>
           </SpeechProvider>
         </SettingsProvider>

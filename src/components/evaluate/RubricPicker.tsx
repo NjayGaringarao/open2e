@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import { getAllRubrics, Rubric } from "@/database/rubric";
-import { useDialog } from "@/context/dialog";
+import { Rubric } from "@/database/rubric";
 import {
   Listbox,
   ListboxButton,
@@ -10,6 +8,7 @@ import {
 } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon } from "lucide-react";
 import clsx from "clsx";
+import { useRubric } from "@/context/main/rubric";
 
 interface RubricPickerProps {
   selectedRubricId: number | null;
@@ -20,29 +19,7 @@ const RubricPicker = ({
   selectedRubricId,
   onRubricSelect,
 }: RubricPickerProps) => {
-  const [rubrics, setRubrics] = useState<Rubric[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { alert } = useDialog();
-
-  const loadRubrics = async () => {
-    setLoading(true);
-    const { rubrics, error } = await getAllRubrics();
-    if (error) {
-      alert({
-        title: "Error",
-        description: `Failed to load rubrics: ${error}`,
-        mode: "ERROR",
-      });
-    } else {
-      setRubrics(rubrics);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    loadRubrics();
-  }, []);
-
+  const { rubrics, loading } = useRubric();
   const selectedRubric = rubrics.find((r) => r.id === selectedRubricId);
 
   const handleRubricSelect = (rubric: Rubric) => {

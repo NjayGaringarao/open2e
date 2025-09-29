@@ -1,35 +1,16 @@
-import { useState, useEffect } from "react";
-import { getAllRubrics, deleteRubric, Rubric } from "@/database/rubric";
+import { useState } from "react";
+import { deleteRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
+import { useRubric } from "@/context/main/rubric";
 import Button from "@/components/Button";
 import RubricModal from "./RubricModal";
 import { Plus, Trash } from "lucide-react";
 
 const RubricList = () => {
-  const [rubrics, setRubrics] = useState<Rubric[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
   const [selectedRubric, setSelectedRubric] = useState<Rubric | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { alert } = useDialog();
-
-  const loadRubrics = async () => {
-    setLoading(true);
-    const { rubrics, error } = await getAllRubrics();
-    if (error) {
-      alert({
-        title: "Error",
-        description: `Failed to load rubrics: ${error}`,
-        mode: "ERROR",
-      });
-    } else {
-      setRubrics(rubrics);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    loadRubrics();
-  }, []);
 
   const handleDelete = async (id: number, name: string) => {
     const { error } = await deleteRubric(id);
@@ -40,12 +21,12 @@ const RubricList = () => {
         mode: "ERROR",
       });
     } else {
+      removeRubric(id);
       alert({
         title: "Success",
         description: `Rubric "${name}" deleted successfully`,
         mode: "SUCCESS",
       });
-      loadRubrics();
     }
   };
 
@@ -62,7 +43,7 @@ const RubricList = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setSelectedRubric(null);
-    loadRubrics();
+    refreshRubrics();
   };
 
   if (loading) {

@@ -1,6 +1,6 @@
 import { RUBRIC_BLOCK } from "../../rubric";
 
-export const getEvaluationInstruction = (): string => {
+export const getEvaluationInstruction = (rubric?: string): string => {
   const INTRO = `
 You are an educational AI evaluator and assistant for open-ended student responses.
 If the question is nonsensical or unrelated to computer literacy:
@@ -22,5 +22,5 @@ Additional Instruction:
 - Example format: "basic concepts of computer networks for beginners"
 `;
 
-  return [INTRO.trim(), RUBRIC_BLOCK.trim()].join("\n\n");
+  return [INTRO.trim(), rubric || RUBRIC_BLOCK.trim()].join("\n\n");
 };

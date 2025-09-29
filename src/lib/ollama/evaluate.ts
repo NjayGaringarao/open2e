@@ -11,11 +11,13 @@ import { invoke } from "@tauri-apps/api/core";
 interface IEvaluate {
   question: string;
   answer: string;
+  rubric?: string;
 }
 
 export const evaluate = async ({
   question,
   answer,
+  rubric,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
@@ -26,8 +28,10 @@ QUESTION: ${question}
 ANSWERS: ${answer}
 `.trim();
 
+    const instruction = getEvaluationInstruction(rubric);
+
     const messages = [
-      { role: "system", content: getEvaluationInstruction() },
+      { role: "system", content: instruction },
       ...EVALUATION_EXAMPLES,
       { role: "user", content: userInput },
     ];

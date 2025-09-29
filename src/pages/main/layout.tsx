@@ -4,6 +4,7 @@ import Home from "./home";
 import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
+import Rubrics from "./rubrics";
 import { ReactNode, useEffect, useState } from "react";
 
 export default function Layout() {
@@ -18,6 +19,7 @@ export default function Layout() {
       "/evaluate": <Evaluate />,
       "/settings": <Settings />,
       "/chat": <Chat />,
+      "/rubrics": <Rubrics />,
     });
   }, []);
 

@@ -9,6 +9,7 @@ interface IAdd {
   justification: string;
   llm_model: string;
   detected_ai?: number;
+  rubric_id: number;
 }
 
 export const add = async ({
@@ -18,6 +19,7 @@ export const add = async ({
   justification,
   llm_model,
   detected_ai,
+  rubric_id,
 }: IAdd): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
@@ -51,9 +53,17 @@ export const add = async ({
 
     // Step 2: Insert into evaluation
     await db.execute(
-      `INSERT INTO evaluation (question_id, answer, score, justification, llm_model, detected_ai)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [question_id, answer, score, justification, llm_model, detected_ai]
+      `INSERT INTO evaluation (question_id, answer, score, justification, llm_model, detected_ai, rubric_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        question_id,
+        answer,
+        score,
+        justification,
+        llm_model,
+        detected_ai,
+        rubric_id,
+      ]
     );
 
     return {};

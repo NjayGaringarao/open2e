@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { EvaluationContext, Question } from "./EvaluationContext";
 import { Article, Result, SheetData } from "@/types/evaluation";
 import { DEFAULT_LEARNERSHEET } from "@/constant/default";
@@ -10,6 +10,7 @@ import { add } from "@/database/evaluation";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "./analytics/AnalyticsContext";
+import { getAllRubrics, Rubric } from "@/database/rubric";
 
 export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   const { status } = useConnectionStatus();
@@ -23,6 +24,19 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     committed: "",
   });
   const [sheet, setSheet] = useState<SheetData>(DEFAULT_LEARNERSHEET);
+  const [selectedRubric, setSelectedRubric] = useState<Rubric | null>(null);
+
+  // Load default rubric on mount
+  useEffect(() => {
+    const loadDefaultRubric = async () => {
+      const { rubrics, error } = await getAllRubrics();
+      if (!error && rubrics.length > 0) {
+        // Set the first rubric (default) as selected
+        setSelectedRubric(rubrics[0]);
+      }
+    };
+    loadDefaultRubric();
+  }, []);
 
   const loadArticles = async (suggestedQuery: string) => {
     // Implementation of article query using Openai
@@ -72,6 +86,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       const { result, error } = await openai.evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
+        rubric: selectedRubric?.content,
       });
 
       if (error || !result) {
@@ -95,6 +110,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       const { result, error } = await ollama.evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
+        rubric: selectedRubric?.content,
       });
 
       if (error || !result) {
@@ -144,6 +160,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       justification: sheet.justification,
       llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
       detected_ai: sheet.detectedAI,
+      rubric_id: selectedRubric?.id || 1, // Fallback to default rubric ID
     });
 
     if (error) {
@@ -180,6 +197,8 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         saveSheet,
         clearSheet,
         articleList,
+        selectedRubric,
+        updateSelectedRubric: setSelectedRubric,
       }}
     >
       {children}

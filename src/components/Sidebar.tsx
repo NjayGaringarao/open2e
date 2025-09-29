@@ -13,6 +13,7 @@ import {
   MessageSquareText,
   ClipboardCheck,
   LucideProps,
+  ListTodo,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
 
@@ -36,6 +37,7 @@ export default function Sidebar() {
       { name: "Home", path: "/home", icon: Home },
       { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
       { name: "Chat", path: "/chat", icon: MessageSquareText },
+      { name: "Rubrics", path: "/rubrics", icon: ListTodo },
       { name: "Settings", path: "/settings", icon: Settings },
     ]);
   }, []);
@@ -71,7 +73,8 @@ export default function Sidebar() {
               to={path}
               className={clsx(
                 "flex items-center gap-3 rounded transition group hover:bg-secondary/60",
-                active && "font-semibold border border-primary/40 bg-secondary/40",
+                active &&
+                  "font-semibold border border-primary/40 bg-secondary/40",
                 expanded || screenSize === "extralarge"
                   ? "px-2 py-2"
                   : "justify-center py-2"

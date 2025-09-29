@@ -5,17 +5,19 @@ import { OPEN2E_BACKEND } from "@/constant/hostname";
 interface IEvaluate {
   question: string;
   answer: string;
+  rubric?: string;
 }
 
 export const evaluate = async ({
   question,
   answer,
+  rubric,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, answer }),
+      body: JSON.stringify({ question, answer, rubric }),
     });
 
     if (!res.ok) {

@@ -1,5 +1,6 @@
 import React, { createContext } from "react";
 import { Article, SheetData } from "@/types/evaluation";
+import { Rubric } from "@/database/rubric";
 
 export type Question = {
   tracked: string;
@@ -17,6 +18,8 @@ export interface EvaluationContextType {
   suggestedQuery?: string;
   isLoading: boolean;
   articleList: Article[];
+  selectedRubric: Rubric | null;
+  updateSelectedRubric: (rubric: Rubric | null) => void;
 }
 
 export const EvaluationContext = createContext<

@@ -12,12 +12,14 @@ interface prop {
   isListening: boolean;
   recorderControls: any;
   stopListening: () => void;
+  isSupported?: boolean;
 }
 
 export function ModalListen({
   isListening,
   recorderControls,
   stopListening,
+  isSupported = true,
 }: prop) {
   const primaryColor = getComputedStyle(document.documentElement)
     .getPropertyValue("--primary")
@@ -68,7 +70,15 @@ export function ModalListen({
               {/* Voice Visualizer active only while listening */}
 
               <div className="relative border">
-                {isListening && (
+                {!isSupported ? (
+                  <div className="h-[150px] w-[370px] flex items-center justify-center bg-red-50 border border-red-200 rounded">
+                    <p className="text-red-600 text-center">
+                      Speech recognition is not supported in this browser.
+                      <br />
+                      Please use a modern browser like Chrome, Edge, or Safari.
+                    </p>
+                  </div>
+                ) : isListening ? (
                   <VoiceVisualizer
                     controls={recorderControls}
                     height={150}
@@ -77,6 +87,17 @@ export function ModalListen({
                     mainBarColor={primaryColor}
                     secondaryBarColor={grayColor}
                   />
+                ) : (
+                  <div className="h-[150px] w-[370px] flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-uGrayLight mb-2">
+                        Starting voice recognition...
+                      </p>
+                      <p className="text-sm text-uGrayLight">
+                        Please allow microphone access when prompted
+                      </p>
+                    </div>
+                  </div>
                 )}
                 <div className="bottom-0 absolute bg-background py-8 w-full flex flex-col items-center border">
                   <Button

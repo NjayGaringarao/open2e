@@ -1,5 +1,5 @@
-import Learner from "@/components/evaluate/learner/Learner";
-import { LearnerProvider } from "@/context/main/learner/LearnerProvider";
+import Evaluation from "@/components/evaluate/Evaluation";
+import { EvaluationProvider } from "@/context/main/EvaluationProvider";
 import { ClipboardCheck } from "lucide-react";
 import { Panel as HowToUsePanel } from "@/components/evaluate/howToUse";
 
@@ -13,9 +13,9 @@ export default function Evaluate() {
             <ClipboardCheck className="h-10 w-10" />
             Open Ended Evaluation
           </div>
-          <LearnerProvider>
-            <Learner />
-          </LearnerProvider>
+          <EvaluationProvider>
+            <Evaluation />
+          </EvaluationProvider>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { openDatabase } from "../sqlite";
+import { openDatabase } from "./sqlite";
 import { Question } from "@/models";
 import Database from "@tauri-apps/plugin-sql";
 import { normalize } from "@/utils/string";

@@ -1,21 +1,17 @@
 import { ReactNode, useState } from "react";
-import { LearnerContext, Question } from "./LearnerContext";
-import {
-  Article,
-  LearnerResult,
-  LearnerSheetData,
-} from "@/types/evaluation/learner";
+import { EvaluationContext, Question } from "./EvaluationContext";
+import { Article, Result, SheetData } from "@/types/evaluation";
 import { DEFAULT_LEARNERSHEET } from "@/constant/default";
-import { useSettings } from "../settings";
+import { useSettings } from "./settings";
 import * as openai from "@/lib/openai";
 import * as ollama from "@/lib/ollama";
 import { useDialog } from "@/context/dialog";
-import { add } from "@/database/evaluation/learner";
+import { add } from "@/database/evaluation";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
-import { useAnalyticsContext } from "../analytics/AnalyticsContext";
+import { useAnalyticsContext } from "./analytics/AnalyticsContext";
 
-export const LearnerProvider = ({ children }: { children: ReactNode }) => {
+export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   const { status } = useConnectionStatus();
   const { triggerRefresh } = useAnalyticsContext();
   const { systemMemory } = useSettings();
@@ -26,7 +22,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
     tracked: "",
     committed: "",
   });
-  const [sheet, setSheet] = useState<LearnerSheetData>(DEFAULT_LEARNERSHEET);
+  const [sheet, setSheet] = useState<SheetData>(DEFAULT_LEARNERSHEET);
 
   const loadArticles = async (suggestedQuery: string) => {
     // Implementation of article query using Openai
@@ -69,10 +65,10 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
   const evaluateSheet = async () => {
     setIsLoading(true);
 
-    let evaluation: LearnerResult | null = null;
+    let evaluation: Result | null = null;
 
     // Implementation of evaluation using openai
-    const evaluateOnline = async (): Promise<LearnerResult | null> => {
+    const evaluateOnline = async (): Promise<Result | null> => {
       const { result, error } = await openai.evaluate({
         question: question.tracked,
         answer: sheet.trackedAnswer,
@@ -87,7 +83,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
     };
 
     // Implementation of evaluation using ollama
-    const evaluateOffline = async (): Promise<LearnerResult | null> => {
+    const evaluateOffline = async (): Promise<Result | null> => {
       // Check system memory before proceeding
       if (systemMemory < 8) {
         alert({
@@ -173,7 +169,7 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <LearnerContext.Provider
+    <EvaluationContext.Provider
       value={{
         question,
         updateQuestion: setQuestion,
@@ -187,6 +183,6 @@ export const LearnerProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </LearnerContext.Provider>
+    </EvaluationContext.Provider>
   );
 };

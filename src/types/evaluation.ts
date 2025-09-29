@@ -1,7 +1,4 @@
-import { Student } from "@/models";
-import { Name } from "./config";
-
-export type LearnerSheetData = {
+export type SheetData = {
   id: string;
   trackedAnswer: string;
   committedAnswer: string;
@@ -11,7 +8,7 @@ export type LearnerSheetData = {
   detectedAI?: number;
 };
 
-export type LearnerResult = {
+export type Result = {
   result: {
     score: number | null;
     justification: string;

@@ -1,5 +1,5 @@
 import { normalize } from "@/utils/string";
-import { openDatabase } from "../sqlite";
+import { openDatabase } from "./sqlite";
 import Database from "@tauri-apps/plugin-sql";
 
 interface IAdd {

@@ -30,7 +30,7 @@
   },
   "plugins": {
     "sql": {
-      "preload": ["sqlite:evaluator.db", "sqlite:learner.db"]
+      "preload": ["sqlite:main.db"]
     }
   },
   "bundle": {

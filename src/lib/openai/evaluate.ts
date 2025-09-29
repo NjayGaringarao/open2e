@@ -1,4 +1,4 @@
-import { LearnerResult } from "@/types/evaluation/learner";
+import { Result } from "@/types/evaluation";
 import { fetch } from "@tauri-apps/plugin-http";
 import { OPEN2E_BACKEND } from "@/constant/hostname";
 
@@ -10,7 +10,7 @@ interface IEvaluate {
 export const evaluate = async ({
   question,
   answer,
-}: IEvaluate): Promise<{ result: LearnerResult | null; error?: string }> => {
+}: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
       method: "POST",

@@ -1,16 +1,16 @@
 import React, { createContext } from "react";
-import { Article, LearnerSheetData } from "@/types/evaluation/learner";
+import { Article, SheetData } from "@/types/evaluation";
 
 export type Question = {
   tracked: string;
   committed: string;
 };
 
-export interface LearnerContextType {
+export interface EvaluationContextType {
   question: Question;
   updateQuestion: React.Dispatch<React.SetStateAction<Question>>;
-  sheet: LearnerSheetData;
-  updateSheet: React.Dispatch<React.SetStateAction<LearnerSheetData>>;
+  sheet: SheetData;
+  updateSheet: React.Dispatch<React.SetStateAction<SheetData>>;
   evaluateSheet: () => Promise<void>;
   saveSheet: () => Promise<void>;
   clearSheet: () => void;
@@ -19,6 +19,6 @@ export interface LearnerContextType {
   articleList: Article[];
 }
 
-export const LearnerContext = createContext<LearnerContextType | undefined>(
-  undefined
-);
+export const EvaluationContext = createContext<
+  EvaluationContextType | undefined
+>(undefined);

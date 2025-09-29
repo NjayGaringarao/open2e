@@ -1,4 +1,4 @@
-import { LearnerResult } from "@/types/evaluation/learner";
+import { Result } from "@/types/evaluation";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   getEvaluationInstruction,
@@ -16,7 +16,7 @@ interface IEvaluate {
 export const evaluate = async ({
   question,
   answer,
-}: IEvaluate): Promise<{ result: LearnerResult | null; error?: string }> => {
+}: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
     await invoke("initialize_ollama");

@@ -1,4 +1,4 @@
-import { Article } from "@/types/evaluation/learner";
+import { Article } from "@/types/evaluation";
 import { fetch } from "@tauri-apps/plugin-http";
 import { OPEN2E_BACKEND } from "@/constant/hostname";
 

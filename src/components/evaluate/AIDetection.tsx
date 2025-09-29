@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { detectAI } from "@/lib/sapling/detection"; // adjust path if needed
 import clsx from "clsx";
-import { LearnerSheetData } from "@/types/evaluation/learner";
+import { SheetData } from "@/types/evaluation";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 
 interface IAIDetection {
   text: string;
   className?: string;
-  sheet: LearnerSheetData;
-  setSheet: React.Dispatch<React.SetStateAction<LearnerSheetData>>;
+  sheet: SheetData;
+  setSheet: React.Dispatch<React.SetStateAction<SheetData>>;
 }
 
 const AIDetection = ({ text, className, sheet, setSheet }: IAIDetection) => {

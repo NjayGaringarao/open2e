@@ -1,6 +1,6 @@
 import icon from "@/constant/icon";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
-import { Article } from "@/types/evaluation/learner"; // adjust path if needed
+import { Article } from "@/types/evaluation";
 import { openUrl } from "@tauri-apps/plugin-opener"; // opens default browser
 import clsx from "clsx";
 import { useEffect, useState } from "react";

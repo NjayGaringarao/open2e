@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import ParagraphBox from "../../ParagraphBox";
-import Loading from "../../Loading";
-import ModalResult from "../ModalResult";
+import ParagraphBox from "../ParagraphBox";
+import Loading from "../Loading";
+import ModalResult from "./ModalResult";
 import { Save } from "lucide-react";
 import clsx from "clsx";
-import { useLearner } from "@/context/main/learner/useLearner";
-import AIDetection from "../AIDetection";
+import { useEvaluation } from "@/context/main/useEvaluation";
+import AIDetection from "./AIDetection";
 
 const AnswerSheet = () => {
   const {
@@ -16,7 +16,7 @@ const AnswerSheet = () => {
     clearSheet,
     saveSheet,
     isLoading,
-  } = useLearner();
+  } = useEvaluation();
   const [isAnswerModified, setIsAnswerModified] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isResultVisible, setIsResultVisible] = useState(false);

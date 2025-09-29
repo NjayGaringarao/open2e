@@ -65,13 +65,14 @@ export const addMessage = async (msg: Message): Promise<{ error?: string }> => {
       msg.conversation_id,
     ]);
     await db.execute(
-      `INSERT INTO message (id, conversation_id, role, content, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
+      `INSERT INTO message (id, conversation_id, role, content, status, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
         msg.id,
         msg.conversation_id,
         msg.role,
         msg.content,
+        msg.status,
         msg.created_at,
         msg.updated_at,
       ]

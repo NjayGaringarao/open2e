@@ -1,15 +1,12 @@
 import InputBox from "@/components/InputBox";
 import { Question } from "@/models";
-import { useLearner } from "@/context/main/learner/useLearner";
+import { useEvaluation } from "@/context/main/useEvaluation";
 import { useEffect, useRef, useState } from "react";
-import {
-  getSimilarQuestions,
-  getTopQuestions,
-} from "@/database/question/learner";
+import { getSimilarQuestions, getTopQuestions } from "@/database/question";
 import clsx from "clsx";
 
 const QuestionBox = () => {
-  const { question, updateQuestion, isLoading } = useLearner();
+  const { question, updateQuestion, isLoading } = useEvaluation();
   const [isFocus, setIsFocus] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   const [suggestionList, setSuggestionList] = useState<Question[]>([]);

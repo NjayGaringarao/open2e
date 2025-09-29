@@ -1,6 +1,6 @@
-import { LearnerSheetData } from "@/types/evaluation/learner";
+import { SheetData } from "@/types/evaluation";
 
-export const DEFAULT_LEARNERSHEET: LearnerSheetData = {
+export const DEFAULT_LEARNERSHEET: SheetData = {
   id: "",
   trackedAnswer: "",
   committedAnswer: "",

@@ -1,13 +1,13 @@
 import AnswerSheet from "./AnswerSheet";
-import { LearnerProvider } from "@/context/main/learner/LearnerProvider";
+import { EvaluationProvider } from "@/context/main/EvaluationProvider";
 import QuestionBox from "./QuestionBox";
 import { nanoid } from "nanoid";
-import { useLearner } from "@/context/main/learner/useLearner";
+import { useEvaluation } from "@/context/main/useEvaluation";
 import ArticleItem from "./ArticleItem";
 import clsx from "clsx";
 
-const LearnerContent = () => {
-  const { articleList, question } = useLearner();
+const EvaluationContent = () => {
+  const { articleList, question } = useEvaluation();
   return (
     <div className="w-full flex flex-col gap-8">
       <QuestionBox />
@@ -38,10 +38,10 @@ const LearnerContent = () => {
   );
 };
 
-const Learner = () => (
-  <LearnerProvider>
-    <LearnerContent />
-  </LearnerProvider>
+const Evaluation = () => (
+  <EvaluationProvider>
+    <EvaluationContent />
+  </EvaluationProvider>
 );
 
-export default Learner;
+export default Evaluation;

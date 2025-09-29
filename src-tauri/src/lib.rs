@@ -12,7 +12,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(
             tauri_plugin_sql::Builder::new()
-                .add_migrations("sqlite:evaluator.db", migrations::main())
+                .add_migrations("sqlite:main.db", migrations::main())
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::new().build())

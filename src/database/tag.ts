@@ -1,6 +1,6 @@
 import { Tag } from "@/models";
 import Database from "@tauri-apps/plugin-sql";
-import { openEvaluatorDatabase } from "./sqlite";
+import { openDatabase } from "./sqlite";
 
 export const getAll = async (): Promise<{
   tags?: Tag[];
@@ -8,7 +8,7 @@ export const getAll = async (): Promise<{
 }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
 
     const tags = await db.select<
       {
@@ -29,7 +29,7 @@ export const getAll = async (): Promise<{
 export const create = async (label: string): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
     await db.execute(`INSERT INTO tag (label) VALUES (?)`, [label]);
     return {};
   } catch (error) {
@@ -48,7 +48,7 @@ export const create = async (label: string): Promise<{ error?: string }> => {
 export const remove = async (id: number): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
     await db.execute("DELETE FROM tag WHERE id = $1", [id]);
     return {};
   } catch (error) {

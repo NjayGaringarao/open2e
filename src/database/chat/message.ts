@@ -1,13 +1,13 @@
 import { Message } from "@/models";
 import Database from "@tauri-apps/plugin-sql";
-import { openLearnerDatabase } from "../sqlite";
+import { openDatabase } from "../sqlite";
 
 export const getAllByConversation = async (
   conversation_id: string
 ): Promise<{ messages?: Message[]; error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     const messages = await db.select<Message[]>(
       `
       SELECT * FROM message
@@ -27,7 +27,7 @@ export const getAllByConversation = async (
 export const add = async (msg: Message): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     await db.execute(`UPDATE conversation SET updated_at = $1 WHERE id = $2`, [
       msg.updated_at,
       msg.conversation_id,
@@ -56,7 +56,7 @@ export const add = async (msg: Message): Promise<{ error?: string }> => {
 export const update = async (msg: Message): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     await db.execute(`UPDATE conversation SET updated_at = $1 WHERE id = $2`, [
       msg.updated_at,
       msg.conversation_id,

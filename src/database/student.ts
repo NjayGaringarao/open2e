@@ -1,5 +1,5 @@
 import { Student } from "@/models";
-import { openEvaluatorDatabase } from "./sqlite";
+import { openDatabase } from "./sqlite";
 import Database from "@tauri-apps/plugin-sql";
 
 export const getAll = async (): Promise<{
@@ -8,7 +8,7 @@ export const getAll = async (): Promise<{
 }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
 
     const result = await db.select<
       {
@@ -71,7 +71,7 @@ export const add = async ({
 }: IAdd): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
     await db.execute(
       `INSERT INTO student (id, first_name, middle_name, last_name, remarks, tag_id)
        VALUES ($1, $2, $3, $4, $5, $6)`,
@@ -94,7 +94,7 @@ export const add = async ({
 export const update = async (student: Student): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
 
     await db.execute(
       `UPDATE student
@@ -125,7 +125,7 @@ export const update = async (student: Student): Promise<{ error?: string }> => {
 export const remove = async (id: string): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openEvaluatorDatabase();
+    db = await openDatabase();
     await db.execute("DELETE FROM student WHERE id = $1", [id]);
     return {};
   } catch (error) {

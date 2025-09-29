@@ -1,4 +1,4 @@
-import { openLearnerDatabase } from "./sqlite";
+import { openDatabase } from "./sqlite";
 import Database from "@tauri-apps/plugin-sql";
 import type { Conversation, Message } from "@/models/index";
 
@@ -8,7 +8,7 @@ export const getAllConversations = async (): Promise<{
 }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     const rows = await db.select<Conversation[]>(`
       SELECT * FROM conversation ORDER BY updated_at DESC
     `);
@@ -27,7 +27,7 @@ export const createConversation = async (
 ): Promise<{ conversation?: Conversation; error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     await db.execute(
       `INSERT INTO conversation (id, title, created_at, updated_at)
        VALUES ($1, $2, $3, $4)`,
@@ -46,7 +46,7 @@ export const deleteConversation = async (
 ): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     await db.execute(`DELETE FROM conversation WHERE id = $1`, [id]);
     return {};
   } catch (error) {
@@ -59,7 +59,7 @@ export const deleteConversation = async (
 export const addMessage = async (msg: Message): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     await db.execute(`UPDATE conversation SET updated_at = $1 WHERE id = $2`, [
       msg.updated_at,
       msg.conversation_id,
@@ -89,7 +89,7 @@ export const getMessagesByConversation = async (
 ): Promise<{ messages?: Message[]; error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     const messages = await db.select<Message[]>(
       `
       SELECT * FROM message

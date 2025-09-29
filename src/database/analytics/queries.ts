@@ -1,22 +1,22 @@
-import { openLearnerDatabase } from "../sqlite";
-import type { 
-  AnalyticsSummary, 
-  QuestionScore, 
-  EvaluationTimeData, 
-  EvaluationData 
+import { openDatabase } from "../sqlite";
+import type {
+  AnalyticsSummary,
+  QuestionScore,
+  EvaluationTimeData,
+  EvaluationData,
 } from "./types";
 
 // Function to clear existing evaluation data
 export async function clearExistingData(): Promise<{ error?: string }> {
-  const db = await openLearnerDatabase();
-  
+  const db = await openDatabase();
+
   try {
     // Clear all existing evaluations
     await db.execute("DELETE FROM evaluation");
-    
+
     // Clear all existing questions
     await db.execute("DELETE FROM question");
-    
+
     return {};
   } catch (error) {
     return { error: `${error}` };
@@ -24,8 +24,8 @@ export async function clearExistingData(): Promise<{ error?: string }> {
 }
 
 export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
-  const db = await openLearnerDatabase();
-  
+  const db = await openDatabase();
+
   // Get total number of answers evaluated
   const totalAnswersResult = await db.select<[{ count: number }]>(
     "SELECT COUNT(*) as count FROM evaluation"
@@ -71,8 +71,8 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
 }
 
 export async function getAllEvaluations(): Promise<EvaluationData[]> {
-  const db = await openLearnerDatabase();
-  
+  const db = await openDatabase();
+
   const result = await db.select<EvaluationData[]>(`
     SELECT 
       e.id,
@@ -92,12 +92,13 @@ export async function getAllEvaluations(): Promise<EvaluationData[]> {
 }
 
 export async function getEvaluationsByDateRange(
-  startDate: string, 
+  startDate: string,
   endDate: string
 ): Promise<EvaluationData[]> {
-  const db = await openLearnerDatabase();
-  
-  const result = await db.select<EvaluationData[]>(`
+  const db = await openDatabase();
+
+  const result = await db.select<EvaluationData[]>(
+    `
     SELECT 
       e.id,
       e.question_id as questionId,
@@ -111,15 +112,20 @@ export async function getEvaluationsByDateRange(
     JOIN question q ON e.question_id = q.id
     WHERE DATE(e.timestamp) BETWEEN ? AND ?
     ORDER BY e.timestamp DESC
-  `, [startDate, endDate]);
+  `,
+    [startDate, endDate]
+  );
 
   return result;
 }
 
-export async function getEvaluationsByQuestion(questionId: number): Promise<EvaluationData[]> {
-  const db = await openLearnerDatabase();
-  
-  const result = await db.select<EvaluationData[]>(`
+export async function getEvaluationsByQuestion(
+  questionId: number
+): Promise<EvaluationData[]> {
+  const db = await openDatabase();
+
+  const result = await db.select<EvaluationData[]>(
+    `
     SELECT 
       e.id,
       e.question_id as questionId,
@@ -133,7 +139,9 @@ export async function getEvaluationsByQuestion(questionId: number): Promise<Eval
     JOIN question q ON e.question_id = q.id
     WHERE e.question_id = ?
     ORDER BY e.timestamp DESC
-  `, [questionId]);
+  `,
+    [questionId]
+  );
 
   return result;
 }

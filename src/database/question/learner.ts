@@ -1,4 +1,4 @@
-import { openLearnerDatabase } from "../sqlite";
+import { openDatabase } from "../sqlite";
 import { Question } from "@/models";
 import Database from "@tauri-apps/plugin-sql";
 import { normalize } from "@/utils/string";
@@ -9,7 +9,7 @@ export const getTopQuestions = async (): Promise<{
 }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
 
     const rows = await db.select<{ id: number; content: string }[]>(
       `
@@ -35,7 +35,7 @@ export const getSimilarQuestions = async (
 ): Promise<{ questions: Question[]; error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
     const normalized = normalize(question);
 
     const rows = await db.select<{ id: number; content: string }[]>(

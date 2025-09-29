@@ -1,5 +1,5 @@
 import { normalize } from "@/utils/string";
-import { openLearnerDatabase } from "../sqlite";
+import { openDatabase } from "../sqlite";
 import Database from "@tauri-apps/plugin-sql";
 
 interface IAdd {
@@ -21,7 +21,7 @@ export const add = async ({
 }: IAdd): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
-    db = await openLearnerDatabase();
+    db = await openDatabase();
 
     const normalized = normalize(question);
 

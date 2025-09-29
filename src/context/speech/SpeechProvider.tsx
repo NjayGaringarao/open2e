@@ -115,7 +115,7 @@ export const SpeechProvider = ({ children }: { children: React.ReactNode }) => {
           clearTimeout((resolving as any).timeout);
         }
         resolving(finalTranscript);
-        setResolving(null);
+        setResolving(undefined);
       }
     } catch (error) {
       console.error("Error stopping speech recognition:", error);
@@ -126,7 +126,7 @@ export const SpeechProvider = ({ children }: { children: React.ReactNode }) => {
           clearTimeout((resolving as any).timeout);
         }
         resolving("");
-        setResolving(null);
+        setResolving(undefined);
       }
     }
   }, [recorderControls, resolving, transcript]);
@@ -189,7 +189,7 @@ export const SpeechProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Speech recognition error:", speechError);
       if (resolving) {
         resolving("");
-        setResolving(null);
+        setResolving(undefined);
       }
     }
   }, [speechError, resolving]);

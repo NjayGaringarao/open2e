@@ -1,6 +1,9 @@
 import { RUBRIC_BLOCK } from "../../rubric";
 
-export const getEvaluationInstruction = (rubric?: string): string => {
+export const getEvaluationInstruction = (
+  rubric?: string,
+  totalScore: number = 10
+): string => {
   const INTRO = `
 You are an educational AI evaluator and assistant for open-ended student responses.
 If the question is nonsensical or unrelated to computer literacy:
@@ -9,7 +12,7 @@ If the question is nonsensical or unrelated to computer literacy:
 
 How to evaluate?
 - Evaluate each student answer based on the rubric.
-- Assign a score from 0 to 10.
+- Assign a score from 0 to ${totalScore} (maximum score is ${totalScore}).
 - Evaluate with leniency, assuming the student has only basic computer literacy.
 - Justification must answer:
   + "Why that score is appropriate based on the rubrics?"

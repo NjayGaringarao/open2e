@@ -21,6 +21,7 @@ interface RubricModalProps {
 const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
+  const [totalScore, setTotalScore] = useState(10);
   const [loading, setLoading] = useState(false);
   const { alert } = useDialog();
   const { addRubric } = useRubric();
@@ -29,18 +30,20 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
     if (rubric) {
       setName(rubric.name);
       setContent(rubric.content);
+      setTotalScore(rubric.total_score);
     } else {
       setName("");
       setContent("");
+      setTotalScore(10);
     }
   }, [rubric, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !content.trim()) {
+    if (!name.trim() || !content.trim() || totalScore <= 0) {
       alert({
         title: "Validation Error",
-        description: "Please fill in all fields",
+        description: "Please fill in all fields and enter a valid total score",
         mode: "ERROR",
       });
       return;
@@ -50,6 +53,7 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
     const { rubric: newRubric, error } = await createRubric({
       name: name.trim(),
       content: content.trim(),
+      total_score: totalScore,
     });
     setLoading(false);
 
@@ -127,6 +131,14 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
                         }}
                       />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Total Score
+                      </label>
+                      <div className="p-3 bg-gray-50 rounded-md">
+                        {rubric.total_score}
+                      </div>
+                    </div>
                     <div className="flex justify-end">
                       <Button
                         onClick={onClose}
@@ -163,6 +175,26 @@ const RubricModal = ({ isOpen, onClose, rubric }: RubricModalProps) => {
                         placeholder="Enter rubric content (supports markdown formatting)"
                         disabled={loading}
                       />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Total Score
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        value={totalScore}
+                        onChange={(e) =>
+                          setTotalScore(parseInt(e.target.value) || 10)
+                        }
+                        className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter maximum score (e.g., 10, 20, 100)"
+                        disabled={loading}
+                      />
+                      <p className="text-sm text-gray-500 mt-1">
+                        The maximum score that can be assigned for this rubric
+                      </p>
                     </div>
                     <div className="flex justify-end gap-3">
                       <Button type="submit" disabled={loading}>

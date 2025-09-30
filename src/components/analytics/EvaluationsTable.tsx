@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import type { EvaluationData } from '@/database/analytics/types';
+import React, { useState } from "react";
+import type { EvaluationData } from "@/database/analytics/types";
 
 interface EvaluationsTableProps {
   data: EvaluationData[];
@@ -10,7 +10,7 @@ interface EvaluationsTableProps {
 export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
   data,
   title = "Recent Evaluations",
-  maxRows = 10
+  maxRows = 10,
 }) => {
   const [showAll, setShowAll] = useState(false);
   const displayData = showAll ? data : data.slice(0, maxRows);
@@ -22,7 +22,9 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
         <div className="flex items-center justify-center h-32 text-uGrayLight">
           <div className="text-center">
             <p className="mb-2">No evaluations yet</p>
-            <p className="text-sm text-uGrayLightLight">Start evaluating answers to see detailed evaluation data</p>
+            <p className="text-sm text-uGrayLightLight">
+              Start evaluating answers to see detailed evaluation data
+            </p>
           </div>
         </div>
       </div>
@@ -30,18 +32,18 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
   }
 
   const formatDate = (timestamp: string) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(timestamp).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const truncateText = (text: string, maxLength: number = 100) => {
     if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + "...";
   };
 
   return (
@@ -88,13 +90,27 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
                   </div>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-uGray">
-                  <span className={`font-semibold ${
-                    evaluation.score >= 8 ? 'text-uGreen' :
-                    evaluation.score >= 6 ? 'text-primary' :
-                    'text-uRed'
-                  }`}>
-                    {evaluation.score}
-                  </span>
+                  <div className="flex flex-col">
+                    <span
+                      className={`font-semibold ${
+                        (evaluation.score / evaluation.totalScore) * 100 >= 80
+                          ? "text-uGreen"
+                          : (evaluation.score / evaluation.totalScore) * 100 >=
+                            60
+                          ? "text-primary"
+                          : "text-uRed"
+                      }`}
+                    >
+                      {evaluation.score}/{evaluation.totalScore}
+                    </span>
+                    <span className="text-xs text-uGrayLight">
+                      {(
+                        (evaluation.score / evaluation.totalScore) *
+                        100
+                      ).toFixed(1)}
+                      %
+                    </span>
+                  </div>
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-uGray">
                   {evaluation.llmModel}
@@ -107,7 +123,7 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
           </tbody>
         </table>
       </div>
-      
+
       {data.length > maxRows && (
         <div className="mt-4 text-center">
           <button

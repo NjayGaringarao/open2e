@@ -1,5 +1,5 @@
-import React from 'react';
-import type { QuestionScore } from '@/database/analytics/types';
+import React from "react";
+import type { QuestionScore } from "@/database/analytics/types";
 
 interface QuestionScoresTableProps {
   data: QuestionScore[];
@@ -8,7 +8,7 @@ interface QuestionScoresTableProps {
 
 export const QuestionScoresTable: React.FC<QuestionScoresTableProps> = ({
   data,
-  title = "Average Scores by Question"
+  title = "Average Scores by Question",
 }) => {
   if (data.length === 0) {
     return (
@@ -17,7 +17,9 @@ export const QuestionScoresTable: React.FC<QuestionScoresTableProps> = ({
         <div className="flex items-center justify-center h-32 text-uGrayLight">
           <div className="text-center">
             <p className="mb-2">No questions evaluated yet</p>
-            <p className="text-sm text-uGrayLightLight">Start evaluating answers to see question performance data</p>
+            <p className="text-sm text-uGrayLightLight">
+              Start evaluating answers to see question performance data
+            </p>
           </div>
         </div>
       </div>
@@ -55,12 +57,18 @@ export const QuestionScoresTable: React.FC<QuestionScoresTableProps> = ({
                   {question.questionContent}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-uGray">
-                  <span className={`font-semibold ${
-                    question.averageScore >= 8 ? 'text-uGreen' :
-                    question.averageScore >= 6 ? 'text-primary' :
-                    'text-uRed'
-                  }`}>
-                    {question.averageScore ? question.averageScore.toFixed(2) : 'N/A'}
+                  <span
+                    className={`font-semibold ${
+                      question.averageScore >= 80
+                        ? "text-uGreen"
+                        : question.averageScore >= 60
+                        ? "text-primary"
+                        : "text-uRed"
+                    }`}
+                  >
+                    {question.averageScore
+                      ? question.averageScore.toFixed(1) + "%"
+                      : "N/A"}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-uGray">

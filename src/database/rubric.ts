@@ -5,6 +5,7 @@ export interface Rubric {
   id: number;
   name: string;
   content: string;
+  total_score: number;
   created_at: string;
   is_default?: boolean;
 }
@@ -12,6 +13,7 @@ export interface Rubric {
 interface ICreateRubric {
   name: string;
   content: string;
+  total_score: number;
 }
 
 export const getAllRubrics = async (): Promise<{
@@ -23,7 +25,7 @@ export const getAllRubrics = async (): Promise<{
     db = await openDatabase();
 
     const rubrics = await db.select<Rubric[]>(
-      `SELECT id, name, content, created_at FROM rubric ORDER BY created_at ASC`
+      `SELECT id, name, content, total_score, created_at FROM rubric ORDER BY created_at ASC`
     );
 
     return { rubrics };
@@ -37,15 +39,16 @@ export const getAllRubrics = async (): Promise<{
 export const createRubric = async ({
   name,
   content,
+  total_score,
 }: ICreateRubric): Promise<{ rubric?: Rubric; error?: string }> => {
   let db: Database | null = null;
   try {
     db = await openDatabase();
 
-    await db.execute(`INSERT INTO rubric (name, content) VALUES ($1, $2)`, [
-      name,
-      content,
-    ]);
+    await db.execute(
+      `INSERT INTO rubric (name, content, total_score) VALUES ($1, $2, $3)`,
+      [name, content, total_score]
+    );
 
     // Get the created rubric
     const lastIdRow = await db.select<{ id: number }[]>(
@@ -54,7 +57,7 @@ export const createRubric = async ({
     const rubricId = lastIdRow[0].id;
 
     const rubric = await db.select<Rubric[]>(
-      `SELECT id, name, content, created_at FROM rubric WHERE id = $1`,
+      `SELECT id, name, content, total_score, created_at FROM rubric WHERE id = $1`,
       [rubricId]
     );
 
@@ -89,7 +92,7 @@ export const getRubricById = async (
     db = await openDatabase();
 
     const rubric = await db.select<Rubric[]>(
-      `SELECT id, name, content, created_at FROM rubric WHERE id = $1`,
+      `SELECT id, name, content, total_score, created_at FROM rubric WHERE id = $1`,
       [id]
     );
 

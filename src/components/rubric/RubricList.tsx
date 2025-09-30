@@ -67,6 +67,9 @@ const RubricList = () => {
               <p className="text-sm text-gray-500">
                 Created: {new Date(rubric.created_at).toLocaleDateString()}
               </p>
+              <p className="text-sm text-gray-600">
+                Max Score: {rubric.total_score}
+              </p>
             </div>
             <div className="flex gap-2">
               <Button onClick={() => handleViewRubric(rubric)}>View</Button>

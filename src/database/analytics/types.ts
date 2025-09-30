@@ -24,6 +24,8 @@ export interface EvaluationData {
   questionContent: string;
   answer: string;
   score: number;
+  rubric: string;
+  totalScore: number;
   justification: string | null;
   llmModel: string;
   timestamp: string;

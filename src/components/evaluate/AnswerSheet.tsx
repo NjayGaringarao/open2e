@@ -16,6 +16,7 @@ const AnswerSheet = () => {
     clearSheet,
     saveSheet,
     isLoading,
+    selectedRubric,
   } = useEvaluation();
   const [isAnswerModified, setIsAnswerModified] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -141,6 +142,7 @@ const AnswerSheet = () => {
           isResultVisible && sheet.justification !== "" && sheet.score !== null
         }
         score={sheet.score ?? 0}
+        totalScore={selectedRubric?.total_score || 10}
         justification={sheet.justification}
         answer={sheet.committedAnswer}
         question={question.committed}

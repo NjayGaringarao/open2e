@@ -24,24 +24,26 @@ CREATE TABLE IF NOT EXISTS question (
   content TEXT NOT NULL
 );
 
+-- Create rubric table
+CREATE TABLE IF NOT EXISTS rubric (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  total_score INTEGER NOT NULL DEFAULT 10,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create evaluation table
 CREATE TABLE IF NOT EXISTS evaluation (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   question_id INTEGER NOT NULL,
   answer TEXT NOT NULL,
   score INTEGER NOT NULL,
-  rubric_id INTEGER NOT NULL,
+  rubric TEXT NOT NULL,
+  total_score INTEGER NOT NULL,
   justification TEXT,
   detected_ai INTEGER,
   llm_model TEXT NOT NULL,
   timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE,
-  FOREIGN KEY (rubric_id) REFERENCES rubric(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS rubric (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  content TEXT NOT NULL,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
 )

@@ -32,18 +32,18 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   );
   const totalAnswers = totalAnswersResult[0]?.count || 0;
 
-  // Get overall average score
+  // Get overall average score (as percentage of total_score)
   const overallAverageResult = await db.select<[{ average: number }]>(
-    "SELECT AVG(score) as average FROM evaluation"
+    "SELECT AVG(CAST(score AS FLOAT) / CAST(total_score AS FLOAT) * 100) as average FROM evaluation"
   );
   const overallAverageScore = overallAverageResult[0]?.average || 0;
 
-  // Get average score per question
+  // Get average score per question (as percentage of total_score)
   const questionScoresResult = await db.select<QuestionScore[]>(`
     SELECT 
       q.id as questionId,
       q.content as questionContent,
-      AVG(e.score) as averageScore,
+      AVG(CAST(e.score AS FLOAT) / CAST(e.total_score AS FLOAT) * 100) as averageScore,
       COUNT(e.id) as totalEvaluations
     FROM question q
     LEFT JOIN evaluation e ON q.id = e.question_id
@@ -56,7 +56,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     SELECT 
       DATE(timestamp) as date,
       COUNT(*) as count,
-      AVG(score) as averageScore
+      AVG(CAST(score AS FLOAT) / CAST(total_score AS FLOAT) * 100) as averageScore
     FROM evaluation
     GROUP BY DATE(timestamp)
     ORDER BY date
@@ -80,6 +80,8 @@ export async function getAllEvaluations(): Promise<EvaluationData[]> {
       q.content as questionContent,
       e.answer,
       e.score,
+      e.rubric,
+      e.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
       e.timestamp
@@ -105,6 +107,8 @@ export async function getEvaluationsByDateRange(
       q.content as questionContent,
       e.answer,
       e.score,
+      e.rubric,
+      e.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
       e.timestamp
@@ -132,6 +136,8 @@ export async function getEvaluationsByQuestion(
       q.content as questionContent,
       e.answer,
       e.score,
+      e.rubric,
+      e.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
       e.timestamp

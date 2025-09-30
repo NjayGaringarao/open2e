@@ -91,6 +91,9 @@ const RubricPicker = ({
                             Created:{" "}
                             {new Date(rubric.created_at).toLocaleDateString()}
                           </div>
+                          <div className="text-sm text-gray-600">
+                            Max Score: {rubric.total_score}
+                          </div>
                         </div>
                         {selected && (
                           <CheckIcon className="w-5 h-5 text-primary" />

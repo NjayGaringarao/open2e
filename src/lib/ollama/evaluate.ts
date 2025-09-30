@@ -2,9 +2,9 @@ import { Result } from "@/types/evaluation";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   getEvaluationInstruction,
-  EVALUATION_EXAMPLES,
+  createEvaluationExamples,
 } from "../context/evaluation";
-import { EvaluationResultSchema } from "../schema";
+import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -12,12 +12,14 @@ interface IEvaluate {
   question: string;
   answer: string;
   rubric?: string;
+  totalScore?: number;
 }
 
 export const evaluate = async ({
   question,
   answer,
   rubric,
+  totalScore = 10,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
@@ -28,11 +30,13 @@ QUESTION: ${question}
 ANSWERS: ${answer}
 `.trim();
 
-    const instruction = getEvaluationInstruction(rubric);
+    const instruction = getEvaluationInstruction(rubric, totalScore);
+    const dynamicSchema = createEvaluationResultSchema(totalScore);
+    const dynamicExamples = createEvaluationExamples(totalScore);
 
     const messages = [
       { role: "system", content: instruction },
-      ...EVALUATION_EXAMPLES,
+      ...dynamicExamples,
       { role: "user", content: userInput },
     ];
 
@@ -42,7 +46,7 @@ ANSWERS: ${answer}
       temperature: 0,
       stream: false,
       // include zod JSON schema in case Ollama honors the "format" field
-      format: zodToJsonSchema(EvaluationResultSchema),
+      format: zodToJsonSchema(dynamicSchema),
     };
 
     const res = await fetch("http://localhost:11434/api/chat", {
@@ -81,7 +85,7 @@ ANSWERS: ${answer}
       parsedContent = rawContent;
     }
 
-    const evaluation = EvaluationResultSchema.parse(parsedContent);
+    const evaluation = dynamicSchema.parse(parsedContent);
 
     return { result: evaluation };
   } catch (error: any) {

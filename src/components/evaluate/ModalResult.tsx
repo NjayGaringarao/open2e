@@ -17,6 +17,7 @@ import Markdown from "../Markdown";
 
 interface IModalResult {
   score: number;
+  totalScore?: number;
   justification: string;
   answer: string;
   question?: string;
@@ -27,6 +28,7 @@ interface IModalResult {
 const ModalResult = ({
   onClose,
   score,
+  totalScore = 10,
   justification,
   question,
   answer,
@@ -51,7 +53,7 @@ const ModalResult = ({
     if (justification) {
       setIsSpeeching(true);
       await talk(
-        `You've got the score of ${score}. It is because: `.concat(
+        `You've got the score of ${score} out of ${totalScore}. It is because: `.concat(
           justification
         )
       );
@@ -134,11 +136,12 @@ const ModalResult = ({
                 <div
                   className={clsx(
                     "px-10 py-14 text-5xl font-extrabold text-uGray",
-                    `bg-score-${score}`,
+                    `bg-score-${Math.round((score / totalScore) * 10)}`,
                     " rounded-lg text-center shadow-sm"
                   )}
                 >
-                  {score}
+                  <div>{score}</div>
+                  <div className="text-lg text-uGrayLight">/ {totalScore}</div>
                 </div>
                 <ArrowRight className="hidden md:block h-10 w-10 text-uGrayLight" />
                 <div

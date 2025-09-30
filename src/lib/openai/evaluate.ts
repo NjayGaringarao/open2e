@@ -6,18 +6,20 @@ interface IEvaluate {
   question: string;
   answer: string;
   rubric?: string;
+  totalScore?: number;
 }
 
 export const evaluate = async ({
   question,
   answer,
   rubric,
+  totalScore = 10,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, answer, rubric }),
+      body: JSON.stringify({ question, answer, rubric, totalScore }),
     });
 
     if (!res.ok) {

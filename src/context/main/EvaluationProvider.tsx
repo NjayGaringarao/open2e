@@ -92,6 +92,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         question: question.tracked,
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
+        totalScore: selectedRubric?.total_score || 10,
       });
 
       if (error || !result) {
@@ -122,6 +123,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         question: question.tracked,
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
+        totalScore: selectedRubric?.total_score || 10,
       });
 
       if (error || !result) {
@@ -171,7 +173,8 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       justification: sheet.justification,
       llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
       detected_ai: sheet.detectedAI,
-      rubric_id: selectedRubric?.id || 1, // Fallback to default rubric ID
+      rubric: selectedRubric?.content || "",
+      total_score: selectedRubric?.total_score || 10,
     });
 
     if (error) {

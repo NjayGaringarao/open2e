@@ -1,5 +1,5 @@
 -- Insert default rubric
-INSERT INTO rubric (name, content) VALUES (
+INSERT INTO rubric (name, content, total_score) VALUES (
   'Default Rubric',
   'If the question requires learners understanding:
 
@@ -11,5 +11,6 @@ INSERT INTO rubric (name, content) VALUES (
 5 and below - Incorrect, irrelevant, or misleading information. No meaningful attempt to answer. Confused or nonsensical phrasing. 0 for completely blank or incoherent.
 
 If the question is openended list, follow proportional scoring: 
-raw = correct answer / expected answer (defined in question. if not, assume only 2 if plural.) x 10,  if raw > 10, set score to 10'
+raw = correct answer / expected answer (defined in question. if not, assume only 2 if plural.) x 10,  if raw > 10, set score to 10',
+  10
 );

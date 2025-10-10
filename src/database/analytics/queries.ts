@@ -34,7 +34,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
 
   // Get overall average score (as percentage of total_score)
   const overallAverageResult = await db.select<[{ average: number }]>(
-    "SELECT AVG(CAST(score AS FLOAT) / CAST(total_score AS FLOAT) * 100) as average FROM evaluation"
+    "SELECT AVG(CAST(e.score AS FLOAT) / CAST(r.total_score AS FLOAT) * 100) as average FROM evaluation e JOIN rubric r ON e.rubric_id = r.id"
   );
   const overallAverageScore = overallAverageResult[0]?.average || 0;
 
@@ -43,10 +43,11 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     SELECT 
       q.id as questionId,
       q.content as questionContent,
-      AVG(CAST(e.score AS FLOAT) / CAST(e.total_score AS FLOAT) * 100) as averageScore,
+      AVG(CAST(e.score AS FLOAT) / CAST(r.total_score AS FLOAT) * 100) as averageScore,
       COUNT(e.id) as totalEvaluations
     FROM question q
     LEFT JOIN evaluation e ON q.id = e.question_id
+    LEFT JOIN rubric r ON e.rubric_id = r.id
     GROUP BY q.id, q.content
     ORDER BY q.id
   `);
@@ -54,11 +55,12 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   // Get evaluations over time (grouped by date)
   const evaluationsOverTimeResult = await db.select<EvaluationTimeData[]>(`
     SELECT 
-      DATE(timestamp) as date,
+      DATE(e.created_at) as date,
       COUNT(*) as count,
-      AVG(CAST(score AS FLOAT) / CAST(total_score AS FLOAT) * 100) as averageScore
-    FROM evaluation
-    GROUP BY DATE(timestamp)
+      AVG(CAST(e.score AS FLOAT) / CAST(r.total_score AS FLOAT) * 100) as averageScore
+    FROM evaluation e
+    JOIN rubric r ON e.rubric_id = r.id
+    GROUP BY DATE(e.created_at)
     ORDER BY date
   `);
 
@@ -80,14 +82,17 @@ export async function getAllEvaluations(): Promise<EvaluationData[]> {
       q.content as questionContent,
       e.answer,
       e.score,
-      e.rubric,
-      e.total_score as totalScore,
+      e.rubric_id as rubricId,
+      r.name as rubricName,
+      r.content as rubricContent,
+      r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.timestamp
+      e.created_at as timestamp
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
-    ORDER BY e.timestamp DESC
+    JOIN rubric r ON e.rubric_id = r.id
+    ORDER BY e.created_at DESC
   `);
 
   return result;
@@ -107,15 +112,18 @@ export async function getEvaluationsByDateRange(
       q.content as questionContent,
       e.answer,
       e.score,
-      e.rubric,
-      e.total_score as totalScore,
+      e.rubric_id as rubricId,
+      r.name as rubricName,
+      r.content as rubricContent,
+      r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.timestamp
+      e.created_at as timestamp
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
-    WHERE DATE(e.timestamp) BETWEEN ? AND ?
-    ORDER BY e.timestamp DESC
+    JOIN rubric r ON e.rubric_id = r.id
+    WHERE DATE(e.created_at) BETWEEN ? AND ?
+    ORDER BY e.created_at DESC
   `,
     [startDate, endDate]
   );
@@ -136,15 +144,18 @@ export async function getEvaluationsByQuestion(
       q.content as questionContent,
       e.answer,
       e.score,
-      e.rubric,
-      e.total_score as totalScore,
+      e.rubric_id as rubricId,
+      r.name as rubricName,
+      r.content as rubricContent,
+      r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.timestamp
+      e.created_at as timestamp
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
+    JOIN rubric r ON e.rubric_id = r.id
     WHERE e.question_id = ?
-    ORDER BY e.timestamp DESC
+    ORDER BY e.created_at DESC
   `,
     [questionId]
   );

@@ -30,20 +30,22 @@ CREATE TABLE IF NOT EXISTS rubric (
   name TEXT NOT NULL,
   content TEXT NOT NULL,
   total_score INTEGER NOT NULL DEFAULT 10,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  is_archived BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  archived_at TEXT
 );
 
 -- Create evaluation table
 CREATE TABLE IF NOT EXISTS evaluation (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   question_id INTEGER NOT NULL,
+  rubric_id INTEGER NOT NULL,
   answer TEXT NOT NULL,
   score INTEGER NOT NULL,
-  rubric TEXT NOT NULL,
-  total_score INTEGER NOT NULL,
-  justification TEXT,
+  justification TEXT NOT NULL,
   detected_ai INTEGER,
   llm_model TEXT NOT NULL,
-  timestamp TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE RESTRICT,
+  FOREIGN KEY (rubric_id) REFERENCES rubric(id) ON DELETE RESTRICT
 )

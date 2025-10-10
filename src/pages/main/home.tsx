@@ -45,7 +45,7 @@ export default function Home() {
         <div className="flex flex-1 flex-col w-full h-full p-6 overflow-y-auto relative z-10">
           <div className="w-full max-w-7xl mx-auto">
             {/* Welcome Section */}
-            <div className="mb-8">
+            <div className="h-screen flex flex-col justify-center">
               <div className="text-center mb-12">
                 <div className="relative inline-block mb-6">
                   <h1 className="text-5xl font-bold bg-gradient-to-r from-uGray via-uGrayLight to-uGray bg-clip-text text-transparent mb-4">

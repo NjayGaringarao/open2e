@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { deleteRubric, Rubric } from "@/database/rubric";
+import { archiveRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
 import { useRubric } from "@/context/main/rubric";
 import Button from "@/components/Button";
 import RubricModal from "./RubricModal";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 const RubricList = () => {
   const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
@@ -12,8 +12,8 @@ const RubricList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { alert } = useDialog();
 
-  const handleDelete = async (id: number, name: string) => {
-    const { error } = await deleteRubric(id);
+  const handleArchive = async (id: number, name: string) => {
+    const { error } = await archiveRubric(id);
     if (error) {
       alert({
         title: "Error",
@@ -75,10 +75,10 @@ const RubricList = () => {
               <Button onClick={() => handleViewRubric(rubric)}>View</Button>
               {rubric.name !== "Default Rubric" && (
                 <Button
-                  onClick={() => handleDelete(rubric.id, rubric.name)}
+                  onClick={() => handleArchive(rubric.id, rubric.name)}
                   secondary
                 >
-                  <Trash className="w-5 h-5 text-uRed" />
+                  <Trash2 className="w-5 h-5 text-uRed" />
                 </Button>
               )}
             </div>

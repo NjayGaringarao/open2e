@@ -6,7 +6,9 @@ export interface Rubric {
   name: string;
   content: string;
   total_score: number;
+  is_archived: boolean;
   created_at: string;
+  archived_at?: string;
   is_default?: boolean;
 }
 
@@ -25,7 +27,7 @@ export const getAllRubrics = async (): Promise<{
     db = await openDatabase();
 
     const rubrics = await db.select<Rubric[]>(
-      `SELECT id, name, content, total_score, created_at FROM rubric ORDER BY created_at ASC`
+      `SELECT id, name, content, total_score, is_archived, created_at, archived_at FROM rubric WHERE is_archived = 0 ORDER BY created_at ASC`
     );
 
     return { rubrics };
@@ -57,7 +59,7 @@ export const createRubric = async ({
     const rubricId = lastIdRow[0].id;
 
     const rubric = await db.select<Rubric[]>(
-      `SELECT id, name, content, total_score, created_at FROM rubric WHERE id = $1`,
+      `SELECT id, name, content, total_score, is_archived, created_at, archived_at FROM rubric WHERE id = $1`,
       [rubricId]
     );
 
@@ -69,12 +71,17 @@ export const createRubric = async ({
   }
 };
 
-export const deleteRubric = async (id: number): Promise<{ error?: string }> => {
+export const archiveRubric = async (
+  id: number
+): Promise<{ error?: string }> => {
   let db: Database | null = null;
   try {
     db = await openDatabase();
 
-    await db.execute(`DELETE FROM rubric WHERE id = $1`, [id]);
+    await db.execute(
+      `UPDATE rubric SET is_archived = 1, archived_at = CURRENT_TIMESTAMP WHERE id = $1`,
+      [id]
+    );
 
     return {};
   } catch (error) {
@@ -92,7 +99,7 @@ export const getRubricById = async (
     db = await openDatabase();
 
     const rubric = await db.select<Rubric[]>(
-      `SELECT id, name, content, total_score, created_at FROM rubric WHERE id = $1`,
+      `SELECT id, name, content, total_score, is_archived, created_at, archived_at FROM rubric WHERE id = $1`,
       [id]
     );
 

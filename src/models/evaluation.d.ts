@@ -4,9 +4,8 @@ export type Evaluation = {
   respondent_id?: string;
   answer: string;
   score: number;
-  rubric: string;
-  total_score: number;
+  rubric_id: number;
   justification: string;
   llm_model: string;
-  timestamp: Date;
+  created_at: Date;
 };

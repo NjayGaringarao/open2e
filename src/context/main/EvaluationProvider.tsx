@@ -173,8 +173,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       justification: sheet.justification,
       llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
       detected_ai: sheet.detectedAI,
-      rubric: selectedRubric?.content || "",
-      total_score: selectedRubric?.total_score || 10,
+      rubric_id: selectedRubric?.id || 1,
     });
 
     if (error) {

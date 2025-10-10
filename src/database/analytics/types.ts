@@ -24,7 +24,9 @@ export interface EvaluationData {
   questionContent: string;
   answer: string;
   score: number;
-  rubric: string;
+  rubricId: number;
+  rubricName: string;
+  rubricContent: string;
   totalScore: number;
   justification: string | null;
   llmModel: string;

@@ -28,22 +28,24 @@ export default function Settings() {
 
           <DropDown
             headerElement={
-              <p className="text-uGray text-xl font-semibold">LLM Source</p>
+              <p className="text-uGray text-xl font-semibold">Text to Speech</p>
+            }
+            isDefaultOpen
+          >
+            <TTS />
+          </DropDown>
+
+          <DropDown
+            headerElement={
+              <p className="text-uGray text-xl font-semibold">
+                LLM Source and Capability
+              </p>
             }
             isDefaultOpen
           >
             <LocalSetupProvider>
               <LLMSource />
             </LocalSetupProvider>
-          </DropDown>
-
-          <DropDown
-            headerElement={
-              <p className="text-uGray text-xl font-semibold">Text to Speech</p>
-            }
-            isDefaultOpen
-          >
-            <TTS />
           </DropDown>
         </div>
         <Toaster />

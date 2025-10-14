@@ -38,7 +38,7 @@ export default function Sidebar() {
       { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
       { name: "Chat", path: "/chat", icon: MessageSquareText },
       { name: "Rubrics", path: "/rubrics", icon: ListTodo },
-      { name: "Settings", path: "/settings", icon: Settings },
+      { name: "Configuration", path: "/settings", icon: Settings },
     ]);
   }, []);
 

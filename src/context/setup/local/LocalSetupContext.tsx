@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 export interface IStartInstallation {
-  isCleanInstall?: boolean;
+  isReinstall?: boolean;
 }
 export type LocalSetupContextType = {
   currentStep: number;

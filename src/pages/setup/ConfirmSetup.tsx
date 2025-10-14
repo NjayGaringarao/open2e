@@ -15,7 +15,6 @@ const ConfirmSetup = () => {
       title: "Confirm Setup",
       description:
         "Your configuration will be saved. Would you like to continue?",
-      mode: "CRITICAL",
     });
 
     if (!isConfirmed) return;

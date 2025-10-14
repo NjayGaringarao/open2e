@@ -59,7 +59,7 @@ export const LocalSetupProvider = ({
 
     try {
       // Step 0: Clean install
-      if (options?.isCleanInstall) await invoke("clean_ollama");
+      if (options?.isReinstall) await invoke("clean_ollama");
 
       // Step 1: Download Ollama
       setCurrentStep(0);
@@ -85,7 +85,9 @@ export const LocalSetupProvider = ({
       setIsInstalled(true);
 
       await alert({
-        title: "Reinstallation Successful",
+        title: options?.isReinstall
+          ? "Reinstallation Successful"
+          : "Installation Successful",
         description:
           "Please restart your computer before using open2e offline. This is necessary only for once.",
         mode: "SUCCESS",

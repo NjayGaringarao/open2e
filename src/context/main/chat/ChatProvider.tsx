@@ -13,9 +13,11 @@ import {
 import * as openai from "@/lib/openai";
 import * as ollama from "@/lib/ollama";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
+import { useSettings } from "@/context/main/settings";
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const { status } = useConnectionStatus();
+  const { systemMemory } = useSettings();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] =
     useState<Conversation | null>(null);
@@ -123,6 +125,23 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (status === "ONLINE") {
       replyFromLLM = await openai.chat(messages);
     } else {
+      // Check system memory before using ollama
+      if (systemMemory < 8) {
+        const now = new Date().toISOString();
+        const errorMessage: Message = {
+          id: nanoid(),
+          conversation_id: activeConversation.id,
+          role: "assistant",
+          status: "FAILED",
+          content:
+            "Chat is unavailable. Your system requires at least 8GB of memory to use offline mode. Please connect to the internet.",
+          created_at: now,
+          updated_at: now,
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+        setIsGenerating(false);
+        return;
+      }
       replyFromLLM = await ollama.chat(messages);
     }
 

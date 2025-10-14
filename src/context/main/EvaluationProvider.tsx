@@ -112,6 +112,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
           description:
             "Not enough system memory. Please connect to the internet.",
         });
+        return null;
       }
       console.log(
         "Evaluating with rubric (Ollama):",

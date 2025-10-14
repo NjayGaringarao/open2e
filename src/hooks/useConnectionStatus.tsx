@@ -1,137 +1,74 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetch } from "@tauri-apps/plugin-http";
 
-// Configuration for network checking
-const NETWORK_CHECK_CONFIG = {
-  // URLs to check for connectivity (in order of preference)
-  // Start with allowed URLs, then try external ones
+const CONFIG = {
   checkUrls: [
-    "https://open2e.vercel.app/api/health", // Your own API first
-    "https://www.google.com",
-    "https://www.cloudflare.com",
-    "https://httpbin.org/status/200",
+    "https://www.google.com/generate_204",
+    "https://1.1.1.1/cdn-cgi/trace",
   ],
-  // Timeout for each request (in milliseconds)
   timeout: 8000,
-  // How often to check connectivity (in milliseconds)
-  checkInterval: 30000,
-  // Initial delay before first check (in milliseconds)
+  checkInterval: 10000,
   initialDelay: 1000,
 };
 
+type ConnectionStatus = "ONLINE" | "OFFLINE";
+
+// Helper: Check a single URL with timeout
+async function checkUrl(url: string, timeout: number): Promise<boolean> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      method: "HEAD",
+      signal: controller.signal,
+      headers: { "Cache-Control": "no-cache" },
+    });
+    clearTimeout(timeoutId);
+    return response.ok;
+  } catch {
+    clearTimeout(timeoutId);
+    return false;
+  }
+}
+
+// Helper: Try all URLs until one succeeds
+async function checkAnyUrl(urls: string[], timeout: number): Promise<boolean> {
+  for (const url of urls) {
+    const isReachable = await checkUrl(url, timeout);
+    if (isReachable) return true;
+  }
+  return false;
+}
+
 export const useConnectionStatus = () => {
-  // Start with a more optimistic initial state, but still check
-  const [status, setStatus] = useState<"ONLINE" | "OFFLINE">("ONLINE");
+  const [status, setStatus] = useState<ConnectionStatus>("ONLINE");
   const [isChecking, setIsChecking] = useState(false);
 
-  const checkConnectivity = useCallback(async (): Promise<boolean> => {
-    // console.log("🔍 Starting network connectivity check...");
-    setIsChecking(true);
-
-    // First try with the configured URLs
-    for (const url of NETWORK_CHECK_CONFIG.checkUrls) {
-      try {
-        // console.log(`🌐 Checking connectivity with: ${url}`);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-          // console.log(`⏰ Timeout reached for ${url}`);
-          controller.abort();
-        }, NETWORK_CHECK_CONFIG.timeout);
-
-        const response = await fetch(url, {
-          method: "HEAD",
-          signal: controller.signal,
-          headers: {
-            "Cache-Control": "no-cache",
-            Pragma: "no-cache",
-          },
-        });
-
-        clearTimeout(timeoutId);
-        // console.log(`✅ Response from ${url}:`, {
-        //   status: response.status,
-        //   ok: response.ok,
-        //   statusText: response.statusText
-        // });
-
-        if (response.ok) {
-          // console.log("🎉 Network connectivity confirmed!");
-          setIsChecking(false);
-          return true;
-        } else {
-          // console.log(`❌ Non-OK response from ${url}: ${response.status} ${response.statusText}`);
-        }
-      } catch (error) {
-        // console.error(`💥 Network check failed for ${url}:`, error);
-        // Continue to next URL if this one fails
-      }
-    }
-
-    // Fallback: Try a simple GET request to a known working endpoint
-    try {
-      // console.log("🔄 Trying fallback connectivity check...");
-      const fallbackResponse = await fetch("https://open2e.vercel.app", {
-        method: "GET",
-        headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
-      });
-
-      if (fallbackResponse.ok) {
-        // console.log("🎉 Fallback connectivity check successful!");
-        setIsChecking(false);
-        return true;
-      }
-    } catch (error) {
-      console.error("💥 Fallback connectivity check failed:", error);
-    }
-
-    // console.log("❌ All network checks failed - marking as offline");
-    setIsChecking(false);
-    return false;
-  }, []);
-
-  const updateConnectionStatus = useCallback(async () => {
-    // First check if navigator.onLine indicates offline - if so, trust it
+  const checkConnection = useCallback(async () => {
     if (!navigator.onLine) {
-      //  console.log("📱 Navigator indicates offline - marking as offline");
       setStatus("OFFLINE");
       return;
     }
 
-    // If navigator says online, verify with actual HTTP request
-    const isOnline = await checkConnectivity();
+    setIsChecking(true);
+    const isOnline = await checkAnyUrl(CONFIG.checkUrls, CONFIG.timeout);
+    setIsChecking(false);
     setStatus(isOnline ? "ONLINE" : "OFFLINE");
-  }, [checkConnectivity]);
+  }, []);
 
   useEffect(() => {
-    // Initial check with delay
-    const initialTimeout = setTimeout(
-      updateConnectionStatus,
-      NETWORK_CHECK_CONFIG.initialDelay
-    );
+    const initialTimeout = setTimeout(checkConnection, CONFIG.initialDelay);
+    const interval = setInterval(checkConnection, CONFIG.checkInterval);
 
-    // Set up periodic checking
-    const interval = setInterval(
-      updateConnectionStatus,
-      NETWORK_CHECK_CONFIG.checkInterval
-    );
-
-    // Also listen to browser events as a fallback (though they may not work reliably in Tauri)
     const handleOnline = () => setStatus("ONLINE");
     const handleOffline = () => setStatus("OFFLINE");
+    const handleVisibilityChange = () => {
+      if (!document.hidden) checkConnection();
+    };
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-
-    // Listen for visibility change to check connectivity when app becomes visible
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        updateConnectionStatus();
-      }
-    };
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
@@ -141,10 +78,7 @@ export const useConnectionStatus = () => {
       window.removeEventListener("offline", handleOffline);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [updateConnectionStatus]);
+  }, [checkConnection]);
 
-  return {
-    status: status as "ONLINE" | "OFFLINE",
-    isChecking,
-  };
+  return { status, isChecking };
 };

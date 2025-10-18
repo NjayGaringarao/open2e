@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useChat } from "@/context/main/chat/useChat";
 import MessageBubble from "./MessageBubble";
+import MainContentBox from "../container/MainContentBox";
 
 const ChatPanel = () => {
   const { messages, isGenerating } = useChat();
@@ -13,31 +14,22 @@ const ChatPanel = () => {
     }
   }, [messages, isGenerating]);
 
-  if (messages.length > 0) {
-    return (
-      <div
-        ref={scrollRef}
-        className="flex-1 flex flex-col items-center w-full overflow-y-auto"
-      >
-        <div className="flex flex-col w-full max-w-5xl p-8">
-          <div className="h-20" />
-          {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
-          ))}
-          {!!isGenerating && <MessageBubble key="holder" />}
-          <div className="h-20" />
-        </div>
+  return messages.length > 0 ? (
+    <MainContentBox>
+      <div ref={scrollRef} className="flex-1 flex flex-col w-full">
+        <div className="h-20" />
+        {messages.map((msg) => (
+          <MessageBubble key={msg.id} message={msg} />
+        ))}
+        {!!isGenerating && <MessageBubble key="holder" />}
+        <div className="h-20" />
       </div>
-    );
-  } else {
-    return (
-      <div className="py-6 max-w-3xl">
-        <p className="text-uGray text-2xl">
-          Hello, Let's talk about Computers!
-        </p>
-      </div>
-    );
-  }
+    </MainContentBox>
+  ) : (
+    <MainContentBox>
+      <p className="text-uGray text-2xl">Hello, Let's talk about Computers!</p>
+    </MainContentBox>
+  );
 };
 
 export default ChatPanel;

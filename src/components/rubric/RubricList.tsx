@@ -86,7 +86,7 @@ const RubricList = () => {
       ) : (
         <div className="py-4">
           <Button
-            className="w-full h-20 bg-primary bg-opacity-20 "
+            className="w-full h-20 bg-transparent text-primary"
             onClick={() => setIsModalCreateOpen(true)}
           >
             <Plus className="w-7 h-7" /> Create New Rubric

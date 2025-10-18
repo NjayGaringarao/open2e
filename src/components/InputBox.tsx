@@ -45,7 +45,7 @@ const InputBox = ({
       {title && (
         <div
           className={clsx(
-            "text-sm text-uGrayLight flex flex-row gap-2",
+            "text-sm lg:text-base text-uGrayLight",
             titleClassName
           )}
         >
@@ -60,7 +60,7 @@ const InputBox = ({
             "bg-transparent",
             "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
             "text-base lg:text-lg text-uGrayLight font-mono",
-            "hover:border hover:border-primary",
+            !inputProp.disabled && "hover:border hover:border-primary",
             "outline-primary",
             "placeholder:italic",
             inputClassName,

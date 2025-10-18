@@ -55,14 +55,15 @@ const ParagraphBox = ({
 
       <textarea
         className={clsx(
-          "bg-transparent w-full rounded-md pl-4 pr-12 py-2",
+          "bg-transparent w-full rounded-md px-4 py-2",
           "resize-none break-all break-words whitespace-pre-wrap",
           "text-base lg:text-lg text-uGrayLight font-mono",
-          "hover:border hover:border-primary",
+          !disabled && "hover:border hover:border-primary",
           "shadow-inner shadow-uGrayLight w-full rounded-md",
           "outline-primary",
           "placeholder:italic",
-          inputClassName
+          inputClassName,
+          (withVoiceInput || withClearButton) && "pr-12"
         )}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}

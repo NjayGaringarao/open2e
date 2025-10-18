@@ -9,7 +9,7 @@ import { ArrowRight, VolumeOff, Volume2, X } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
-import DropDown from "../DropDown";
+import DropDown from "@/components/container/DropDown";
 import { useChat } from "@/context/main/chat";
 import { useNavigate } from "react-router";
 import Button from "../Button";

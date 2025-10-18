@@ -3,13 +3,15 @@ import { archiveRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
 import { useRubric } from "@/context/main/rubric";
 import Button from "@/components/Button";
-import RubricModal from "./RubricModal";
 import { Plus, Trash2 } from "lucide-react";
+import { cn } from "@/utils/style";
+import ModalView from "./ModalView";
+import ModalCreate from "./ModalCreate";
 
 const RubricList = () => {
   const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
   const [selectedRubric, setSelectedRubric] = useState<Rubric | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
   const { alert } = useDialog();
 
   const handleArchive = async (id: number, name: string) => {
@@ -30,18 +32,8 @@ const RubricList = () => {
     }
   };
 
-  const handleViewRubric = (rubric: Rubric) => {
-    setSelectedRubric(rubric);
-    setIsModalOpen(true);
-  };
-
-  const handleCreateRubric = () => {
-    setSelectedRubric(null);
-    setIsModalOpen(true);
-  };
-
   const handleModalClose = () => {
-    setIsModalOpen(false);
+    setIsModalCreateOpen(false);
     setSelectedRubric(null);
     refreshRubrics();
   };
@@ -60,28 +52,29 @@ const RubricList = () => {
         {rubrics.map((rubric) => (
           <div
             key={rubric.id}
-            className="flex flex-row justify-between items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
+            onClick={() => setSelectedRubric(rubric)}
+            className={cn(
+              "flex flex-row justify-between items-center",
+              "p-4 shadow shadow-uGrayLight rounded-lg",
+              "hover:bg-secondary cursor-pointer"
+            )}
           >
             <div className="flex-1">
               <h3 className="text-lg font-semibold">{rubric.name}</h3>
-              <p className="text-sm text-gray-500">
-                Created: {new Date(rubric.created_at).toLocaleDateString()}
-              </p>
+
               <p className="text-sm text-gray-600">
                 Max Score: {rubric.total_score}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button onClick={() => handleViewRubric(rubric)}>View</Button>
-              {rubric.name !== "Default Rubric" && (
-                <Button
-                  onClick={() => handleArchive(rubric.id, rubric.name)}
-                  secondary
-                >
-                  <Trash2 className="w-5 h-5 text-uRed" />
-                </Button>
-              )}
-            </div>
+
+            {rubric.name !== "Default Rubric" && (
+              <button
+                onClick={() => handleArchive(rubric.id, rubric.name)}
+                className="px-4"
+              >
+                <Trash2 className="w-6 h-6 text-uRed" />
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -92,17 +85,16 @@ const RubricList = () => {
         </div>
       ) : (
         <div className="py-4">
-          <Button className="w-full" onClick={handleCreateRubric}>
+          <Button
+            className="w-full h-20 bg-primary bg-opacity-20 "
+            onClick={() => setIsModalCreateOpen(true)}
+          >
             <Plus className="w-7 h-7" /> Create New Rubric
           </Button>
         </div>
       )}
-
-      <RubricModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        rubric={selectedRubric}
-      />
+      <ModalView onClose={handleModalClose} rubric={selectedRubric} />
+      <ModalCreate isOpen={isModalCreateOpen} onClose={handleModalClose} />
     </div>
   );
 };

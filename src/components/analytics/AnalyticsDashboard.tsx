@@ -8,8 +8,13 @@ import { PieChart } from "./PieChart";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Ranking } from "./Ranking";
 import { Forecasting } from "./Forecasting";
-import { BarChart3, TrendingUp, Users, Award, Trash2 } from "lucide-react";
-import { clearExistingData } from "@/database/analytics/queries";
+import {
+  BarChart3,
+  TrendingUp,
+  Users,
+  Award,
+  RefreshCcwIcon,
+} from "lucide-react";
 
 export const AnalyticsDashboard: React.FC = () => {
   const { analyticsData, evaluationsData, loading, refreshData } =
@@ -18,30 +23,6 @@ export const AnalyticsDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "overview" | "charts" | "ranking" | "forecasting"
   >("overview");
-  const [isClearing, setIsClearing] = useState(false);
-
-  const handleClearData = async () => {
-    if (
-      window.confirm(
-        "Are you sure you want to clear all existing evaluation data? This action cannot be undone."
-      )
-    ) {
-      setIsClearing(true);
-      try {
-        const { error } = await clearExistingData();
-        if (error) {
-          alert("Failed to clear data: " + error);
-        } else {
-          // Refresh data to show empty state
-          await refreshData();
-        }
-      } catch (err) {
-        alert("Failed to clear data: " + err);
-      } finally {
-        setIsClearing(false);
-      }
-    }
-  };
 
   if (loading) {
     return (
@@ -70,78 +51,55 @@ export const AnalyticsDashboard: React.FC = () => {
   // Show empty state if no data
   if (!hasData) {
     return (
-      <div className="flex flex-col w-full h-full p-6 overflow-y-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="relative">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent">
-              Analytics Dashboard
-            </h2>
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-50" />
-          </div>
-          <div className="flex space-x-3">
-            <button
-              onClick={handleClearData}
-              disabled={isClearing}
-              className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
-            >
-              <Trash2 className="h-4 w-4" />
-              <span>{isClearing ? "Clearing..." : "Clear Data"}</span>
-            </button>
-            <button
-              onClick={refreshData}
-              className="px-4 py-2 bg-gradient-to-r from-uBlue to-blue-600 text-background rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              Refresh Data
-            </button>
-          </div>
-        </div>
-
+      <div className="flex flex-col flex-1 w-full h-full items-center justify-center">
         {/* Empty State - Enhanced with more content */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="relative bg-gradient-to-br from-background via-background/95 to-background/90 rounded-2xl shadow-2xl p-16 border border-uGrayLight/30 text-center max-w-2xl backdrop-blur-sm">
-            {/* Background gradient effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-emerald-500/5 rounded-2xl" />
-            <div className="relative z-10">
-              <div className="mx-auto w-32 h-32 bg-gradient-to-br from-uBlue via-primary to-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-2xl">
-                <BarChart3 className="h-16 w-16 text-white" />
+
+        <div className="relative w-full max-w-5xl bg-gradient-to-br from-background via-background/95 to-background/90 rounded-2xl shadow-2xl p-16 border border-uGrayLight/30 text-center backdrop-blur-sm">
+          {/* Background gradient effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-emerald-500/5 rounded-2xl" />
+          <div className="relative z-10">
+            <div className="mx-auto w-32 h-32 bg-gradient-to-br from-uBlue via-primary to-emerald-500 rounded-full flex items-center justify-center mb-8 shadow-2xl">
+              <BarChart3 className="h-16 w-16 text-white" />
+            </div>
+
+            <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
+              Start evaluating answers in the evaluation page to see
+              comprehensive analytics data here. The dashboard will display
+              detailed insights about your evaluation performance.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+              <div className="bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-blue-700/10 rounded-xl p-6 border border-blue-500/20">
+                <h4 className="font-semibold text-uGray mb-3 flex items-center">
+                  <span className="text-2xl mr-2">📊</span>
+                  Key Metrics
+                </h4>
+                <ul className="text-base text-uGrayLight space-y-2">
+                  <li>• Total answers evaluated</li>
+                  <li>• Overall average score</li>
+                  <li>• Performance trends</li>
+                  <li>• Question-wise analysis</li>
+                </ul>
               </div>
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent mb-4">
-                Welcome to Analytics
-              </h3>
-              <p className="text-lg text-uGrayLight mb-8 max-w-lg mx-auto leading-relaxed">
-                Start evaluating answers in the evaluation page to see
-                comprehensive analytics data here. The dashboard will display
-                detailed insights about your evaluation performance.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                <div className="bg-gradient-to-br from-blue-500/10 via-blue-600/5 to-blue-700/10 rounded-xl p-6 border border-blue-500/20">
-                  <h4 className="font-semibold text-uGray mb-3 flex items-center">
-                    <span className="text-2xl mr-2">📊</span>
-                    Key Metrics
-                  </h4>
-                  <ul className="text-sm text-uGrayLight space-y-2">
-                    <li>• Total answers evaluated</li>
-                    <li>• Overall average score</li>
-                    <li>• Performance trends</li>
-                    <li>• Question-wise analysis</li>
-                  </ul>
-                </div>
-                <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-emerald-700/10 rounded-xl p-6 border border-emerald-500/20">
-                  <h4 className="font-semibold text-uGray mb-3 flex items-center">
-                    <span className="text-2xl mr-2">📈</span>
-                    Visual Insights
-                  </h4>
-                  <ul className="text-sm text-uGrayLight space-y-2">
-                    <li>• Interactive charts</li>
-                    <li>• Score distributions</li>
-                    <li>• Time-based analysis</li>
-                    <li>• Comparative data</li>
-                  </ul>
-                </div>
+              <div className="bg-gradient-to-br from-emerald-500/10 via-emerald-600/5 to-emerald-700/10 rounded-xl p-6 border border-emerald-500/20">
+                <h4 className="font-semibold text-uGray mb-3 flex items-center">
+                  <span className="text-2xl mr-2">📈</span>
+                  Visual Insights
+                </h4>
+                <ul className="text-base text-uGrayLight space-y-2">
+                  <li>• Interactive charts</li>
+                  <li>• Score distributions</li>
+                  <li>• Time-based analysis</li>
+                  <li>• Comparative data</li>
+                </ul>
               </div>
             </div>
           </div>
+          <button
+            onClick={refreshData}
+            className="absolute flex flex-row gap-2 top-4 right-4 text-uGrayLight hover:text-primary"
+          >
+            Load Data <RefreshCcwIcon className="h-6 w-6" />
+          </button>
         </div>
       </div>
     );
@@ -152,20 +110,12 @@ export const AnalyticsDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div className="relative">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-uGray via-primary to-uGray bg-clip-text text-transparent">
-            Analytics Dashboard
+          <h2 className="text-3xl font-bold text-primary bg-clip-text">
+            Dashboard
           </h2>
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-50" />
         </div>
         <div className="flex space-x-3">
-          <button
-            onClick={handleClearData}
-            disabled={isClearing}
-            className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-background rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 shadow-lg hover:shadow-xl"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span>{isClearing ? "Clearing..." : "Clear Data"}</span>
-          </button>
           <button
             onClick={refreshData}
             className="px-4 py-2 bg-gradient-to-r from-uBlue to-blue-600 text-background rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"

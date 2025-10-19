@@ -4,7 +4,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Link, useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import clsx from "clsx";
 import icon from "../constant/icon";
 import {
@@ -28,7 +28,7 @@ type Tab = {
 
 export default function Sidebar() {
   const screenSize = useScreenSize();
-
+  const navigate = useNavigate();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
   const [tabList, setTabList] = useState<Tab[]>([]);
@@ -42,6 +42,8 @@ export default function Sidebar() {
       { name: "Rubrics", path: "/rubrics", icon: ListTodo },
       { name: "Configuration", path: "/settings", icon: Settings },
     ]);
+
+    window.history.replaceState({}, "", "/home");
   }, []);
 
   return (
@@ -70,9 +72,9 @@ export default function Sidebar() {
         {tabList.map(({ name, path, icon: Icon }) => {
           const active = location.pathname === path;
           return (
-            <Link
+            <button
               key={path}
-              to={path}
+              onClick={() => navigate(path)}
               className={clsx(
                 "flex items-center gap-3 rounded transition group hover:bg-secondary/60",
                 active &&
@@ -93,7 +95,7 @@ export default function Sidebar() {
                   {name}
                 </p>
               )}
-            </Link>
+            </button>
           );
         })}
       </nav>

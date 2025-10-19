@@ -8,7 +8,7 @@ import {
   importAllData,
   type BackupData,
 } from "@/database/backup";
-import { Download, Upload, AlertTriangle } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import clsx from "clsx";
 
 const BackupRestore = () => {

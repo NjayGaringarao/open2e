@@ -2,7 +2,6 @@ import { useState } from "react";
 import { archiveRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
 import { useRubric } from "@/context/main/rubric";
-import Button from "@/components/Button";
 import { Plus } from "lucide-react";
 import ModalView from "./ModalView";
 import ModalCreate from "./ModalCreate";

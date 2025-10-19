@@ -54,8 +54,8 @@ export default function Home() {
                   <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-75" />
                 </div>
                 <p className="text-xl text-uGrayLight max-w-3xl mx-auto leading-relaxed">
-                  Your comprehensive platform for AI-powered educational
-                  evaluation and analytics
+                  AI-powered evaluation and analytics for open ended questions
+                  related to computer literacy with extra features.
                 </p>
               </div>
 
@@ -93,11 +93,8 @@ export default function Home() {
             </div>
 
             {/* Analytics Dashboard */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-2xl" />
-              <div className="relative border-t border-uGrayLight/30 pt-8">
-                <AnalyticsDashboard />
-              </div>
+            <div className="relative min-h-screen flex flex-col">
+              <AnalyticsDashboard />
             </div>
           </div>
         </div>

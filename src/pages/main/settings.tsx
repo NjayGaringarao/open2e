@@ -6,10 +6,12 @@ import { LocalSetupProvider } from "@/context/setup/local";
 import TTS from "@/components/settings/TTS";
 import ThemeToggle from "@/components/settings/ThemeToggle";
 import MainContentBox from "@/components/container/MainContentBox";
+import ConfigHelp from "@/constant/helpContent/ConfigHelp";
+import { HelpPanel } from "@/components/HelpPanel";
 
 export default function Settings() {
   return (
-    <div className="flex h-screen flex-row">
+    <div className="flex flex-row h-screen">
       {/* This is the main content area of the page */}
       <MainContentBox className="flex flex-col gap-8">
         <div className="flex flex-row gap-4 py-8 items-center text-uGray text-4xl font-mono font-semibold">
@@ -48,10 +50,12 @@ export default function Settings() {
           </LocalSetupProvider>
         </DropDown>
       </MainContentBox>
-      <Toaster />
 
       {/* This is the sidebar for usage information */}
-      <div className="hidden 2xl:block bg-panel w-96 transition-all duration-500"></div>
+      <HelpPanel>
+        <ConfigHelp />
+      </HelpPanel>
+      <Toaster />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useChat } from "@/context/main/chat/useChat";
 import { SendHorizonal } from "lucide-react";
 import ParagraphBox from "../ParagraphBox";
 import clsx from "clsx";
+import { cn } from "@/utils/style";
 
 const ChatInput = () => {
   const { sendMessage, isLoading, isGenerating } = useChat();
@@ -31,7 +32,7 @@ const ChatInput = () => {
       <div
         className={clsx(
           "w-full max-w-5xl p-4 z-30",
-          "bg-panel/80 backdrop-blur-sm border border-white/10",
+          "bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-white/10",
           "rounded-md shadow-md",
           "flex flex-row items-center gap-4"
         )}
@@ -43,7 +44,12 @@ const ChatInput = () => {
           placeholder="Type your message here..."
           disabled={isDisabled}
           containerClassname="flex-1"
-          inputClassName="py-1 pl-4 text-lg max-h-72 bg-transparent rounded-xl font-sans"
+          inputClassName={cn(
+            "py-1 pl-4 text-lg max-h-72 bg-transparent rounded-none",
+            "shadow-none",
+            "focus:border-b focus:outline-none",
+            "hover:border-b"
+          )}
           withVoiceInput
         />
         <button onClick={handleSend} disabled={!input.trim() || isDisabled}>

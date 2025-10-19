@@ -7,9 +7,12 @@ import {
 } from "@headlessui/react";
 import { HelpCircle } from "lucide-react";
 import clsx from "clsx";
-import Content from "./Content";
 
-export const Panel = () => {
+interface HelpPanelProps {
+  children: React.ReactNode;
+}
+
+export const HelpPanel = ({ children }: HelpPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -17,12 +20,11 @@ export const Panel = () => {
       {/* Desktop view */}
       <div
         className={clsx(
-          "hidden w-96 2xl:block h-full overflow-y-auto",
-          "bg-gradient-to-b from-panel/80 to-panel/60 backdrop-blur-sm ",
-          "border-r border-uGrayLight/30"
+          "hidden w-[30rem] 2xl:block h-full overflow-y-auto",
+          "bg-gradient-to-b from-panel to-transparent backdrop-blur-sm "
         )}
       >
-        <Content />
+        {children}
       </div>
 
       {/* Floating button for mobile */}
@@ -56,14 +58,12 @@ export const Panel = () => {
           >
             <DialogPanel
               className={clsx(
-                "fixed inset-y-0 right-0 w-80 max-w-full",
+                "fixed inset-y-0 right-0 w-1/2 max-w-full",
                 "bg-gradient-to-b from-background via-background/95 to-background/90 shadow-2xl border-l border-uGrayLight/30 z-50",
                 "flex flex-col backdrop-blur-sm"
               )}
             >
-              <div className="overflow-y-auto flex-1">
-                <Content />
-              </div>
+              <div className="overflow-y-auto flex-1">{children}</div>
             </DialogPanel>
           </TransitionChild>
 

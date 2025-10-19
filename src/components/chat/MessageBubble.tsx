@@ -13,7 +13,7 @@ interface Props {
 
 const MessageBubble = ({ message, onRetry }: Props) => {
   const { colorMode } = useColorMode();
-  
+
   if (!message) {
     // Loading dots bubble
     return (
@@ -74,9 +74,17 @@ const MessageBubble = ({ message, onRetry }: Props) => {
           )}
         >
           <div className="w-full flex flex-col">
-            <Markdown 
-              text={message.content} 
-              className={isAssistant ? (colorMode === 'dark' ? "ai-response-dark" : "text-white") : ""}
+            <Markdown
+              text={message.content}
+              className={
+                isAssistant
+                  ? colorMode === "dark"
+                    ? "ai-response-dark"
+                    : "text-white"
+                  : colorMode === "dark"
+                  ? "ai-response-dark"
+                  : "text-black"
+              }
             />
           </div>
         </div>

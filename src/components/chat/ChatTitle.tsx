@@ -37,7 +37,7 @@ export default function ChatTitle() {
       <div
         className={clsx(
           "w-full max-w-5xl p-4 z-30",
-          "bg-panel/80 backdrop-blur-sm border border-white/10",
+          "bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-white/10",
           "rounded-md shadow-md",
           "flex flex-col items-center"
         )}

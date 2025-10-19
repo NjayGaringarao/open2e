@@ -18,6 +18,7 @@ const ModalView = ({ onClose, rubric }: ModalViewProps) => {
     totalScore: "10",
   });
   const [brackets, setBrackets] = useState<any[]>([]);
+  const [note, setNote] = useState<string>("");
 
   useEffect(() => {
     if (rubric) {
@@ -27,9 +28,10 @@ const ModalView = ({ onClose, rubric }: ModalViewProps) => {
         totalScore: rubric.total_score.toString(),
       });
 
-      // Try to parse brackets from content, fallback to showing raw content
-      const parsedBrackets = parseContentToBrackets(rubric.content);
-      setBrackets(parsedBrackets);
+      // Try to parse brackets and note from content, fallback to showing raw content
+      const parsed = parseContentToBrackets(rubric.content);
+      setBrackets(parsed.brackets);
+      setNote(parsed.note || "");
     } else {
       setForm({
         name: "",
@@ -37,6 +39,7 @@ const ModalView = ({ onClose, rubric }: ModalViewProps) => {
         totalScore: "10",
       });
       setBrackets([]);
+      setNote("");
     }
   }, [rubric]);
 
@@ -67,32 +70,33 @@ const ModalView = ({ onClose, rubric }: ModalViewProps) => {
           />
         </div>
 
-        {brackets.length > 0 ? (
-          <div className="space-y-4">
-            <h3 className="text-lg text-uGrayLight">Score Brackets</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {brackets
-                .sort((a, b) => a.minScore - b.minScore)
-                .map((bracket) => (
-                  <ScoreBracketCard
-                    key={bracket.id}
-                    bracket={bracket}
-                    onEdit={() => {}} // No-op for view mode
-                    onDelete={() => {}} // No-op for view mode
-                    disabled={true}
-                  />
-                ))}
-            </div>
+        <div className="flex flex-col gap-1">
+          <h3 className="text-base text-uGrayLight">Score Brackets</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {brackets
+              .sort((a, b) => a.minScore - b.minScore)
+              .map((bracket) => (
+                <ScoreBracketCard
+                  key={bracket.id}
+                  bracket={bracket}
+                  onEdit={() => {}} // No-op for view mode
+                  onDelete={() => {}} // No-op for view mode
+                  disabled={true}
+                />
+              ))}
           </div>
-        ) : (
-          <ParagraphBox
-            value={form.content}
-            title="Scoring"
-            setValue={(value) => setForm({ ...form, content: value })}
-            placeholder="Enter rubric content (supports markdown formatting)"
-            disabled={true}
-            containerClassname="h-96"
-          />
+        </div>
+        {note && (
+          <div className="flex flex-col gap-1">
+            <h3 className="text-base text-uGrayLight">Additional Notes</h3>
+            <ParagraphBox
+              value={note}
+              setValue={() => {}} // No-op for view mode
+              placeholder="No additional notes"
+              disabled={true}
+              rows={3}
+            />
+          </div>
         )}
       </div>
     </BaseModal>

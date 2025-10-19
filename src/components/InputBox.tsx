@@ -59,7 +59,7 @@ const InputBox = ({
           className={clsx(
             "bg-transparent",
             "shadow-inner shadow-uGrayLight w-full rounded-md resize-none",
-            "text-base lg:text-lg text-uGrayLight font-mono",
+            "text-base lg:text-lg text-uGrayLight font-sans",
             !inputProp.disabled && "hover:border hover:border-primary",
             "outline-primary",
             "placeholder:italic",

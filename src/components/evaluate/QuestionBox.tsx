@@ -3,7 +3,8 @@ import { Question } from "@/models";
 import { useEvaluation } from "@/context/main/useEvaluation";
 import { useEffect, useRef, useState } from "react";
 import { getSimilarQuestions, getTopQuestions } from "@/database/question";
-import clsx from "clsx";
+import { cn } from "@/utils/style";
+import { Popover, PopoverPanel, Transition } from "@headlessui/react";
 
 const QuestionBox = () => {
   const { question, updateQuestion, isLoading } = useEvaluation();
@@ -71,39 +72,52 @@ const QuestionBox = () => {
   return (
     <div className="relative">
       <p className="text-uGrayLight text-xl mb-2 font-semibold">Question</p>
-      <InputBox
-        value={question.tracked}
-        setValue={(e) => updateQuestion((prev) => ({ ...prev, tracked: e }))}
-        placeholder="Type the question here..."
-        withVoiceInput
-        inputClassName="p-4 text-base"
-        disabled={isLoading}
-        onFocus={() => setIsFocus(true)}
-        onBlur={handleOnBlur}
-      />
 
-      <div
-        className={clsx(
-          "absolute bg-panel mt-2 p-2 rounded-md z-50",
-          "shadow-md shadow-background",
-          "flex-col items-start",
-          "animate-fadeIn",
-          isFocus && !!suggestionList.length ? "flex" : "hidden"
-        )}
-      >
-        <p className="text-sm text-uGrayLight">
-          {isFilled ? "Similar Questions:" : "Suggested Questions:"}
-        </p>
-        {suggestionList.map((question) => (
-          <button
-            key={question.id.toString()}
-            onMouseDown={() => handleSuggestionClick(question.content)}
-            className="px-4 text-uGrayLight text-lg"
+      <Popover className="relative">
+        <InputBox
+          value={question.tracked}
+          setValue={(e) => updateQuestion((prev) => ({ ...prev, tracked: e }))}
+          placeholder="Type the question here..."
+          withVoiceInput
+          inputClassName="px-4 py-3 text-base"
+          disabled={isLoading}
+          onFocus={() => setIsFocus(true)}
+          onBlur={handleOnBlur}
+        />
+
+        <Transition
+          show={isFocus && !!suggestionList.length}
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
+          <PopoverPanel
+            static
+            className={cn(
+              "absolute bg-panel mt-2 p-2 rounded-md z-50 min-w-52 max-w-full",
+              "overflow-x-hidden",
+              "shadow-md shadow-background",
+              "flex flex-col items-start"
+            )}
           >
-            {question.content}
-          </button>
-        ))}
-      </div>
+            <p className="text-sm text-uGrayLight">
+              {isFilled ? "Similar Questions:" : "Suggested Questions:"}
+            </p>
+            {suggestionList.map((question) => (
+              <button
+                key={question.id.toString()}
+                onMouseDown={() => handleSuggestionClick(question.content)}
+                className="px-4 py-2 text-uGrayLight text-base text-nowrap text-ellipsis truncate w-full text-left hover:bg-secondary"
+              >
+                {question.content}
+              </button>
+            ))}
+          </PopoverPanel>
+        </Transition>
+      </Popover>
     </div>
   );
 };

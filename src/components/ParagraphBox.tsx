@@ -57,7 +57,7 @@ const ParagraphBox = ({
         className={clsx(
           "bg-transparent w-full rounded-md px-4 py-2",
           "resize-none break-all break-words whitespace-pre-wrap",
-          "text-base lg:text-lg text-uGrayLight font-mono",
+          "text-base lg:text-lg text-uGrayLight font-sans",
           !disabled && "hover:border hover:border-primary",
           "shadow-inner shadow-uGrayLight w-full rounded-md",
           "outline-primary",

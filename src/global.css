@@ -45,12 +45,12 @@
     /* Dark theme aligned to logo: rich charcoal + warm gold accent */
     --primary: #ffc131;
     --background: #0d1117;    /* deep navy-charcoal improved contrast */
-    --secondary: rgba(255, 193, 49, 0.12);
+    --secondary: rgba(1, 191, 212, 0.14);
     --panel: #151b23;         /* slightly lighter panel for cards/tables */
     --uBlack: #0a0f18;
     --uGray: #eaeef4;         /* main foreground, brighter */
-    --uGrayLight: #c5cad3;    /* secondary text, brighter */
-    --uGrayLightLight: #2a313c; /* muted borders, darker */
+    --uGrayLight: #ced1d8;    /* secondary text, brighter */
+    --uGrayLightLight: #5c6168; /* muted borders, darker */
     --uRed: #ef4444;
     --uGreen: #34d17c;
     --uBlue: #60a5fa;

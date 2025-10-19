@@ -146,6 +146,7 @@ const AnswerSheet = () => {
         justification={sheet.justification}
         answer={sheet.committedAnswer}
         question={question.committed}
+        rubric={selectedRubric || undefined}
         onClose={(e) => {
           if (e?.re_evaluate) evaluateSheet();
           setIsResultVisible(false);

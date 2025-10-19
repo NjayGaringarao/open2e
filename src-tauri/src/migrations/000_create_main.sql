@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS rubric (
   name TEXT NOT NULL,
   content TEXT NOT NULL,
   total_score INTEGER NOT NULL DEFAULT 10,
+  created_by TEXT NOT NULL DEFAULT 'USER',
   is_archived BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   archived_at TEXT

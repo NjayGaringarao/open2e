@@ -14,7 +14,7 @@ import { cn } from "@/utils/style";
 export interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
+  title?: string;
   children: React.ReactNode;
   showCloseButton?: boolean;
   footer?: React.ReactNode;
@@ -56,7 +56,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className={cn("fixed inset-0 bg-black/40 backdrop-blur-xs")} />
+          <div className={cn("fixed inset-0 bg-black/40 backdrop-blur-sm")} />
         </TransitionChild>
 
         {/* Centered panel */}
@@ -74,29 +74,32 @@ const BaseModal: React.FC<BaseModalProps> = ({
               className={cn(
                 "w-full rounded-xl bg-background shadow-xl flex flex-col",
                 "max-w-md overflow-hidden",
+                "border border-uGrayLight",
                 panelClassName
               )}
             >
               {/* Header */}
-              <div
-                className={cn(
-                  "flex justify-between items-center px-6",
-                  "border-b border-textBody/60 py-4 bg-primary/10",
-                  headerClassName
-                )}
-              >
-                <DialogTitle className="text-xl font-semibold text-primary">
-                  {title}
-                </DialogTitle>
-                {showCloseButton && (
-                  <button
-                    onClick={onClose}
-                    className="p-2 rounded-md hover:bg-gray-100 transition"
-                  >
-                    <X className="w-5 h-5 text-primary/80 hover:text-primary" />
-                  </button>
-                )}
-              </div>
+              {title && (
+                <div
+                  className={cn(
+                    "flex justify-between items-center px-6",
+                    "border-b border-uGrayLightLight py-4 bg-panel",
+                    headerClassName
+                  )}
+                >
+                  <DialogTitle className="text-xl font-semibold text-primary">
+                    {title}
+                  </DialogTitle>
+                  {showCloseButton && (
+                    <button
+                      onClick={onClose}
+                      className="p-2 rounded-md hover:bg-gray-100 transition"
+                    >
+                      <X className="w-5 h-5 text-primary/80 hover:text-primary" />
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* Child */}
               <div

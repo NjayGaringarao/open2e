@@ -9,20 +9,24 @@ import {
 import { ChevronDownIcon, CheckIcon } from "lucide-react";
 import clsx from "clsx";
 import { useRubric } from "@/context/main/rubric";
+import { cn } from "@/utils/style";
 
 interface RubricPickerProps {
   selectedRubricId: number | null;
   onRubricSelect: (rubric: Rubric) => void;
+  disabled?: boolean;
 }
 
 const RubricPicker = ({
   selectedRubricId,
   onRubricSelect,
+  disabled = false,
 }: RubricPickerProps) => {
   const { rubrics, loading } = useRubric();
   const selectedRubric = rubrics.find((r) => r.id === selectedRubricId);
 
   const handleRubricSelect = (rubric: Rubric) => {
+    if (disabled) return;
     onRubricSelect(rubric);
   };
 
@@ -43,6 +47,7 @@ const RubricPicker = ({
       <Listbox value={selectedRubric} onChange={handleRubricSelect}>
         <div className="relative">
           <ListboxButton
+            disabled={disabled}
             className={clsx(
               "bg-transparent",
               "w-full min-w-44",
@@ -51,7 +56,8 @@ const RubricPicker = ({
               "shadow shadow-uGrayLight",
               "hover:border hover:border-primary",
               "text-uGrayLight text-base",
-              "flex justify-between items-center"
+              "flex justify-between items-center",
+              disabled && "opacity-50 cursor-not-allowed"
             )}
           >
             <span className="text-left">
@@ -68,7 +74,15 @@ const RubricPicker = ({
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0"
           >
-            <ListboxOptions className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+            <ListboxOptions
+              className={cn(
+                "max-h-60 absolute z-10 w-full mt-2 bg-panel ",
+                "rounded-md  overflow-y-auto",
+                "shadow-md shadow-background",
+                "flex-col items-start",
+                "animate-fadeIn"
+              )}
+            >
               {rubrics.map((rubric) => (
                 <ListboxOption
                   key={rubric.id}
@@ -76,8 +90,8 @@ const RubricPicker = ({
                   className={({ active, selected }) =>
                     clsx(
                       "relative cursor-pointer select-none py-3 px-4",
-                      "border-b border-gray-100 last:border-b-0",
-                      active ? "bg-gray-100" : "",
+                      "border-b border-uGrayLightLight last:border-b-0",
+                      active ? "bg-secondary" : "",
                       selected ? "bg-primary/10" : ""
                     )
                   }
@@ -86,13 +100,13 @@ const RubricPicker = ({
                     <>
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col">
-                          <div className="font-medium">{rubric.name}</div>
-                          <div className="text-sm text-gray-500">
-                            Created:{" "}
-                            {new Date(rubric.created_at).toLocaleDateString()}
+                          <div className="text-base font-medium">
+                            {rubric.name}
                           </div>
-                          <div className="text-sm text-gray-600">
-                            Max Score: {rubric.total_score}
+                          <div className="text-sm text-uGrayLightLight">
+                            Max Score: {rubric.total_score} | Created by:{" "}
+                            {rubric.created_by} | Created:{" "}
+                            {new Date(rubric.created_at).toLocaleDateString()}
                           </div>
                         </div>
                         {selected && (

@@ -9,4 +9,5 @@ export interface RubricForm {
   name: string;
   totalScore: number;
   brackets: ScoreBracket[];
+  note?: string;
 }

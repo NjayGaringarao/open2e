@@ -71,9 +71,12 @@ export const validateNoOverlaps = (brackets: ScoreBracket[]): boolean => {
 /**
  * Converts score brackets to markdown string for storage
  */
-export const convertBracketsToContent = (brackets: ScoreBracket[]): string => {
+export const convertBracketsToContent = (
+  brackets: ScoreBracket[],
+  note?: string
+): string => {
   if (brackets.length === 0) {
-    return "";
+    return note ? `Note:\n${note}` : "";
   }
 
   const sortedBrackets = [...brackets].sort((a, b) => a.minScore - b.minScore);
@@ -90,25 +93,50 @@ export const convertBracketsToContent = (brackets: ScoreBracket[]): string => {
     content += `| **${range}** | ${bracket.criteria} |\n`;
   });
 
+  if (note && note.trim()) {
+    content += `\n\nNote:\n${note}`;
+  }
+
   return content;
 };
 
 /**
  * Parses markdown content back to score brackets (for editing existing rubrics)
  */
-export const parseContentToBrackets = (content: string): ScoreBracket[] => {
+export const parseContentToBrackets = (
+  content: string
+): { brackets: ScoreBracket[]; note?: string } => {
   const brackets: ScoreBracket[] = [];
   const lines = content.split("\n");
 
   let inTable = false;
   let idCounter = 0;
+  let note = "";
+  let inNoteSection = false;
 
   for (const line of lines) {
+    // Check if we're entering the note section
+    if (line.trim().toLowerCase() === "note:") {
+      inNoteSection = true;
+      inTable = false;
+      continue;
+    }
+
+    // If we're in the note section, collect note content
+    if (inNoteSection) {
+      if (line.trim()) {
+        note += (note ? "\n" : "") + line;
+      }
+      continue;
+    }
+
+    // Check if we're entering the table section
     if (line.includes("| **Score Range** |")) {
       inTable = true;
       continue;
     }
 
+    // Parse table rows
     if (inTable && line.startsWith("|") && line.includes("**")) {
       const parts = line
         .split("|")
@@ -143,7 +171,10 @@ export const parseContentToBrackets = (content: string): ScoreBracket[] => {
     }
   }
 
-  return brackets;
+  return {
+    brackets,
+    note: note.trim() || undefined,
+  };
 };
 
 /**

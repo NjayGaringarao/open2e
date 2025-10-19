@@ -1,13 +1,6 @@
-import { Fragment } from "react";
-import {
-  Dialog,
-  DialogPanel,
-  Transition,
-  TransitionChild,
-} from "@headlessui/react";
 import { VoiceVisualizer } from "react-voice-visualizer";
 import Button from "@/components/Button";
-import clsx from "clsx";
+import BaseModal from "@/components/container/BaseModal";
 interface prop {
   isListening: boolean;
   recorderControls: any;
@@ -29,88 +22,52 @@ export function ModalListen({
     .trim();
 
   return (
-    <Transition appear show={isListening} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={() => {}}>
-        <TransitionChild
-          as={Fragment}
-          enter="ease-out duration-200"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in duration-150"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div
-            style={{
-              position: "fixed",
-              inset: 0,
-              opacity: "90%",
-              background: "black",
-            }}
+    <BaseModal
+      isOpen={isListening}
+      onClose={stopListening}
+      panelClassName="w-[26rem] flex flex-col gap-4 items-center py-6"
+      contentClassName="gap-4 items-center"
+      disableBackdropClick={true}
+    >
+      {/* Voice Visualizer active only while listening */}
+      <div className="relative">
+        {!isSupported ? (
+          <div className="h-[150px] w-[370px] flex items-center justify-center bg-red-50 border border-red-200 rounded">
+            <p className="text-red-600 text-center">
+              Speech recognition is not supported in this browser.
+              <br />
+              Please use a modern browser like Chrome, Edge, or Safari.
+            </p>
+          </div>
+        ) : isListening ? (
+          <VoiceVisualizer
+            controls={recorderControls}
+            height={150}
+            width={370}
+            barWidth={4}
+            mainBarColor={primaryColor}
+            secondaryBarColor={grayColor}
           />
-        </TransitionChild>
-
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <TransitionChild
-            as={Fragment}
-            enter="ease-out duration-200"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-150"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <DialogPanel
-              className={clsx(
-                "relative w-[26rem] transform overflow-hidden",
-                "rounded-lg bg-background text-left align-middle shadow-xl transition-all ",
-                "flex flex-col gap-4 items-center py-6"
-              )}
-            >
-              {/* Voice Visualizer active only while listening */}
-
-              <div className="relative border">
-                {!isSupported ? (
-                  <div className="h-[150px] w-[370px] flex items-center justify-center bg-red-50 border border-red-200 rounded">
-                    <p className="text-red-600 text-center">
-                      Speech recognition is not supported in this browser.
-                      <br />
-                      Please use a modern browser like Chrome, Edge, or Safari.
-                    </p>
-                  </div>
-                ) : isListening ? (
-                  <VoiceVisualizer
-                    controls={recorderControls}
-                    height={150}
-                    width={370}
-                    barWidth={4}
-                    mainBarColor={primaryColor}
-                    secondaryBarColor={grayColor}
-                  />
-                ) : (
-                  <div className="h-[150px] w-[370px] flex items-center justify-center">
-                    <div className="text-center">
-                      <p className="text-uGrayLight mb-2">
-                        Starting voice recognition...
-                      </p>
-                      <p className="text-sm text-uGrayLight">
-                        Please allow microphone access when prompted
-                      </p>
-                    </div>
-                  </div>
-                )}
-                <div className="bottom-0 absolute bg-background py-8 w-full flex flex-col items-center border">
-                  <Button
-                    title="Stop Listening"
-                    onClick={stopListening}
-                    className="bg-uRed py-2"
-                  />
-                </div>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
+        ) : (
+          <div className="h-[150px] w-[370px] flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-uGrayLight mb-2">
+                Starting voice recognition...
+              </p>
+              <p className="text-sm text-uGrayLight">
+                Please allow microphone access when prompted
+              </p>
+            </div>
+          </div>
+        )}
+        <div className="bottom-0 absolute bg-background py-8 w-full flex flex-col items-center border-t border-uGrayLightLight">
+          <Button
+            title="Stop Listening"
+            onClick={stopListening}
+            className="bg-uRed py-2"
+          />
         </div>
-      </Dialog>
-    </Transition>
+      </div>
+    </BaseModal>
   );
 }

@@ -4,17 +4,23 @@ import QuestionBox from "./QuestionBox";
 import { nanoid } from "nanoid";
 import { useEvaluation } from "@/context/main/useEvaluation";
 import ArticleItem from "./ArticleItem";
-import RubricPicker from "./RubricPicker";
+import RubricPicker from "../rubric/RubricPicker";
 import clsx from "clsx";
 
 const EvaluationContent = () => {
-  const { articleList, question, selectedRubric, updateSelectedRubric } =
-    useEvaluation();
+  const {
+    articleList,
+    question,
+    selectedRubric,
+    updateSelectedRubric,
+    isLoading,
+  } = useEvaluation();
   return (
     <div className="w-full flex flex-col gap-8">
       <RubricPicker
         selectedRubricId={selectedRubric?.id || null}
         onRubricSelect={updateSelectedRubric}
+        disabled={isLoading}
       />
 
       <QuestionBox />

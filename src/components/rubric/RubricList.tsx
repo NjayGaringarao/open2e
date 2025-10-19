@@ -3,10 +3,10 @@ import { archiveRubric, Rubric } from "@/database/rubric";
 import { useDialog } from "@/context/dialog";
 import { useRubric } from "@/context/main/rubric";
 import Button from "@/components/Button";
-import { Plus, Trash2 } from "lucide-react";
-import { cn } from "@/utils/style";
+import { Plus } from "lucide-react";
 import ModalView from "./ModalView";
 import ModalCreate from "./ModalCreate";
+import RubricItem from "./RubricItem";
 
 const RubricList = () => {
   const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
@@ -50,32 +50,12 @@ const RubricList = () => {
     <div className="w-full">
       <div className="space-y-3">
         {rubrics.map((rubric) => (
-          <div
+          <RubricItem
             key={rubric.id}
-            onClick={() => setSelectedRubric(rubric)}
-            className={cn(
-              "flex flex-row justify-between items-center",
-              "p-4 shadow shadow-uGrayLight rounded-lg",
-              "hover:bg-secondary cursor-pointer"
-            )}
-          >
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold">{rubric.name}</h3>
-
-              <p className="text-sm text-gray-600">
-                Max Score: {rubric.total_score}
-              </p>
-            </div>
-
-            {rubric.name !== "Default Rubric" && (
-              <button
-                onClick={() => handleArchive(rubric.id, rubric.name)}
-                className="px-4"
-              >
-                <Trash2 className="w-6 h-6 text-uRed" />
-              </button>
-            )}
-          </div>
+            rubric={rubric}
+            setSelectedRubric={setSelectedRubric}
+            handleArchive={handleArchive}
+          />
         ))}
       </div>
 
@@ -86,7 +66,7 @@ const RubricList = () => {
       ) : (
         <div className="py-4">
           <Button
-            className="w-full h-20 bg-transparent text-primary"
+            className="w-full h-20 bg-transparent text-primary hover:bg-secondary"
             onClick={() => setIsModalCreateOpen(true)}
           >
             <Plus className="w-7 h-7" /> Create New Rubric

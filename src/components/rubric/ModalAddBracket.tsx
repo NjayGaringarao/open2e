@@ -5,7 +5,7 @@ import ParagraphBox from "../ParagraphBox";
 import Button from "../Button";
 import { ScoreBracket } from "@/types/rubric";
 
-interface AddBracketModalProps {
+interface ModalAddBracketProps {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (bracket: ScoreBracket) => void;
@@ -15,7 +15,7 @@ interface AddBracketModalProps {
   existingBrackets: ScoreBracket[];
 }
 
-const AddBracketModal = ({
+const ModalAddBracket = ({
   isOpen,
   onClose,
   onAdd,
@@ -23,7 +23,7 @@ const AddBracketModal = ({
   editingBracket,
   totalScore,
   existingBrackets,
-}: AddBracketModalProps) => {
+}: ModalAddBracketProps) => {
   const [form, setForm] = useState({
     minScore: "",
     maxScore: "",
@@ -237,4 +237,4 @@ const AddBracketModal = ({
   );
 };
 
-export default AddBracketModal;
+export default ModalAddBracket;

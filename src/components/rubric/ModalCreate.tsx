@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BaseModal from "../container/BaseModal";
 import InputBox from "../InputBox";
+import ParagraphBox from "../ParagraphBox";
 import Button from "../Button";
 import { useDialog } from "@/context/dialog";
 import { useRubric } from "@/context/main/rubric";
@@ -12,7 +13,7 @@ import {
   getCoveragePercentage,
 } from "@/utils/rubricUtils";
 import ScoreBracketCard from "./ScoreBracketCard";
-import AddBracketModal from "./AddBracketModal";
+import ModalAddBracket from "./ModalAddBracket";
 import { Plus, AlertCircle } from "lucide-react";
 
 interface ModalCreateProps {
@@ -25,6 +26,7 @@ const ModalCreate = ({ isOpen, onClose }: ModalCreateProps) => {
     name: "",
     totalScore: 10,
     brackets: [],
+    note: "",
   });
   const [loading, setLoading] = useState(false);
   const [showAddBracketModal, setShowAddBracketModal] = useState(false);
@@ -77,7 +79,7 @@ const ModalCreate = ({ isOpen, onClose }: ModalCreateProps) => {
     setLoading(true);
 
     // Convert brackets to content string
-    const content = convertBracketsToContent(form.brackets);
+    const content = convertBracketsToContent(form.brackets, form.note);
 
     const { rubric: newRubric, error } = await createRubric({
       name: form.name.trim(),
@@ -150,6 +152,7 @@ const ModalCreate = ({ isOpen, onClose }: ModalCreateProps) => {
       name: "",
       totalScore: 10,
       brackets: [],
+      note: "",
     });
     setShowAddBracketModal(false);
     setEditingBracket(null);
@@ -218,6 +221,20 @@ const ModalCreate = ({ isOpen, onClose }: ModalCreateProps) => {
             </div>
           </div>
 
+          {/* Note Section */}
+          <div className="space-y-2">
+            <h3 className="text-base text-uGrayLight">
+              Additional Notes (Optional)
+            </h3>
+            <ParagraphBox
+              value={form.note || ""}
+              setValue={(value) => setForm({ ...form, note: value })}
+              placeholder="Enter any additional notes or instructions for this rubric..."
+              disabled={loading}
+              rows={3}
+            />
+          </div>
+
           <div className="flex flex-row gap-4">
             {/* Coverage Status */}
             <div className="flex-1">
@@ -268,7 +285,7 @@ const ModalCreate = ({ isOpen, onClose }: ModalCreateProps) => {
         </form>
       </BaseModal>
 
-      <AddBracketModal
+      <ModalAddBracket
         isOpen={showAddBracketModal}
         onClose={() => setShowAddBracketModal(false)}
         onAdd={handleAddBracket}

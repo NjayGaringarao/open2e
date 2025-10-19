@@ -5,21 +5,19 @@ const ConfigHelp = () => {
 
 ---
 ## Getting Started
-This page allows you to customize the appearance, set up text-to-speech, and manage the core Artificial Intelligence (AI) source for the entire application.
+This page allows you to customize the appearance, backup and restore your data, set up text-to-speech, and view the current LLM source and capability for the entire application.
 
 ---
 ## Appearance
 1. **Theme**: Switch between **Light** and **Dark** mode to change the visual theme of the application. The current setting is highlighted.
 
 ---
-## Text to Speech
-This section controls the audio output settings used throughout the application.
+## Backup and Restore
+This section allows you to backup and restore your data. This includes all your evaluations, rubrics, and AI Chats.
+1. **Backup**: Click the \`[ Create Backup ]\` and select a folder to save the backup file.
+2. **Restore**: Click the \`[ Restore from Backup ]\` and select the backup file to restore your data.
 
-1. **Voice Selection**: Use the dropdown menu (e.g., **Microsoft David - English (United States) (en-US)**) to select a different voice.
-2. **Adjust Controls**:
-    * **Rate**: Controls the speed of the speech.
-    * **Pitch**: Adjusts the tone or frequency of the voice.
-    * **Volume**: Sets the loudness of the audio output.
+> Note: Restoring from backup will completely replace all existing data including evaluations, rubrics, and AI Chats. Make sure to create a backup before restoring if you want to keep your current data.
 
 ---
 ## LLM Source and Capability
@@ -42,6 +40,16 @@ This table shows which AI features are available based on the currently selected
 * **Connectivity**: If using an Online LLM, ensure your device has a stable internet connection.
 
 > Note: Feature availability (Evaluation, AI Detection, AI Chat) can change instantly based on your chosen LLM and network status.
+
+---
+## Text to Speech
+This section controls the audio output settings used throughout the application.
+
+1. **Voice Selection**: Use the dropdown menu (e.g., **Microsoft David - English (United States) (en-US)**) to select a different voice.
+2. **Adjust Controls**:
+    * **Rate**: Controls the speed of the speech.
+    * **Pitch**: Adjusts the tone or frequency of the voice.
+    * **Volume**: Sets the loudness of the audio output.
 
 `;
   return (

@@ -8,6 +8,7 @@ import ThemeToggle from "@/components/settings/ThemeToggle";
 import MainContentBox from "@/components/container/MainContentBox";
 import ConfigHelp from "@/constant/helpContent/ConfigHelp";
 import { HelpPanel } from "@/components/HelpPanel";
+import BackupRestore from "@/components/settings/BackupRestore";
 
 export default function Settings() {
   return (
@@ -30,11 +31,13 @@ export default function Settings() {
 
         <DropDown
           headerElement={
-            <p className="text-uGray text-xl font-semibold">Text to Speech</p>
+            <p className="text-uGray text-xl font-semibold">
+              Backup and Restore
+            </p>
           }
           isDefaultOpen
         >
-          <TTS />
+          <BackupRestore />
         </DropDown>
 
         <DropDown
@@ -48,6 +51,15 @@ export default function Settings() {
           <LocalSetupProvider>
             <LLMSource />
           </LocalSetupProvider>
+        </DropDown>
+
+        <DropDown
+          headerElement={
+            <p className="text-uGray text-xl font-semibold">Text to Speech</p>
+          }
+          isDefaultOpen
+        >
+          <TTS />
         </DropDown>
       </MainContentBox>
 

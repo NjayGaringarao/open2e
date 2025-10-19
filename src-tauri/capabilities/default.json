@@ -22,12 +22,26 @@
     {
       "identifier": "http:default",
       "allow": [
-        { "url": "http://localhost:3000/*" }, 
-        { "url": "https://open2e.vercel.app/*" },
-        { "url": "https://www.google.com/*" },
-        { "url": "https://www.cloudflare.com/*" },
-        { "url": "https://httpbin.org/*" }
+        {
+          "url": "http://localhost:3000/*"
+        },
+        {
+          "url": "https://open2e.vercel.app/*"
+        },
+        {
+          "url": "https://www.google.com/*"
+        },
+        {
+          "url": "https://www.cloudflare.com/*"
+        },
+        {
+          "url": "https://httpbin.org/*"
+        }
       ]
-    }
+    },
+    "fs:default",
+    "dialog:default",
+    "fs:allow-write-text-file",
+    "fs:allow-read-text-file"
   ]
 }

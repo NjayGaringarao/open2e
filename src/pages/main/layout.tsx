@@ -5,6 +5,7 @@ import Evaluate from "./evaluate";
 import Settings from "./settings";
 import Chat from "./chat";
 import Rubrics from "./rubrics";
+import History from "./history";
 import { ReactNode, useEffect, useState } from "react";
 
 export default function Layout() {
@@ -17,6 +18,7 @@ export default function Layout() {
     setPageComponents({
       "/home": <Home />,
       "/evaluate": <Evaluate />,
+      "/history": <History />,
       "/settings": <Settings />,
       "/chat": <Chat />,
       "/rubrics": <Rubrics />,

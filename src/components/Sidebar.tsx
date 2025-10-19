@@ -14,6 +14,7 @@ import {
   ClipboardCheck,
   LucideProps,
   ListTodo,
+  History,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
 
@@ -36,6 +37,7 @@ export default function Sidebar() {
     setTabList([
       { name: "Home", path: "/home", icon: Home },
       { name: "Evaluate", path: "/evaluate", icon: ClipboardCheck },
+      { name: "History", path: "/history", icon: History },
       { name: "Chat", path: "/chat", icon: MessageSquareText },
       { name: "Rubrics", path: "/rubrics", icon: ListTodo },
       { name: "Configuration", path: "/settings", icon: Settings },

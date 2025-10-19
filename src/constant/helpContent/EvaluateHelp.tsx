@@ -21,6 +21,12 @@ const EvaluateHelp = () => {
 - **Re-evaluate**: Press the > Evaluation Input < and re-evaluate the answer.
 
 ---
+## Save Evaluation
+- **Save Evaluation**: Press the save button to save the evaluation results.
+- **View History**: Saved evaluations can be viewed from the history tab.
+- **Delete Evaluation**: Saved evaluations cannot be deleted.
+
+---
 ## Tips for Better Evaluation
 - Use clear, accurate, and specific questions
 - Review AI evaluations for accuracy.

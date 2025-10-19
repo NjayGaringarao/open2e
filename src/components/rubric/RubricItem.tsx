@@ -18,7 +18,7 @@ const RubricItem = ({
       key={rubric.id}
       className={cn(
         "flex flex-row justify-between items-center",
-        "shadow shadow-uGrayLight rounded-lg",
+        "border border-uGrayLightLight rounded-lg",
         "hover:bg-secondary cursor-pointer"
       )}
     >

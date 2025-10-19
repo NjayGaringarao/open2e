@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import ModalView from "./ModalView";
 import ModalCreate from "./ModalCreate";
 import RubricItem from "./RubricItem";
+import { cn } from "@/utils/style";
 
 const RubricList = () => {
   const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
@@ -65,12 +66,17 @@ const RubricList = () => {
         </div>
       ) : (
         <div className="py-4">
-          <Button
-            className="w-full h-20 bg-transparent text-primary hover:bg-secondary"
+          <button
+            className={cn(
+              "w-full h-20 bg-panel text-primary",
+              "hover:bg-secondary",
+              "border border-uGrayLightLight rounded-lg ",
+              "flex flex-row items-center justify-center gap-2"
+            )}
             onClick={() => setIsModalCreateOpen(true)}
           >
             <Plus className="w-7 h-7" /> Create New Rubric
-          </Button>
+          </button>
         </div>
       )}
       <ModalView onClose={handleModalClose} rubric={selectedRubric} />

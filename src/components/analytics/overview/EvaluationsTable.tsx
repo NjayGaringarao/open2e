@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import type { EvaluationData } from "@/database/analytics/types";
+import { getAIDetectionColor } from "@/utils/aiDetectionUtils";
+import { cn } from "@/utils/style";
 
 interface EvaluationsTableProps {
   data: EvaluationData[];
@@ -66,6 +68,9 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
                 Score
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-uGray uppercase tracking-wider">
+                AI Detection
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-uGray uppercase tracking-wider">
                 Model
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-uGray uppercase tracking-wider">
@@ -111,6 +116,25 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
                       %
                     </span>
                   </div>
+                </td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-uGray">
+                  {evaluation.aiDetectionData ? (
+                    <span
+                      className={cn(
+                        "px-2 py-1 rounded-full text-xs font-semibold",
+                        getAIDetectionColor(
+                          evaluation.aiDetectionData.overall_score
+                        )
+                      )}
+                    >
+                      {Math.round(
+                        evaluation.aiDetectionData.overall_score * 100
+                      )}
+                      %
+                    </span>
+                  ) : (
+                    <span className="text-gray-400 text-xs">N/A</span>
+                  )}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-uGray">
                   {evaluation.llmModel}

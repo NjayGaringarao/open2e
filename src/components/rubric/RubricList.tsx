@@ -5,6 +5,7 @@ import { useRubric } from "@/context/main/rubric";
 import { Plus } from "lucide-react";
 import ModalView from "./ModalView";
 import ModalCreate from "./ModalCreate";
+import ModalEdit from "./ModalEdit";
 import RubricItem from "./RubricItem";
 import { cn } from "@/utils/style";
 
@@ -12,9 +13,22 @@ const RubricList = () => {
   const { rubrics, loading, refreshRubrics, removeRubric } = useRubric();
   const [selectedRubric, setSelectedRubric] = useState<Rubric | null>(null);
   const [isModalCreateOpen, setIsModalCreateOpen] = useState(false);
-  const { alert } = useDialog();
+  const [editingRubric, setEditingRubric] = useState<Rubric | null>(null);
+  const { alert, confirm } = useDialog();
 
   const handleArchive = async (id: number, name: string) => {
+    const confirmed = await confirm({
+      title: "Confirm Deletion",
+      description: `You will not be able to use this rubric but this will remain in your saved evaluations. Are you sure you want to delete the rubric "${name}"? `,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      mode: "CRITICAL",
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
     const { error } = await archiveRubric(id);
     if (error) {
       alert({
@@ -32,9 +46,14 @@ const RubricList = () => {
     }
   };
 
+  const handleEdit = (rubric: Rubric) => {
+    setEditingRubric(rubric);
+  };
+
   const handleModalClose = () => {
     setIsModalCreateOpen(false);
     setSelectedRubric(null);
+    setEditingRubric(null);
     refreshRubrics();
   };
 
@@ -55,6 +74,7 @@ const RubricList = () => {
             rubric={rubric}
             setSelectedRubric={setSelectedRubric}
             handleArchive={handleArchive}
+            handleEdit={handleEdit}
           />
         ))}
       </div>
@@ -80,6 +100,11 @@ const RubricList = () => {
       )}
       <ModalView onClose={handleModalClose} rubric={selectedRubric} />
       <ModalCreate isOpen={isModalCreateOpen} onClose={handleModalClose} />
+      <ModalEdit
+        isOpen={!!editingRubric}
+        onClose={handleModalClose}
+        rubric={editingRubric}
+      />
     </div>
   );
 };

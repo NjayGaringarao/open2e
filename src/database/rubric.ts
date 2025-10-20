@@ -20,6 +20,14 @@ interface ICreateRubric {
   created_by?: string;
 }
 
+interface IUpdateRubric {
+  oldRubricId: number;
+  name: string;
+  content: string;
+  total_score: number;
+  created_by?: string;
+}
+
 export const getAllRubrics = async (): Promise<{
   rubrics: Rubric[];
   error?: string;
@@ -87,6 +95,48 @@ export const archiveRubric = async (
     );
 
     return {};
+  } catch (error) {
+    return { error: `${error}` };
+  } finally {
+    db?.close();
+  }
+};
+
+export const updateRubric = async ({
+  oldRubricId,
+  name,
+  content,
+  total_score,
+  created_by = "USER",
+}: IUpdateRubric): Promise<{ rubric?: Rubric; error?: string }> => {
+  let db: Database | null = null;
+  try {
+    db = await openDatabase();
+
+    // Archive old rubric
+    await db.execute(
+      `UPDATE rubric SET is_archived = 1, archived_at = CURRENT_TIMESTAMP WHERE id = $1`,
+      [oldRubricId]
+    );
+
+    // Create new rubric with updated data
+    await db.execute(
+      `INSERT INTO rubric (name, content, total_score, created_by) VALUES ($1, $2, $3, $4)`,
+      [name, content, total_score, created_by]
+    );
+
+    // Get the newly created rubric
+    const lastIdRow = await db.select<{ id: number }[]>(
+      `SELECT last_insert_rowid() as id`
+    );
+    const rubricId = lastIdRow[0].id;
+
+    const rubric = await db.select<Rubric[]>(
+      `SELECT id, name, content, total_score, created_by, is_archived, created_at, archived_at FROM rubric WHERE id = $1`,
+      [rubricId]
+    );
+
+    return { rubric: rubric[0] };
   } catch (error) {
     return { error: `${error}` };
   } finally {

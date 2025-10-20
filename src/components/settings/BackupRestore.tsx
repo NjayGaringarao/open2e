@@ -12,7 +12,7 @@ import { Download, Upload } from "lucide-react";
 import clsx from "clsx";
 
 const BackupRestore = () => {
-  const { confirm } = useDialog();
+  const { confirm, alert } = useDialog();
   const [isBackingUp, setIsBackingUp] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
 
@@ -137,10 +137,12 @@ const BackupRestore = () => {
         return;
       }
 
-      toaster.create({
+      alert({
         title: "Restore Successful",
-        description: "Data has been successfully restored from backup",
-        type: "success",
+        description:
+          "Data has been successfully restored from backup. Please Restart the application to see the changes.",
+        mode: "SUCCESS",
+        displayTime: 10000,
       });
     } catch (error) {
       toaster.create({

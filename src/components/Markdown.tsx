@@ -83,7 +83,7 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
           /* Paragraphs & lists: reduced bottom margin */
           p: ({ children }) => (
             <p
-              className={`text-base whitespace-pre-wrap break-words -mb-4 last:mb-0 ${
+              className={`text-base whitespace-pre-wrap break-words -mb-2 last:mb-0 ${
                 forceBlackText
                   ? "text-black font-normal"
                   : forceWhiteText
@@ -104,7 +104,7 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
           ),
           li: ({ children }) => (
             <li
-              className={`text-base whitespace-pre-wrap break-words -mb-4 first:-mt-4 ${
+              className={`text-base whitespace-pre-wrap break-words -mb-2 first:-mt-4 ${
                 forceBlackText
                   ? "text-black font-normal"
                   : forceWhiteText
@@ -121,10 +121,10 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
           /* Blockquote: subtle left border + light background */
           blockquote: ({ children }) => (
             <blockquote
-              className={`pl-4 italic text-base rounded-sm py-2 mb-2 last:mb-0 whitespace-pre-wrap break-words ${
+              className={`pl-4 italic text-base rounded-md mb-2 last:mb-0 whitespace-pre-wrap break-words ${
                 colorMode === "dark"
                   ? "text-panel bg-uGrayLightLight"
-                  : "text-uBlack bg-uGrayLight"
+                  : "text-uBlack bg-uGrayLightLight"
               }`}
             >
               {children}
@@ -191,7 +191,7 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
                 className={`rounded px-1 py-0.5 text-base font-mono ${
                   colorMode === "dark"
                     ? "bg-panel text-uGray"
-                    : "bg-uGrayLight text-uBlack"
+                    : "bg-uGrayLightLight text-uBlack"
                 }`}
               >
                 {children}

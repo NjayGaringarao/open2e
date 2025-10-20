@@ -1,17 +1,19 @@
 import { Rubric } from "@/database/rubric";
 import { cn } from "@/utils/style";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 interface RubricItemProps {
   rubric: Rubric;
   setSelectedRubric: (rubric: Rubric) => void;
   handleArchive: (id: number, name: string) => void;
+  handleEdit: (rubric: Rubric) => void;
 }
 
 const RubricItem = ({
   rubric,
   setSelectedRubric,
   handleArchive,
+  handleEdit,
 }: RubricItemProps) => {
   return (
     <div
@@ -29,12 +31,22 @@ const RubricItem = ({
       </div>
 
       {rubric.created_by === "USER" ? (
-        <button
-          onClick={() => handleArchive(rubric.id, rubric.name)}
-          className="flex-2 p-4 pr-8"
-        >
-          <Trash2 className="w-6 h-6 text-uGrayLight hover:text-uRed" />
-        </button>
+        <div className="flex flex-row gap-4 px-4">
+          <button
+            onClick={() => handleEdit(rubric)}
+            className="flex-2 py-4"
+            title="Edit"
+          >
+            <Edit className="w-6 h-6 text-uGrayLight hover:text-uRed" />
+          </button>
+          <button
+            onClick={() => handleArchive(rubric.id, rubric.name)}
+            className="flex-2 py-4"
+            title="Delete"
+          >
+            <Trash2 className="w-6 h-6 text-uGrayLight hover:text-uRed" />
+          </button>
+        </div>
       ) : (
         <p className="text-sm text-uGrayLightLight px-4">
           Created by {rubric.created_by}

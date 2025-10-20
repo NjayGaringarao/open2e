@@ -5,13 +5,21 @@ const RubricHelp = () => {
 
 ---
 ## Getting Started
-This page is your central hub for creating, viewing, and managing the scoring criteria (rubrics) used for all evaluations.
+This page will allow you to view, and manage the scoring criteria (analytical rubrics) that you can use for evaluations. Open2E provides a default rubric for you to use, but you can create your own custom rubrics to suit your needs.
 
 ---
 ### Rubric List
 1. **View Rubric**: Click on any rubric name (e.g., **Default Rubric**) to view its details and score brackets.
 2. **Create New Rubric**: Press the **+ Create New Rubric** button to define a new set of scoring rules.
 3. **Delete Rubric**: Click the **trash icon** (🗑) next to a custom rubric to remove it from the system.
+
+---
+## Viewing a Rubric
+This screen provides a list of your scoring models. Each Item's full details can be viewed by clicking on the item.
+* **Rubric Name**: The name of the rubric.
+* **Total Score**: The total score of the rubric.
+* **Score Brackets**: Review the quality descriptions associated with each point range.
+* **Additional Notes**: Check for any specific instructional rules the AI must follow during evaluation.
 
 ---
 ## Creating a New Rubric
@@ -25,13 +33,19 @@ Use this form to build a detailed scoring guide for the AI.
 4. **Ensure Coverage**: The **Score Coverage** bar must reach **100% Complete**. This means you have defined descriptions for every possible point from 0 up to your Total Score.
 5. **Save**: Click **Save Rubric** once all ranges are covered.
 
----
-## Viewing a Rubric
-This screen provides a quick review of your scoring model.
-* **Score Brackets**: Review the quality descriptions associated with each point range.
-* **Additional Notes**: Check for any specific instructional rules the AI must follow during evaluation.
-
 > Note: Detailed, specific score bracket descriptions lead to more accurate and reliable AI evaluations.
+
+---
+## Updating a Rubric
+Each item in the list can be edited by clicking the **edit icon**. This will open a form to edit the details of a rubric.
+* Updating a rubric will not update the rubric in any evaluations that have already used it.
+
+---
+## Deleting a Rubric
+Each item in the list can be deleted by clicking the **delete icon**. This will open a confirmation dialog to delete the rubric.
+* Deleting a rubric will not delete the rubric from any evaluations that have already used it.
+
+
 
 `;
   return (

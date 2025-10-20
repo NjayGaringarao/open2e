@@ -34,12 +34,14 @@ const ScoreBracketCard = ({
               </div>
               {disabled ? (
                 <button
+                  type="button"
                   onClick={() => setIsViewing(true)}
                   className="absolute top-0 right-0 h-full w-full bg-transparent"
                 />
               ) : (
                 <div className="flex gap-2">
                   <button
+                    type="button"
                     onClick={() => onEdit(bracket)}
                     disabled={disabled}
                     className="text-uGrayLight hover:text-primary"
@@ -47,6 +49,7 @@ const ScoreBracketCard = ({
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
+                    type="button"
                     onClick={() => onDelete(bracket.id)}
                     disabled={disabled}
                     className="p-2 text-uGrayLight hover:text-uRed"

@@ -47,9 +47,9 @@ export const EvaluationsTable: React.FC<EvaluationsTableProps> = ({
   };
 
   return (
-    <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight">
-      <h3 className="text-lg font-semibold text-uGray mb-4">{title}</h3>
-      <div className="overflow-x-auto">
+    <div className="bg-background rounded-lg shadow-md p-6 border border-uGrayLight h-[30rem] flex flex-col gap-4">
+      <h3 className="text-lg font-semibold text-uGray">{title}</h3>
+      <div className="overflow-x-auto overflow-y-auto flex-1">
         <table className="min-w-full divide-y divide-uGrayLight">
           <thead className="bg-panel">
             <tr>

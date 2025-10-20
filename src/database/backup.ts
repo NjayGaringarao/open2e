@@ -13,9 +13,16 @@ export interface BackupData {
     answer: string;
     score: number;
     justification: string;
-    detected_ai: number | null;
+    ai_detection_id: number | null;
     llm_model: string;
     created_at: string;
+  }>;
+  ai_detections: Array<{
+    id: number;
+    overall_score: number;
+    sentence_scores: string;
+    tokens: string;
+    token_probs: string;
   }>;
   rubrics: Array<{
     id: number;
@@ -66,6 +73,10 @@ export const exportAllData = async (): Promise<{
       "SELECT * FROM evaluation ORDER BY id"
     );
 
+    const ai_detections = await db.select<BackupData["ai_detections"]>(
+      "SELECT * FROM ai_detection ORDER BY id"
+    );
+
     const rubrics = await db.select<BackupData["rubrics"]>(
       "SELECT * FROM rubric ORDER BY id"
     );
@@ -81,6 +92,7 @@ export const exportAllData = async (): Promise<{
     const backupData: BackupData = {
       questions,
       evaluations,
+      ai_detections,
       rubrics,
       conversations,
       messages,
@@ -118,6 +130,7 @@ export const validateBackupData = (
     const requiredKeys = [
       "questions",
       "evaluations",
+      "ai_detections",
       "rubrics",
       "conversations",
       "messages",
@@ -133,6 +146,7 @@ export const validateBackupData = (
     const arrayKeys = [
       "questions",
       "evaluations",
+      "ai_detections",
       "rubrics",
       "conversations",
       "messages",
@@ -177,6 +191,7 @@ export const importAllData = async (
       await db.execute("DELETE FROM message");
       await db.execute("DELETE FROM conversation");
       await db.execute("DELETE FROM evaluation");
+      await db.execute("DELETE FROM ai_detection");
       await db.execute("DELETE FROM question");
       await db.execute("DELETE FROM rubric");
 
@@ -221,10 +236,25 @@ export const importAllData = async (
         );
       }
 
+      // Insert ai_detections
+      for (const aiDetection of data.ai_detections) {
+        await db.execute(
+          `INSERT INTO ai_detection (id, overall_score, sentence_scores, tokens, token_probs)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [
+            aiDetection.id,
+            aiDetection.overall_score,
+            aiDetection.sentence_scores,
+            aiDetection.tokens,
+            aiDetection.token_probs,
+          ]
+        );
+      }
+
       // Insert evaluations
       for (const evaluation of data.evaluations) {
         await db.execute(
-          `INSERT INTO evaluation (id, question_id, rubric_id, answer, score, justification, detected_ai, llm_model, created_at)
+          `INSERT INTO evaluation (id, question_id, rubric_id, answer, score, justification, ai_detection_id, llm_model, created_at)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
           [
             evaluation.id,
@@ -233,7 +263,7 @@ export const importAllData = async (
             evaluation.answer,
             evaluation.score,
             evaluation.justification,
-            evaluation.detected_ai,
+            evaluation.ai_detection_id,
             evaluation.llm_model,
             evaluation.created_at,
           ]

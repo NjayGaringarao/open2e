@@ -1,9 +1,8 @@
 import { fetch } from "@tauri-apps/plugin-http";
 import { OPEN2E_BACKEND } from "@/constant/hostname";
+import { AIDetectionData } from "@/types/aiDetection";
 
-export const detectAI = async (
-  answer: string
-): Promise<{ percent: number; error?: string; message?: string }> => {
+export const detectAI = async (answer: string): Promise<AIDetectionData> => {
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/detectAI/v1`, {
       method: "POST",
@@ -13,7 +12,11 @@ export const detectAI = async (
 
     if (!res.ok) {
       return {
-        percent: 0,
+        overall_score: 0,
+        sentence_scores: [],
+        tokens: [],
+        token_probs: [],
+        message: "",
         error: "Failed to connect to the AI Detection service.",
       };
     }
@@ -21,16 +24,23 @@ export const detectAI = async (
     const data = await res.json();
 
     return {
-      percent: data.percent,
-      message: data.message,
+      overall_score: data.overall_score,
+      sentence_scores: data.sentence_scores || [],
+      tokens: data.tokens || [],
+      token_probs: data.token_probs || [],
+      message: data.message || "",
+      error: data.error,
     };
   } catch (error: any) {
     console.warn(error.message);
 
     return {
-      percent: 0,
-      error: "Failed to run ai detection.",
+      overall_score: 0,
+      sentence_scores: [],
+      tokens: [],
+      token_probs: [],
       message: "",
+      error: "Failed to run ai detection.",
     };
   }
 };

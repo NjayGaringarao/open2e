@@ -55,7 +55,7 @@ const AnswerSheet = () => {
           disabled={isLoading}
           placeholder="Type the answer here..."
           containerClassname="flex-1"
-          inputClassName="h-64 py-4 text-base"
+          inputClassName="h-64 py-4 text-base whitespace-pre-line"
           handleClear={clearSheet}
           withVoiceInput
           withClearButton
@@ -104,10 +104,11 @@ const AnswerSheet = () => {
                 className={clsx(
                   "border border-uBlue p-2 rounded-md group",
                   "hover:brightness-110 hover:bg-uBlue",
-                  "flex flex-col items-center"
+                  "flex flex-row items-center gap-2 justify-center"
                 )}
               >
-                <Save className="text-uBlue group-hover:text-background" />
+                <Save className="text-uBlue group-hover:text-background" /> Save
+                Evaluation
               </button>
             )}
         </div>

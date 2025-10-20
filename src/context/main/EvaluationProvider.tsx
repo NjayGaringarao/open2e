@@ -7,6 +7,7 @@ import * as openai from "@/lib/openai";
 import * as ollama from "@/lib/ollama";
 import { useDialog } from "@/context/dialog";
 import { add } from "@/database/evaluation";
+import { insertAIDetection } from "@/database/aiDetection";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "./analytics/AnalyticsContext";
@@ -167,13 +168,32 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     if (sheet.score === null) return;
     setIsLoading(true);
 
+    let aiDetectionId: number | undefined;
+
+    // First, insert AI detection data if available
+    if (sheet.aiDetectionData) {
+      const { id, error: aiError } = await insertAIDetection(
+        sheet.aiDetectionData
+      );
+      if (aiError) {
+        alert({
+          title: "AI Detection Save Failed",
+          description: "There was an error saving AI detection data.",
+          mode: "ERROR",
+        });
+        setIsLoading(false);
+        return;
+      }
+      aiDetectionId = id;
+    }
+
     const { error } = await add({
       question: question.committed,
       answer: sheet.committedAnswer,
       score: sheet.score,
       justification: sheet.justification,
       llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
-      detected_ai: sheet.detectedAI,
+      ai_detection_id: aiDetectionId,
       rubric_id: selectedRubric?.id || 1,
     });
 

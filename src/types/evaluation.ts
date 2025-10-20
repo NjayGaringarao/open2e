@@ -1,3 +1,5 @@
+import { AIDetectionData } from "./aiDetection";
+
 export type SheetData = {
   id: string;
   trackedAnswer: string;
@@ -5,7 +7,8 @@ export type SheetData = {
   score: number | null;
   justification: string;
   isEvaluationSaved: boolean;
-  detectedAI?: number;
+  detectedAI?: number; // For display purposes only
+  aiDetectionData?: AIDetectionData;
 };
 
 export type Result = {

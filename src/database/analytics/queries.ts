@@ -75,7 +75,7 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
 export async function getAllEvaluations(): Promise<EvaluationData[]> {
   const db = await openDatabase();
 
-  const result = await db.select<EvaluationData[]>(`
+  const result = await db.select<any[]>(`
     SELECT 
       e.id,
       e.question_id as questionId,
@@ -88,14 +88,46 @@ export async function getAllEvaluations(): Promise<EvaluationData[]> {
       r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.created_at as timestamp
+      e.created_at as timestamp,
+      e.ai_detection_id as aiDetectionId,
+      ad.overall_score,
+      ad.sentence_scores,
+      ad.tokens,
+      ad.token_probs
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
     JOIN rubric r ON e.rubric_id = r.id
+    LEFT JOIN ai_detection ad ON e.ai_detection_id = ad.id
     ORDER BY e.created_at DESC
   `);
 
-  return result;
+  // Transform the result to include properly structured AI detection data
+  return result.map((row) => ({
+    id: row.id,
+    questionId: row.questionId,
+    questionContent: row.questionContent,
+    answer: row.answer,
+    score: row.score,
+    rubricId: row.rubricId,
+    rubricName: row.rubricName,
+    rubricContent: row.rubricContent,
+    totalScore: row.totalScore,
+    justification: row.justification,
+    llmModel: row.llmModel,
+    timestamp: row.timestamp,
+    aiDetectionId: row.aiDetectionId,
+    aiDetectionData: row.aiDetectionId
+      ? {
+          overall_score: row.overall_score,
+          sentence_scores: JSON.parse(row.sentence_scores || "[]"),
+          tokens: JSON.parse(row.tokens || "[]"),
+          token_probs: JSON.parse(row.token_probs || "[]"),
+          message: `We are ${Math.round(
+            (row.overall_score || 0) * 100
+          )}% certain that the answer is AI generated.`,
+        }
+      : null,
+  }));
 }
 
 export async function getEvaluationsByDateRange(
@@ -104,7 +136,7 @@ export async function getEvaluationsByDateRange(
 ): Promise<EvaluationData[]> {
   const db = await openDatabase();
 
-  const result = await db.select<EvaluationData[]>(
+  const result = await db.select<any[]>(
     `
     SELECT 
       e.id,
@@ -118,17 +150,49 @@ export async function getEvaluationsByDateRange(
       r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.created_at as timestamp
+      e.created_at as timestamp,
+      e.ai_detection_id as aiDetectionId,
+      ad.overall_score,
+      ad.sentence_scores,
+      ad.tokens,
+      ad.token_probs
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
     JOIN rubric r ON e.rubric_id = r.id
+    LEFT JOIN ai_detection ad ON e.ai_detection_id = ad.id
     WHERE DATE(e.created_at) BETWEEN ? AND ?
     ORDER BY e.created_at DESC
   `,
     [startDate, endDate]
   );
 
-  return result;
+  // Transform the result to include properly structured AI detection data
+  return result.map((row) => ({
+    id: row.id,
+    questionId: row.questionId,
+    questionContent: row.questionContent,
+    answer: row.answer,
+    score: row.score,
+    rubricId: row.rubricId,
+    rubricName: row.rubricName,
+    rubricContent: row.rubricContent,
+    totalScore: row.totalScore,
+    justification: row.justification,
+    llmModel: row.llmModel,
+    timestamp: row.timestamp,
+    aiDetectionId: row.aiDetectionId,
+    aiDetectionData: row.aiDetectionId
+      ? {
+          overall_score: row.overall_score,
+          sentence_scores: JSON.parse(row.sentence_scores || "[]"),
+          tokens: JSON.parse(row.tokens || "[]"),
+          token_probs: JSON.parse(row.token_probs || "[]"),
+          message: `We are ${Math.round(
+            (row.overall_score || 0) * 100
+          )}% certain that the answer is AI generated.`,
+        }
+      : null,
+  }));
 }
 
 export async function getEvaluationsByQuestion(
@@ -136,7 +200,7 @@ export async function getEvaluationsByQuestion(
 ): Promise<EvaluationData[]> {
   const db = await openDatabase();
 
-  const result = await db.select<EvaluationData[]>(
+  const result = await db.select<any[]>(
     `
     SELECT 
       e.id,
@@ -150,15 +214,47 @@ export async function getEvaluationsByQuestion(
       r.total_score as totalScore,
       e.justification,
       e.llm_model as llmModel,
-      e.created_at as timestamp
+      e.created_at as timestamp,
+      e.ai_detection_id as aiDetectionId,
+      ad.overall_score,
+      ad.sentence_scores,
+      ad.tokens,
+      ad.token_probs
     FROM evaluation e
     JOIN question q ON e.question_id = q.id
     JOIN rubric r ON e.rubric_id = r.id
+    LEFT JOIN ai_detection ad ON e.ai_detection_id = ad.id
     WHERE e.question_id = ?
     ORDER BY e.created_at DESC
   `,
     [questionId]
   );
 
-  return result;
+  // Transform the result to include properly structured AI detection data
+  return result.map((row) => ({
+    id: row.id,
+    questionId: row.questionId,
+    questionContent: row.questionContent,
+    answer: row.answer,
+    score: row.score,
+    rubricId: row.rubricId,
+    rubricName: row.rubricName,
+    rubricContent: row.rubricContent,
+    totalScore: row.totalScore,
+    justification: row.justification,
+    llmModel: row.llmModel,
+    timestamp: row.timestamp,
+    aiDetectionId: row.aiDetectionId,
+    aiDetectionData: row.aiDetectionId
+      ? {
+          overall_score: row.overall_score,
+          sentence_scores: JSON.parse(row.sentence_scores || "[]"),
+          tokens: JSON.parse(row.tokens || "[]"),
+          token_probs: JSON.parse(row.token_probs || "[]"),
+          message: `We are ${Math.round(
+            (row.overall_score || 0) * 100
+          )}% certain that the answer is AI generated.`,
+        }
+      : null,
+  }));
 }

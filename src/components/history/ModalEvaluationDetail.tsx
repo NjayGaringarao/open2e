@@ -6,6 +6,7 @@ import { useState } from "react";
 import { getRubricById, Rubric } from "@/database/rubric";
 import Button from "../Button";
 import ModalView from "../rubric/ModalView";
+import ModalAIDetection from "../evaluate/ModalAIDetection";
 
 interface ModalEvaluationDetailProps {
   evaluation: EvaluationData | null;
@@ -17,6 +18,7 @@ const ModalEvaluationDetail = ({
   onClose,
 }: ModalEvaluationDetailProps) => {
   const [rubric, setRubric] = useState<Rubric | null>(null);
+  const [isAIDetectionModalOpen, setIsAIDetectionModalOpen] = useState(false);
   const getScoreColor = (score: number, totalScore: number) => {
     const percentage = (score / totalScore) * 100;
     if (percentage >= 80)
@@ -34,6 +36,13 @@ const ModalEvaluationDetail = ({
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const getAIDetectionButtonColor = (score: number) => {
+    const percentage = Math.round(score * 100);
+    if (percentage >= 85) return "text-red-600";
+    if (percentage >= 60) return "text-yellow-600";
+    return "text-green-600";
   };
 
   const handleShowRubric = async () => {
@@ -83,9 +92,31 @@ const ModalEvaluationDetail = ({
 
               {/* Answer Section */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-uGray font-semibold">
-                  <User className="w-5 h-5" />
-                  <span>Answer</span>
+                <div className="flex flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-uGray font-semibold">
+                    <User className="w-5 h-5" />
+                    <span>Answer</span>
+                  </div>
+                  {evaluation.aiDetectionData && (
+                    <Button
+                      secondary
+                      onClick={() => setIsAIDetectionModalOpen(true)}
+                      className={cn(
+                        "shadow-none",
+                        evaluation.aiDetectionData
+                          ? getAIDetectionButtonColor(
+                              evaluation.aiDetectionData.overall_score
+                            )
+                          : " text-gray-500"
+                      )}
+                      disabled={!evaluation.aiDetectionData}
+                    >
+                      {Math.round(
+                        evaluation.aiDetectionData.overall_score * 100
+                      )}
+                      % AI Detection Score
+                    </Button>
+                  )}
                 </div>
                 <div className="px-4 py-2 bg-panel rounded-lg max-h-32 min-h-16 overflow-y-auto">
                   <p className="text-uGrayLight leading-relaxed whitespace-pre-wrap">
@@ -104,6 +135,7 @@ const ModalEvaluationDetail = ({
                 <Award className="w-5 h-5" />
                 <span>LLM's Justification for the Score</span>
               </div>
+
               <Button
                 secondary
                 onClick={handleShowRubric}
@@ -139,6 +171,11 @@ const ModalEvaluationDetail = ({
         </div>
       )}
       <ModalView rubric={rubric} onClose={() => setRubric(null)} />
+      <ModalAIDetection
+        isOpen={isAIDetectionModalOpen}
+        onClose={() => setIsAIDetectionModalOpen(false)}
+        aiDetectionData={evaluation?.aiDetectionData || null}
+      />
     </BaseModal>
   );
 };

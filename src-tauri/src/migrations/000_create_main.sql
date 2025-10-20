@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS rubric (
   archived_at TEXT
 );
 
+-- Create ai_detection table
+CREATE TABLE IF NOT EXISTS ai_detection (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  overall_score REAL NOT NULL,
+  sentence_scores TEXT NOT NULL,  -- JSON array
+  tokens TEXT NOT NULL,            -- JSON array
+  token_probs TEXT NOT NULL        -- JSON array
+);
+
 -- Create evaluation table
 CREATE TABLE IF NOT EXISTS evaluation (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,9 +53,10 @@ CREATE TABLE IF NOT EXISTS evaluation (
   answer TEXT NOT NULL,
   score INTEGER NOT NULL,
   justification TEXT NOT NULL,
-  detected_ai INTEGER,
+  ai_detection_id INTEGER,
   llm_model TEXT NOT NULL,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE RESTRICT,
-  FOREIGN KEY (rubric_id) REFERENCES rubric(id) ON DELETE RESTRICT
+  FOREIGN KEY (rubric_id) REFERENCES rubric(id) ON DELETE RESTRICT,
+  FOREIGN KEY (ai_detection_id) REFERENCES ai_detection(id) ON DELETE SET NULL
 )

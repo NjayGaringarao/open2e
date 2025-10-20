@@ -31,4 +31,13 @@ export interface EvaluationData {
   justification: string | null;
   llmModel: string;
   timestamp: string;
+  // AI Detection fields
+  aiDetectionId: number | null;
+  aiDetectionData?: {
+    overall_score: number;
+    sentence_scores: Array<{ score: number; sentence: string }>;
+    tokens: string[];
+    token_probs: number[];
+    message: string;
+  } | null;
 }

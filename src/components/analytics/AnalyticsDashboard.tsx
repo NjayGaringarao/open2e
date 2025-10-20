@@ -72,7 +72,12 @@ export const AnalyticsDashboard: React.FC = () => {
         />
       )}
 
-      {activeTab === "charts" && <ChartsTab analyticsData={analyticsData} />}
+      {activeTab === "charts" && (
+        <ChartsTab
+          analyticsData={analyticsData}
+          evaluationsData={evaluationsData}
+        />
+      )}
 
       {activeTab === "rank" && <RankTab analyticsData={analyticsData} />}
 

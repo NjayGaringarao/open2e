@@ -64,12 +64,71 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     ORDER BY date
   `);
 
-  return {
+  // Get AI Detection metrics
+  const aiDetectionResult = await db.select<
+    [
+      {
+        totalWithAIDetection: number;
+        averageAIScore: number;
+        highRiskCount: number;
+        mediumRiskCount: number;
+        lowRiskCount: number;
+      }
+    ]
+  >(`
+    SELECT 
+      COUNT(*) as totalWithAIDetection,
+      AVG(ad.overall_score) as averageAIScore,
+      SUM(CASE WHEN ad.overall_score >= 0.85 THEN 1 ELSE 0 END) as highRiskCount,
+      SUM(CASE WHEN ad.overall_score >= 0.60 AND ad.overall_score < 0.85 THEN 1 ELSE 0 END) as mediumRiskCount,
+      SUM(CASE WHEN ad.overall_score < 0.60 THEN 1 ELSE 0 END) as lowRiskCount
+    FROM evaluation e
+    LEFT JOIN ai_detection ad ON e.ai_detection_id = ad.id
+    WHERE ad.id IS NOT NULL
+  `);
+
+  // Debug logging for AI Detection query
+  console.log("AI Detection Query Result:", aiDetectionResult);
+  console.log("First result:", aiDetectionResult[0]);
+  console.log("Result length:", aiDetectionResult.length);
+
+  const aiMetrics = aiDetectionResult[0] || {
+    totalWithAIDetection: 0,
+    averageAIScore: 0,
+    highRiskCount: 0,
+    mediumRiskCount: 0,
+    lowRiskCount: 0,
+  };
+
+  console.log("Processed AI Metrics:", aiMetrics);
+
+  const aiDetectionRate =
+    totalAnswers > 0
+      ? (aiMetrics.totalWithAIDetection / totalAnswers) * 100
+      : 0;
+
+  const finalResult = {
     totalAnswers,
     overallAverageScore,
     averageScorePerQuestion: questionScoresResult,
     evaluationsOverTime: evaluationsOverTimeResult,
+    aiDetectionMetrics: {
+      totalWithAIDetection: aiMetrics.totalWithAIDetection,
+      averageAIScore: aiMetrics.averageAIScore || 0,
+      highRiskCount: aiMetrics.highRiskCount,
+      mediumRiskCount: aiMetrics.mediumRiskCount,
+      lowRiskCount: aiMetrics.lowRiskCount,
+      aiDetectionRate: aiDetectionRate,
+    },
   };
+
+  console.log("Final Analytics Summary Result:", finalResult);
+  console.log(
+    "AI Detection Metrics in Final Result:",
+    finalResult.aiDetectionMetrics
+  );
+
+  return finalResult;
 }
 
 export async function getAllEvaluations(): Promise<EvaluationData[]> {

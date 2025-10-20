@@ -26,7 +26,7 @@ const ChatPanel = () => {
       </div>
     </MainContentBox>
   ) : (
-    <MainContentBox>
+    <MainContentBox className="h-full flex flex-col items-center justify-center">
       <p className="text-uGray text-2xl">Hello, Let's talk about Computers!</p>
     </MainContentBox>
   );

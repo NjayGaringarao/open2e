@@ -19,6 +19,7 @@ const EvaluateHelp = () => {
 ## Results
 - **View Scores**: Press the score button example : [8/10] to view ai's justification for the score.
 - **Re-evaluate**: Press the > Evaluation Input < and re-evaluate the answer.
+- **AI Detection**: The answer will be scanned for AI usage and will be scored accordingly. Detaild breakdown can be shown.
 
 ---
 ## Save Evaluation

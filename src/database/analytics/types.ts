@@ -3,6 +3,15 @@ export interface AnalyticsSummary {
   overallAverageScore: number;
   averageScorePerQuestion: QuestionScore[];
   evaluationsOverTime: EvaluationTimeData[];
+  // AI Detection metrics
+  aiDetectionMetrics: {
+    totalWithAIDetection: number;
+    averageAIScore: number;
+    highRiskCount: number; // >85%
+    mediumRiskCount: number; // 60-84%
+    lowRiskCount: number; // <60%
+    aiDetectionRate: number; // percentage
+  };
 }
 
 export interface QuestionScore {

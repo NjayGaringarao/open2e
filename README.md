@@ -4,37 +4,39 @@
 
 ## Overview
 
-Open2E is a desktop application built with Tauri that provides automated evaluation of open-ended student responses for basic computer literacy assessments. The application uses AI-powered evaluation to score student answers on a scale of 0-10, providing detailed justifications and learning suggestions.
+Open2E is a desktop application built with Tauri that provides automated evaluation of open-ended student responses for basic computer literacy assessments. The application uses AI-powered evaluation with customizable rubrics.
 
 ## Features
 
 ### 🎯 **AI-Powered Evaluation**
-- Automated scoring of open-ended responses (0-10 scale)
+
+- Automated scoring of open-ended responses
 - Detailed justifications for each score
 - Support for both online (OpenAI) and offline (Ollama) evaluation modes
 - AI detection to identify potentially AI-generated responses
 
 ### 💬 **Interactive Chat System**
+
 - Built-in chat interface for discussing computer literacy topics
 - Context-aware responses focused on educational content
 - Voice interaction capabilities with speech recognition
 
-### 📊 **Student Management**
-- Track and manage student responses
+### 📊 **Analytics**
+
 - Historical evaluation data storage
 - Performance analytics and insights
 
 ### 🔧 **Flexible Deployment**
+
 - Works offline with local Ollama integration
 - Online mode with cloud-based evaluation
-- Cross-platform desktop application
 
 ## Technology Stack
 
 - **Frontend**: React 18, TypeScript, Tailwind CSS, Chakra UI
 - **Backend**: Tauri (Rust)
-- **AI Models**: 
-  - Online: OpenAI API
+- **AI Models**:
+  - Online: OpenAI GPT-4o
   - Offline: Ollama with Phi-4 Mini model
 - **Database**: SQLite (local storage)
 - **Additional**: Speech recognition, Voice visualization, Markdown rendering
@@ -45,8 +47,8 @@ Open2E is a desktop application built with Tauri that provides automated evaluat
 
 - **Node.js** (v18 or higher)
 - **Rust** (latest stable version)
-- **Windows 10/11** (currently optimized for Windows)
-- **Minimum 8GB RAM** (for offline AI evaluation)
+- **Windows 11** (currently optimized for Windows)
+- **Recommended 16GB RAM** (for offline AI evaluation)
 
 ### Step 1: Clone the Repository
 
@@ -61,8 +63,6 @@ cd open2e
 # Install Node.js dependencies
 npm install
 
-# Install Rust dependencies (if not already installed)
-cargo install tauri-cli
 ```
 
 ### Step 3: Build and Run
@@ -86,36 +86,42 @@ npm run tauri build
 ### Main Features
 
 #### 📝 **Evaluation Mode**
+
 1. Navigate to the "Evaluate" tab
-2. Enter or paste your question about computer literacy
-3. Input the student's answer
-4. Click "Evaluate" to get an AI-powered assessment
-5. Review the score (0-10), detailed justification, and suggested learning resources
+2. Select a rubric for scoring
+3. Enter or paste your question about computer literacy
+4. Input the student's answer
+5. Click "Evaluate" to get an AI-powered assessment
+6. Review the score, detailed justification, and suggested learning resources
 
 #### 💬 **Chat Mode**
+
 1. Go to the "Chat" tab
 2. Ask questions about computer literacy topics
 3. Get educational responses and explanations
 4. Use voice interaction for hands-free operation
 
 #### ⚙️ **Settings**
-- Configure AI model preferences
-- Manage offline/online evaluation modes
+
+- Configure Appearance
+- Backup and Restore
+- View LLM Source and concurrent capability
 - Adjust voice and speech settings
-- View system information and requirements
 
 ### Evaluation Rubric
 
-The application uses a comprehensive scoring system:
+Open2E supports customizable rubrics for evaluating student responses:
 
-| Score | Criteria |
-|-------|----------|
-| **10** | Accurate, complete, and relevant response with expected core concepts |
-| **9** | Mostly correct and relevant with minor omissions |
-| **8** | Correct but noticeably incomplete or brief |
-| **7** | Partially correct with weak justification |
-| **6** | Fragmented answer with major missing ideas |
-| **5 and below** | Incorrect, irrelevant, or nonsensical information |
+1. **Define or Edit Rubric:**
+
+   - Navigate to the **Rubric Page** to create a grading rubric that fits your assessment criteria.
+   - Rubrics support analytic-type rubrics. Define descriptions for each scoring bracket to enable detailed and transparent evaluation.
+
+2. **Apply Rubric During Evaluation:**
+   - In the **Evaluation** page, select your preferred rubric before evaluation.
+   - The selected rubric will be used to grade open-ended responses, ensuring consistency and clarity in scoring.
+
+You can update rubrics anytime to refine assessment standards, enabling flexible and accurate evaluation for various assignments and learning objectives.
 
 ## Development
 
@@ -123,43 +129,77 @@ The application uses a comprehensive scoring system:
 
 ```
 open2e/
-├── src/                    # React frontend
-│   ├── components/         # UI components
-│   ├── pages/             # Application pages
-│   ├── context/           # React context providers
-│   ├── lib/               # Utility libraries
-│   └── database/          # Database operations
-├── src-tauri/             # Tauri backend
-│   ├── src/               # Rust source code
-│   ├── scripts/           # PowerShell scripts
-│   └── Cargo.toml         # Rust dependencies
-└── windows/               # Application windows
+├── src/                          # Frontend source code
+│   ├── components/               # React components
+│   │   ├── analytics/           # Analytics dashboard components
+│   │   ├── chat/                # Chat system components
+│   │   ├── container/           # Container and modal components
+│   │   ├── evaluate/            # Evaluation components
+│   │   ├── history/             # Evaluation history components
+│   │   ├── rubric/              # Rubric management components
+│   │   ├── settings/            # Settings panel components
+│   │   ├── setup/               # Setup wizard components
+│   │   └── ui/                  # Reusable UI components
+│   ├── constant/                # Application constants
+│   │   ├── eula.ts             # End User License Agreement
+│   │   ├── helpContent/        # Help content components
+│   │   └── ...                 # Other constants
+│   ├── context/                 # React context providers
+│   │   ├── main/               # Main application context
+│   │   ├── setup/              # Setup wizard context
+│   │   └── speech/             # Speech recognition context
+│   ├── database/                # Database operations
+│   │   ├── analytics/          # Analytics data management
+│   │   └── ...                 # Database schemas and operations
+│   ├── hooks/                   # Custom React hooks
+│   ├── lib/                     # Utility libraries
+│   │   ├── ollama/             # Ollama integration
+│   │   ├── openai/             # OpenAI API integration
+│   │   └── sapling/            # Sapling AI integration
+│   ├── models/                  # TypeScript type definitions
+│   ├── pages/                   # Application pages
+│   │   ├── main/               # Main application pages
+│   │   └── setup/              # Setup wizard pages
+│   ├── types/                   # Type definitions
+│   └── utils/                   # Utility functions
+├── src-tauri/                   # Tauri backend (Rust)
+│   ├── src/                     # Rust source code
+│   │   ├── commands/           # Tauri commands
+│   │   ├── migrations/         # Database migrations
+│   │   └── scripts/            # PowerShell scripts
+│   ├── icons/                   # Application icons
+│   └── capabilities/           # Tauri capabilities
+├── public/                      # Static assets
+├── dist/                        # Build output
+├── EULA.md                      # End User License Agreement
+├── LICENSE.md                   # Project license
+└── package.json                 # Node.js dependencies
 ```
 
 ### Available Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run tauri        # Run Tauri commands
+npm run tauri dev          # Start development server
+npm run tauri build        # Creates Binary Installer
 ```
 
 ### Database Schema
 
 The application uses two SQLite databases:
-- `evaluator.db`: Stores evaluation data and results
-- `learner.db`: Stores student responses and learning analytics
+
+- `main.db`: Stores rubrics, questions, evaluations, conversation, and messages
 
 ## System Requirements
 
 ### Minimum Requirements
-- **OS**: Windows 10/11
-- **RAM**: 8GB (16GB recommended for offline AI)
-- **Storage**: 2GB free space
+
+- **OS**: Windows 11
+- **RAM**: 4GB (16GB recommended for offline AI)
+- **Storage**: 10GB free space
 - **Internet**: Required for initial setup and online mode
 
 ### Recommended Requirements
+
 - **OS**: Windows 11
 - **RAM**: 16GB
 - **Storage**: 5GB free space
@@ -170,13 +210,15 @@ The application uses two SQLite databases:
 ### Common Issues
 
 1. **Ollama Installation Fails**
+
    - Ensure PowerShell execution policy allows script execution
    - Check Windows Defender isn't blocking the installation
    - Restart the application and try again
 
 2. **AI Evaluation Not Working**
+
    - Verify internet connection for online mode
-   - Check system memory (minimum 8GB required)
+   - Check system memory (16GB required is required for offline mode)
    - Restart the application to reinitialize Ollama
 
 3. **Voice Features Not Working**
@@ -187,6 +229,7 @@ The application uses two SQLite databases:
 ### Getting Help
 
 If you encounter issues:
+
 1. Check the application logs in the Settings panel
 2. Restart the application
 3. Ensure all system requirements are met
@@ -194,16 +237,18 @@ If you encounter issues:
 
 ## Contributing
 
-We welcome contributions! Please see our contributing guidelines for more information.
+We welcome contributions! Please contact us for more information.
 
 ## License
 
-[Add your license information here]
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See [LICENSE.md](LICENSE.md) for full details.
+
+**Summary**: You are free to share and adapt this material for non-commercial purposes, provided you give appropriate credit to the original creators.
 
 ## Team
 
 - **Alyssa Jane P. Marquez** - Principal Investigator
-- **Niño Jr V. Garingarao** - Software Engineer  
+- **Niño Jr V. Garingarao** - Software Engineer
 - **John Paul C. Marquez** - Research & Development Support
 
 ## Acknowledgments

@@ -5,6 +5,7 @@ import { useLocalSetup } from "@/context/setup/local";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import icon from "@/constant/icon";
 import { useSettings } from "@/context/main/settings";
+import { MINIMUM_MEMORY } from "@/constant/memory";
 
 const LLM_CONFIG = {
   OFFLINE: {
@@ -31,7 +32,7 @@ const LLMSource = () => {
   const { percent, startInstallation, isInstalling } = useLocalSetup();
 
   const config = LLM_CONFIG[status];
-  const isOperational = status === "ONLINE" || systemMemory >= 8;
+  const isOperational = status === "ONLINE" || systemMemory >= MINIMUM_MEMORY;
 
   const handleReinstallDependencies = async () => {
     if (status === "OFFLINE") {
@@ -44,11 +45,10 @@ const LLMSource = () => {
       return;
     }
 
-    if (systemMemory < 8) {
+    if (systemMemory < MINIMUM_MEMORY) {
       await alert({
         title: "Insufficient System Memory",
-        description:
-          "Your system has less than 8GB of RAM. Local LLM requires at least 8GB of memory. You can still use Open2E online with internet connection.",
+        description: `Your system has less than ${MINIMUM_MEMORY}GB of RAM. Local LLM requires at least ${MINIMUM_MEMORY}GB of memory. You can still use Open2E online with internet connection.`,
         mode: "ERROR",
       });
       return;
@@ -129,11 +129,11 @@ const LLMSource = () => {
               <td className="px-4 py-2 text-sm">
                 {status === "ONLINE" ? (
                   <span className="text-uGreen">GPT-4o (Online)</span>
-                ) : systemMemory >= 8 ? (
+                ) : systemMemory >= MINIMUM_MEMORY ? (
                   <span className="text-uGreen">Phi4-mini (Offline)</span>
                 ) : (
                   <span className="text-uRed">
-                    Requires ≥8GB RAM or Internet
+                    Requires ≥{MINIMUM_MEMORY}GB RAM or Internet
                   </span>
                 )}
               </td>
@@ -169,11 +169,11 @@ const LLMSource = () => {
               <td className="px-4 py-2 text-sm">
                 {status === "ONLINE" ? (
                   <span className="text-uGreen">GPT-4o (Online)</span>
-                ) : systemMemory >= 8 ? (
+                ) : systemMemory >= MINIMUM_MEMORY ? (
                   <span className="text-uGreen">Phi4-mini (Offline)</span>
                 ) : (
                   <span className="text-uRed">
-                    Requires ≥8GB RAM or Internet
+                    Requires ≥{MINIMUM_MEMORY}GB RAM or Internet
                   </span>
                 )}
               </td>
@@ -181,18 +181,18 @@ const LLMSource = () => {
           </tbody>
         </table>
 
-        {status === "OFFLINE" && systemMemory < 8 && (
+        {status === "OFFLINE" && systemMemory < MINIMUM_MEMORY && (
           <div className="bg-uRed/10 border border-uRed/30 rounded-md p-3 text-sm">
             <p className="text-uRed font-semibold">Limited Functionality</p>
             <p className="text-uGrayLight mt-1">
               Your system has {systemMemory}GB of RAM. Local AI features require
-              at least 8GB. Connect to the internet to access all features via
-              cloud services.
+              at least {MINIMUM_MEMORY}GB. Connect to the internet to access all
+              features via cloud services.
             </p>
           </div>
         )}
 
-        {systemMemory >= 8 && (
+        {systemMemory >= MINIMUM_MEMORY && (
           <div
             className={clsx(
               "flex flex-row gap-1 self-end",

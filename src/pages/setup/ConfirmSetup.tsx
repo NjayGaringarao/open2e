@@ -3,6 +3,7 @@ import { useDialog } from "@/context/dialog";
 import { useLocalSetup } from "@/context/setup/local";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
+import { MINIMUM_MEMORY } from "@/constant/memory";
 
 const ConfirmSetup = () => {
   const { navigate, step, totalSteps } = useSetupNavigation();
@@ -19,7 +20,7 @@ const ConfirmSetup = () => {
 
     if (!isConfirmed) return;
 
-    if (systemMemory >= 8) {
+    if (systemMemory >= MINIMUM_MEMORY) {
       startInstallation();
       navigate.next();
     } else {
@@ -37,7 +38,7 @@ const ConfirmSetup = () => {
       <div className="flex-1 flex flex-col justify-center gap-4">
         <h1 className="text-5xl font-semibold text-primary">Hello!</h1>
         <p className="text-uGrayLight text-lg">
-          {systemMemory >= 8
+          {systemMemory >= MINIMUM_MEMORY
             ? "You're almost there! Confirm your setup below to proceed with installing the necessary application dependencies"
             : "You're almost done! Confirm your setup below to complete the initialization."}
         </p>
@@ -62,7 +63,7 @@ const ConfirmSetup = () => {
               <td className="border border-uGrayLightLight px-4 py-2 font-semibold">
                 <ul className=" text-uGray text-base font-semibold list-disc list-inside">
                   <li>Cloud Service (Openai's GPT4o)</li>
-                  {systemMemory >= 8 && (
+                  {systemMemory >= MINIMUM_MEMORY && (
                     <li>Local Resources (Microsoft's Phi4-mini)</li>
                   )}
                 </ul>

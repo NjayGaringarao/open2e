@@ -18,6 +18,10 @@ pub async fn download_ollama<R: Runtime>(
         .args([
             "-ExecutionPolicy",
             "Bypass",
+            "-NoProfile",
+            "-NoLogo",
+            "-WindowStyle",
+            "Hidden",
             "-File",
             script_path.to_str().unwrap(),
         ])
@@ -53,7 +57,15 @@ pub async fn install_ollama(app: AppHandle) -> Result<String, String> {
 
     // Execute the PowerShell script
     let output = std::process::Command::new("powershell")
-        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .args(&[
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoProfile",
+            "-NoLogo",
+            "-WindowStyle",
+            "Hidden",
+            "-File",
+        ])
         .arg(&script_path)
         .output()
         .map_err(|e| format!("Script failed to run: {}", e))?;
@@ -78,7 +90,15 @@ pub async fn install_llm(app: AppHandle, window: Window) -> Result<(), String> {
     }
 
     let mut child = Command::new("powershell")
-        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .args(&[
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoProfile",
+            "-NoLogo",
+            "-WindowStyle",
+            "Hidden",
+            "-File",
+        ])
         .arg(script_path)
         .stdout(Stdio::null()) // ignore stdout
         .stderr(Stdio::piped())
@@ -146,7 +166,15 @@ pub async fn clean_ollama(app: AppHandle) -> Result<String, String> {
 
     // Execute the PowerShell script
     let output = std::process::Command::new("powershell")
-        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .args(&[
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoProfile",
+            "-NoLogo",
+            "-WindowStyle",
+            "Hidden",
+            "-File",
+        ])
         .arg(&script_path)
         .output()
         .map_err(|e| format!("Script failed to run: {}", e))?;
@@ -168,7 +196,15 @@ pub async fn initialize_ollama(app: AppHandle) -> Result<(), String> {
         .join("src/scripts/windows/initialize_ollama.ps1");
 
     let output = std::process::Command::new("powershell")
-        .args(&["-ExecutionPolicy", "Bypass", "-File"])
+        .args(&[
+            "-ExecutionPolicy",
+            "Bypass",
+            "-NoProfile",
+            "-NoLogo",
+            "-WindowStyle",
+            "Hidden",
+            "-File",
+        ])
         .arg(&script_path)
         .output()
         .map_err(|e| format!("Script failed to run: {}", e))?;

@@ -13,7 +13,7 @@ import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "./analytics/AnalyticsContext";
 import { useRubric } from "./rubric";
 import { Rubric } from "@/database/rubric";
-import { MINIMUM_MEMORY } from "@/constant/memory";
+import { RECOMMENDED_MEMORY } from "@/constant/memory";
 
 export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   const { status } = useConnectionStatus();
@@ -108,11 +108,11 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     // Implementation of evaluation using ollama
     const evaluateOffline = async (): Promise<Result | null> => {
       // Check system memory before proceeding
-      if (systemMemory < MINIMUM_MEMORY) {
+      if (systemMemory < RECOMMENDED_MEMORY) {
         alert({
           title: "Evaluation Failed",
           description:
-            "Not enough system memory. Please connect to the internet.",
+            "Not enough system memory for optimal performance. Please connect to the internet.",
         });
         return null;
       }

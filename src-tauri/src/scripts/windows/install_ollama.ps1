@@ -1,3 +1,7 @@
+# Add at the top
+$Host.UI.RawUI.WindowTitle = "Open2E Setup"
+[Console]::Title = "Open2E Setup"
+
 # Check if Ollama is already installed
 $ollamaPath = Get-Command "ollama" -ErrorAction SilentlyContinue
 
@@ -7,11 +11,11 @@ if ($ollamaPath) {
     exit 0
 }
 
-# Run the installer from %TEMP%
-Start-Process "$env:TEMP\OllamaSetup.exe" -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL"
+# Run the installer from %TEMP% with hidden window
+Start-Process -FilePath "$env:TEMP\OllamaSetup.exe" -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" -WindowStyle Hidden -Wait
 
 Write-Output "Waiting for installer to finish..."
-Wait-Process -Name "OllamaSetup"
+Start-Sleep -Seconds 5
 
 Start-Sleep -Seconds 3
 

@@ -1,7 +1,11 @@
+# Add at the top
+$Host.UI.RawUI.WindowTitle = "Open2E Setup"
+[Console]::Title = "Open2E Setup"
+
 Write-Output "Start pulling"
 
-# Explicitly wait for ollama pull and force exit
-& ollama pull phi4-mini
+# Run ollama pull with hidden window
+Start-Process -FilePath "ollama" -ArgumentList "pull", "phi4-mini" -WindowStyle Hidden -Wait
 
 Write-Output "Pull complete"
 

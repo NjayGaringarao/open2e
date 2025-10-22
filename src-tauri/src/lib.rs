@@ -2,8 +2,8 @@ mod commands;
 mod migrations;
 
 use commands::{
-    clean_ollama, download_ollama, get_total_memory_gb, initialize_ollama, install_llm,
-    install_ollama, show_window,
+    clean_ollama, download_ollama, get_total_memory_gb, initialize_ollama,
+    install_llm, install_ollama, show_window,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

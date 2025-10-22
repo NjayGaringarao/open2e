@@ -27,6 +27,7 @@ pub async fn show_window(app: tauri::AppHandle) -> Result<(), String> {
                 .title("Open2E: Initialization")
                 .inner_size(800.0, 600.0)
                 .resizable(false)
+                .maximizable(false)
                 .center()
                 .build()
                 .map_err(|e| e.to_string())?;

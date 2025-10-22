@@ -1,3 +1,7 @@
+# Add at the top
+$Host.UI.RawUI.WindowTitle = "Open2E Setup"
+[Console]::Title = "Open2E Setup"
+
 Write-Output "Starting uninstallation..."
 
 # 1. Kill running Ollama processes

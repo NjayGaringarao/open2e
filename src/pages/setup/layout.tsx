@@ -5,7 +5,7 @@ import ConfirmSetup from "./ConfirmSetup";
 import { useSetupNavigation } from "@/context/setup/navigation";
 import { useSetupProcedure } from "@/context/setup/procedure";
 import SkipLocalSetup from "./SkipLocalSetup";
-import { MINIMUM_MEMORY } from "@/constant/memory";
+import { RECOMMENDED_MEMORY } from "@/constant/memory";
 
 const Layout = () => {
   const { step } = useSetupNavigation();
@@ -18,7 +18,11 @@ const Layout = () => {
       {step === 1 && <Eula />}
       {step === 2 && <ConfirmSetup />}
       {step === 3 &&
-        (systemMemory >= MINIMUM_MEMORY ? <LocalSetup /> : <SkipLocalSetup />)}
+        (systemMemory >= RECOMMENDED_MEMORY ? (
+          <LocalSetup />
+        ) : (
+          <SkipLocalSetup />
+        ))}
     </div>
   );
 };

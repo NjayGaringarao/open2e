@@ -1,3 +1,7 @@
+# Add at the top
+$Host.UI.RawUI.WindowTitle = "Open2E Setup"
+[Console]::Title = "Open2E Setup"
+
 # Check if Ollama is already installed
 $ollamaPath = Get-Command "ollama" -ErrorAction SilentlyContinue
 

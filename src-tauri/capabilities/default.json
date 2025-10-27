@@ -42,6 +42,16 @@
     "fs:default",
     "dialog:default",
     "fs:allow-write-text-file",
-    "fs:allow-read-text-file"
+    "fs:allow-read-text-file",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "run-powershell",
+          "cmd": "powershell",
+          "args": true
+        }
+      ]
+    }
   ]
 }

@@ -1,3 +1,7 @@
+// ARCHIVED: This file has been replaced by frontend shell plugin implementation
+// All Ollama commands are now handled in src/lib/ollama/setup.ts
+
+/*
 use regex::Regex;
 use std::io::{BufRead, BufReader, Read};
 use std::process::{Command, Stdio};
@@ -215,3 +219,4 @@ pub async fn initialize_ollama(app: AppHandle) -> Result<(), String> {
 
     Ok(())
 }
+*/

@@ -31,6 +31,9 @@
   "plugins": {
     "sql": {
       "preload": ["sqlite:main.db"]
+    },
+    "shell": {
+      "open": true
     }
   },
   "bundle": {

@@ -2,14 +2,14 @@ import { EVALUATION_MODEL } from "./models";
 import { Message } from "@/models";
 import { nanoid } from "nanoid";
 import { getChatContext } from "../context/chat";
-import { invoke } from "@tauri-apps/api/core";
+import { initializeOllama } from "./setup";
 
 export const chat = async (conversation: Message[]): Promise<Message> => {
   const now = new Date().toISOString();
 
   try {
     // optional: keep your existing initialization step
-    await invoke("initialize_ollama");
+    await initializeOllama();
 
     const messages = [
       { role: "system", content: getChatContext() },

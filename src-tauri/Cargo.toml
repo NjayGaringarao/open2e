@@ -30,5 +30,4 @@ regex = "1.11.1"
 tauri-plugin-http = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
-
-
+tauri-plugin-shell = "2"

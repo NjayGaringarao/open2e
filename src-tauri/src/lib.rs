@@ -1,14 +1,12 @@
 mod commands;
 mod migrations;
 
-use commands::{
-    clean_ollama, download_ollama, get_total_memory_gb, initialize_ollama,
-    install_llm, install_ollama, show_window,
-};
+use commands::{get_total_memory_gb, show_window};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
@@ -19,15 +17,7 @@ pub fn run() {
         )
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![
-            show_window,
-            get_total_memory_gb,
-            install_ollama,
-            download_ollama,
-            install_llm,
-            initialize_ollama,
-            clean_ollama,
-        ])
+        .invoke_handler(tauri::generate_handler![show_window, get_total_memory_gb,])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -6,7 +6,7 @@ import {
 } from "../context/evaluation";
 import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
-import { invoke } from "@tauri-apps/api/core";
+import { initializeOllama } from "./setup";
 
 interface IEvaluate {
   question: string;
@@ -23,7 +23,7 @@ export const evaluate = async ({
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
-    await invoke("initialize_ollama");
+    await initializeOllama();
 
     const userInput = `
 QUESTION: ${question}

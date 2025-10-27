@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { IStartInstallation, LocalSetupContext } from "./LocalSetupContext";
 import { listen } from "@tauri-apps/api/event";
 import { useDialog } from "@/context/dialog";
+import {
+  downloadOllama,
+  installOllama,
+  installLLM,
+  cleanOllama,
+} from "@/lib/ollama";
 
 // const TOTAL_PROGRESS = 100;
 const STEP_WEIGHTS = [30, 30, 30, 10]; // 4 steps
@@ -59,19 +64,19 @@ export const LocalSetupProvider = ({
 
     try {
       // Step 0: Clean install
-      if (options?.isReinstall) await invoke("clean_ollama");
+      if (options?.isReinstall) await cleanOllama();
 
       // Step 1: Download Ollama
       setCurrentStep(0);
-      await invoke("download_ollama");
+      await downloadOllama();
 
       // Step 2: Install Ollama
       setCurrentStep(1);
-      await simulateStepWithInstall(1, () => invoke("install_ollama"));
+      await simulateStepWithInstall(1, () => installOllama());
 
       // Step 3: Download phi3 model
       setCurrentStep(2);
-      await invoke("install_llm");
+      await installLLM();
 
       // Step 4: Setup validation
       setCurrentStep(3);

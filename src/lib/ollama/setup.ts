@@ -7,11 +7,11 @@ const PROGRESS_REGEX = /(\d{1,3})%/;
 const PULL_PROGRESS_REGEX = /pulling .*?:\s*(\d{1,3})%/i;
 
 /**
- * Helper function to run a PowerShell script
+ * Helper function to run a PowerShell script with optional arguments
  */
-async function runPowerShellScript(scriptName: string) {
+async function runPowerShellScript(scriptName: string, args: string[] = []) {
   // Resolve the script path from bundled resources
-  const scriptPath = await resolveResource(`src/scripts/windows/${scriptName}`);
+  const scriptPath = await resolveResource(`src/scripts/${scriptName}`);
 
   // Create command with resolved path
   const command = Command.create("run-powershell", [
@@ -22,49 +22,34 @@ async function runPowerShellScript(scriptName: string) {
     "Hidden",
     "-File",
     scriptPath,
+    ...args,
   ]);
 
   return await command.execute();
 }
 
 /**
- * Download Ollama installer
+ * Download Ollama installer - No longer needed, returns immediately
  */
 export const downloadOllama = async (): Promise<void> => {
-  try {
-    const result = await runPowerShellScript("download_ollama.ps1");
-
-    // Parse output for progress updates
-    if (result.stdout) {
-      const lines = result.stdout.split(/\r?\n/);
-
-      for (const line of lines) {
-        const match = line.match(PROGRESS_REGEX);
-        if (match) {
-          const percent = parseInt(match[1]);
-          emit("ollama-download-progress", percent.toString());
-        }
-      }
-    }
-
-    if (result.code !== 0) {
-      const errorMessage = `Download failed with exit code ${result.code}`;
-      const fullError = `${errorMessage}\nStdout: ${result.stdout}\nStderr: ${result.stderr}`;
-      console.error("Download ollama error:", fullError);
-      throw new Error(errorMessage);
-    }
-  } catch (error) {
-    console.error("Download ollama error:", error);
-    throw error;
-  }
+  // Instantly complete since installer is bundled
+  emit("ollama-download-progress", "100");
 };
 
 /**
- * Install Ollama
+ * Install Ollama using bundled installer
  */
 export const installOllama = async (): Promise<void> => {
   try {
-    const result = await runPowerShellScript("install_ollama.ps1");
+    // Resolve bundled installer path
+    const installerPath = await resolveResource(
+      "resources/ollama/OllamaSetup.exe"
+    );
+
+    // Pass installer path as argument to the script
+    const result = await runPowerShellScript("install_ollama.ps1", [
+      installerPath,
+    ]);
 
     if (result.code !== 0) {
       const errorMessage = `Installation failed with exit code ${result.code}`;
@@ -79,36 +64,31 @@ export const installOllama = async (): Promise<void> => {
 };
 
 /**
- * Pull LLM model (phi4-mini)
+ * Install phi4-mini model by extracting bundled zip
  */
-export const installLLM = async (): Promise<void> => {
+export const installPhi4Mini = async (): Promise<void> => {
   try {
-    const result = await runPowerShellScript("pull_llm.ps1");
+    // Resolve bundled zip file path
+    const zipPath = await resolveResource(
+      "resources/phi4_mini/phi4_mini_prepack.zip"
+    );
 
-    // Parse stderr for progress updates (Ollama outputs progress to stderr)
-    if (result.stderr) {
-      const lines = result.stderr.split(/\r?\n/);
-
-      for (const line of lines) {
-        const match = line.match(PULL_PROGRESS_REGEX);
-        if (match) {
-          const percent = parseInt(match[1]);
-          emit("llm-pull-progress", percent);
-        }
-      }
-    }
+    // Pass zip path as argument to the script
+    const result = await runPowerShellScript("install_phi4_mini.ps1", [
+      zipPath,
+    ]);
 
     if (result.code !== 0) {
-      const errorMessage = `LLM installation failed with exit code ${result.code}`;
+      const errorMessage = `Phi4-mini installation failed with exit code ${result.code}`;
       const fullError = `${errorMessage}\nStdout: ${result.stdout}\nStderr: ${result.stderr}`;
-      console.error("Install LLM error:", fullError);
+      console.error("Install phi4-mini error:", fullError);
       throw new Error(errorMessage);
     }
 
-    // Force 100% at the end
-    emit("llm-pull-progress", 100);
+    // Emit progress event for completion
+    emit("phi4-mini-install-progress", 100);
   } catch (error) {
-    console.error("Install LLM error:", error);
+    console.error("Install phi4-mini error:", error);
     throw error;
   }
 };

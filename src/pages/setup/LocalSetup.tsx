@@ -6,9 +6,8 @@ import { useSetupProcedure } from "@/context/setup/procedure";
 import { Check } from "lucide-react";
 
 const installationSteps = [
-  "Downloading Ollama...",
   "Installing Ollama runtime...",
-  "Fetching LLM locally...",
+  "Installing phi4-mini...",
   "Verifying Setup...",
 ];
 
@@ -43,8 +42,7 @@ const LocalSetup = () => {
               Installing Dependencies
             </h1>
             <p className="text-uGrayLight text-lg mt-4">
-              This may take a few minutes depending on your system performance
-              and internet speed.
+              This may take a few minutes depending on your system performance.
             </p>
           </div>
 

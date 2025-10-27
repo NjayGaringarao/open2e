@@ -4,16 +4,12 @@ $Host.UI.RawUI.WindowTitle = "Open2E Setup"
 
 Write-Output "Starting uninstallation..."
 
-# 1. Kill running Ollama processes more aggressively
-$processPatterns = @("ollama*", "Ollama*")
-foreach ($pattern in $processPatterns) {
-    Get-Process -Name $pattern -ErrorAction SilentlyContinue | ForEach-Object {
-        Write-Output "Stopping process: $($_.ProcessName) (PID: $($_.Id))"
-        try {
-            Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
-        } catch {
-            Write-Output "Could not stop process $($_.ProcessName)"
-        }
+# 1. Kill running Ollama processes
+$processesToKill = @("ollama", "ollama app")
+foreach ($name in $processesToKill) {
+    Get-Process -Name $name -ErrorAction SilentlyContinue | ForEach-Object {
+        Write-Output "Stopping process: $($_.Name)"
+        Stop-Process -Id $_.Id -Force
     }
 }
 

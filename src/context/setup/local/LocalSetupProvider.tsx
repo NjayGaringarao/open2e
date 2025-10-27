@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import { IStartInstallation, LocalSetupContext } from "./LocalSetupContext";
 import { listen } from "@tauri-apps/api/event";
 import { useDialog } from "@/context/dialog";
-import {
-  downloadOllama,
-  installOllama,
-  installLLM,
-  cleanOllama,
-} from "@/lib/ollama";
+import { installOllama, installPhi4Mini, cleanOllama } from "@/lib/ollama";
 
 // const TOTAL_PROGRESS = 100;
-const STEP_WEIGHTS = [30, 30, 30, 10]; // 4 steps
+const STEP_WEIGHTS = [45, 45, 10]; // 3 steps: Install Ollama (0-45%), Install phi4-mini (46-90%), Verify (91-100%)
 
 export const LocalSetupProvider = ({
   children,
@@ -66,22 +61,18 @@ export const LocalSetupProvider = ({
       // Step 0: Clean install
       if (options?.isReinstall) await cleanOllama();
 
-      // Step 1: Download Ollama
+      // Step 1: Install Ollama (0-45%)
       setCurrentStep(0);
-      await downloadOllama();
+      await simulateStepWithInstall(0, () => installOllama(), 45000, 100);
 
-      // Step 2: Install Ollama
+      // Step 2: Install phi4-mini model (46-90%)
       setCurrentStep(1);
-      await simulateStepWithInstall(1, () => installOllama());
+      await installPhi4Mini();
 
-      // Step 3: Download phi3 model
+      // Step 3: Setup validation (91-100%)
       setCurrentStep(2);
-      await installLLM();
-
-      // Step 4: Setup validation
-      setCurrentStep(3);
       await simulateStepWithInstall(
-        3,
+        2,
         () => new Promise<void>((resolve) => setTimeout(resolve, 3000)),
         3000,
         100
@@ -106,18 +97,13 @@ export const LocalSetupProvider = ({
   };
 
   useEffect(() => {
-    const unlisten1 = listen<string>("ollama-download-progress", (e) =>
-      updateProgress(0, parseInt(e.payload ?? "0"))
-    );
-    const unlisten2 = listen<string>("llm-pull-progress", (e) => {
-      console.log("phi4 progress:", e.payload);
-
-      updateProgress(2, parseInt(e.payload));
+    const unlisten = listen<number>("phi4-mini-install-progress", (e) => {
+      console.log("phi4-mini progress:", e.payload);
+      updateProgress(1, parseInt(e.payload.toString()));
     });
 
     return () => {
-      unlisten1.then((un) => un());
-      unlisten2.then((un) => un());
+      unlisten.then((un) => un());
     };
   }, []);
 

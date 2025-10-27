@@ -47,11 +47,14 @@
       "icons/icon.ico"
     ],
     "resources" : [
-       "src/scripts/windows/install_ollama.ps1",
-       "src/scripts/windows/download_ollama.ps1",
-       "src/scripts/windows/pull_llm.ps1",
-       "src/scripts/windows/clean_ollama.ps1",
-       "src/scripts/windows/initialize_ollama.ps1"
+       "src/scripts/install_ollama.ps1",
+       "src/scripts/install_phi4_mini.ps1",
+       "src/scripts/clean_ollama.ps1",
+       "src/scripts/initialize_ollama.ps1",
+       "resources/phi4_mini/phi4_mini_prepack.zip",
+       "resources/phi4_mini/LICENSE",
+       "resources/ollama/OllamaSetup.exe",
+       "resources/ollama/LICENSE"
     ]
   }
 }

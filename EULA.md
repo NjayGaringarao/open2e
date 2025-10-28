@@ -1,6 +1,4 @@
-PLEASE READ BEFORE USING THIS SOFTWARE
-
-This End-User License Agreement (“Agreement”) is between you (“User”) and the developers of _Open2E: Automated Evaluation of Open-Ended Responses on Computer Literacy Using NLP_ (“Developers”). By clicking “I Accept”, installing, or using Open2E, you agree to the terms below.
+This End-User License Agreement (“Agreement”) is between you (“User”) and the developers of _Open2E: Automated Evaluation of Open-Ended Responses on Computer Literacy Using NLP_ (“Developers”).
 
 **1. Purpose and License**
 Open2E is provided for _educational and research use only_. You are granted permission to install, use, modify, and share this software for non-commercial academic purposes under the **Creative Commons Attribution–NonCommercial 4.0 International License (CC BY-NC 4.0)**.

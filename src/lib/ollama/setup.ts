@@ -28,15 +28,8 @@ async function runPowerShellScript(scriptName: string, args: string[] = []) {
  */
 export const installOllama = async (): Promise<void> => {
   try {
-    // Resolve bundled installer path
-    const installerPath = await resolveResource(
-      "resources/ollama/OllamaSetup.exe"
-    );
-
     // Pass installer path as argument to the script
-    const result = await runPowerShellScript("install_ollama.ps1", [
-      installerPath,
-    ]);
+    const result = await runPowerShellScript("install_ollama.ps1");
 
     if (result.code !== 0) {
       const errorMessage = `Installation failed with exit code ${result.code}`;
@@ -55,15 +48,8 @@ export const installOllama = async (): Promise<void> => {
  */
 export const installPhi4Mini = async (): Promise<void> => {
   try {
-    // Resolve bundled zip file path
-    const zipPath = await resolveResource(
-      "resources/phi4_mini/phi4_mini_prepack.zip"
-    );
-
     // Pass zip path as argument to the script
-    const result = await runPowerShellScript("install_phi4_mini.ps1", [
-      zipPath,
-    ]);
+    const result = await runPowerShellScript("install_phi4_mini.ps1");
 
     if (result.code !== 0) {
       const errorMessage = `Phi4-mini installation failed with exit code ${result.code}`;

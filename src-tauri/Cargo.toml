@@ -1,6 +1,6 @@
 [package]
-name = "open2e"
-version = "0.2.0"
+name = "Open2e"
+version = "0.3.0"
 description = "A Tauri App"
 authors = ["NJ Garingarao <ninogaringarao13@gmail.com>", "AJ Marquez", "JP Marquez"]
 edition = "2021"
@@ -31,3 +31,7 @@ tauri-plugin-http = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2"
+winreg = { version = "0.52", optional = true }
+
+[target.'cfg(windows)'.dependencies]
+winreg = { version = "0.52" }

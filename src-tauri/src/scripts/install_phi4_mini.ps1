@@ -18,11 +18,12 @@ Write-Log "Starting phi4-mini installation..."
 Write-Log "Preparing to install phi4-mini..."
 
 # Get zip path from argument
-$zipPath = $args[0]
-if (-not $zipPath) {
-    Write-Error "Zip file path not provided."
-    exit 1
+$zipPath = if ($args.Count -ge 1 -and $args[0]) {
+    $args[0]
+} else {
+    Join-Path $env:ProgramData "Open2E\Resources\phi4_mini\phi4_mini_prepack.zip"
 }
+
 if (-not (Test-Path $zipPath)) {
     Write-Error "Zip file not found: $zipPath"
     exit 1

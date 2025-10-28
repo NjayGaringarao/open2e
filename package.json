@@ -1,13 +1,16 @@
 {
-  "name": "open2e",
+  "name": "Open2E",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "build:tauri": "npm run build && tauri build",
+    "build:installer": "iscc installer.iss",
+    "build:release": "npm run build:tauri && npm run build:installer"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.22.0",

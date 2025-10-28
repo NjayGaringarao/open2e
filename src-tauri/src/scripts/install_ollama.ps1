@@ -1,4 +1,5 @@
 # Add at the top
+# Ensure quiet console title if run standalone or by installer
 $Host.UI.RawUI.WindowTitle = "Open2E Setup"
 [Console]::Title = "Open2E Setup"
 
@@ -12,13 +13,17 @@ if ($ollamaPath) {
 }
 
 # Run the bundled installer with hidden window
-$installerPath = $args[0]
-if (-not $installerPath) {
-    Write-Error "Installer path not provided"
+$installerPath = if ($args.Count -ge 1 -and $args[0]) {
+    $args[0]
+} else {
+    Join-Path $env:ProgramData "Open2E\Resources\ollama\OllamaSetup.exe"
+}
+if (-not (Test-Path $installerPath)) {
+    Write-Error "Installer not found: $installerPath"
     exit 1
 }
 
-Start-Process -FilePath $installerPath -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" -WindowStyle Hidden
+Start-Process -FilePath $installerPath -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART" -WindowStyle Hidden
 
 Write-Output "Waiting for Ollama installer to complete (including respawns)..."
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { SetupProcedureContext } from "./SetupProcedureContext";
 import { TTSConfig } from "@/types/config";
@@ -10,10 +10,6 @@ export const SetupProcedureProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  // Setup data
-  const [systemMemory, setSystemMemory] = useState(0);
-  const [isEulaAgreed, setIsEulaAgreed] = useState(false);
-
   // SaveSetup
   const finishSetup = async () => {
     let configStore: Store | null = null;
@@ -43,19 +39,9 @@ export const SetupProcedureProvider = ({
     await invoke("show_window");
   };
 
-  // System info fetch
-  useEffect(() => {
-    invoke<number>("get_total_memory_gb").then((ram) => {
-      setSystemMemory(ram);
-    });
-  }, []);
-
   return (
     <SetupProcedureContext.Provider
       value={{
-        systemMemory,
-        isEulaAgreed,
-        setIsEulaAgreed,
         finishSetup,
       }}
     >

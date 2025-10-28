@@ -1,10 +1,5 @@
 import { Command } from "@tauri-apps/plugin-shell";
-import { emit } from "@tauri-apps/api/event";
 import { resolveResource } from "@tauri-apps/api/path";
-
-// Progress tracking regex patterns
-const PROGRESS_REGEX = /(\d{1,3})%/;
-const PULL_PROGRESS_REGEX = /pulling .*?:\s*(\d{1,3})%/i;
 
 /**
  * Helper function to run a PowerShell script with optional arguments
@@ -27,14 +22,6 @@ async function runPowerShellScript(scriptName: string, args: string[] = []) {
 
   return await command.execute();
 }
-
-/**
- * Download Ollama installer - No longer needed, returns immediately
- */
-export const downloadOllama = async (): Promise<void> => {
-  // Instantly complete since installer is bundled
-  emit("ollama-download-progress", "100");
-};
 
 /**
  * Install Ollama using bundled installer
@@ -84,9 +71,6 @@ export const installPhi4Mini = async (): Promise<void> => {
       console.error("Install phi4-mini error:", fullError);
       throw new Error(errorMessage);
     }
-
-    // Emit progress event for completion
-    emit("phi4-mini-install-progress", 100);
   } catch (error) {
     console.error("Install phi4-mini error:", error);
     throw error;

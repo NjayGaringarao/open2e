@@ -44,6 +44,9 @@ const LocalSetup = () => {
             <p className="text-uGrayLight text-lg mt-4">
               This may take a few minutes depending on your system performance.
             </p>
+            <p className="text-uGrayLight text-lg">
+              Other windows may popup. DO NOT close them.
+            </p>
           </div>
 
           <div className="w-full">

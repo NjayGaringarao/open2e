@@ -28,8 +28,8 @@ export const LocalSetupProvider = ({
   async function simulateStepWithInstall(
     step: number,
     installCommand: () => Promise<void>,
-    durationMs: number = 85_000,
-    maxSimulatedProgress: number = 95
+    durationMs: number = 45_000,
+    maxSimulatedProgress: number = 100
   ) {
     const intervalMs = 500;
     let simulatedProgress = 0;
@@ -63,11 +63,11 @@ export const LocalSetupProvider = ({
 
       // Step 1: Install Ollama (0-45%)
       setCurrentStep(0);
-      await simulateStepWithInstall(0, () => installOllama(), 45000, 100);
+      await simulateStepWithInstall(0, () => installOllama(), 150_000);
 
       // Step 2: Install phi4-mini model (46-90%)
       setCurrentStep(1);
-      await installPhi4Mini();
+      await simulateStepWithInstall(1, () => installPhi4Mini(), 300_000);
 
       // Step 3: Setup validation (91-100%)
       setCurrentStep(2);

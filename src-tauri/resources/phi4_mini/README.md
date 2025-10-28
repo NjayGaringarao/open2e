@@ -89,7 +89,8 @@ To prevent overwriting other user models, **only include Phi-4-Mini’s assets**
 ```
 
 Keep the relative folder structure intact.
-Rename .ollama directory to phi4_mini_prepack then zip it.
+Compress (.zip) the .ollama/model directory.
+rename model.zip to phi4_mini_prepack.zip
 
 ---
 

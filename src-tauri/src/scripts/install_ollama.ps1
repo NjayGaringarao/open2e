@@ -18,90 +18,55 @@ if (-not $installerPath) {
     exit 1
 }
 
-Start-Process -FilePath $installerPath -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" -WindowStyle Hidden -Wait
+Start-Process -FilePath $installerPath -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" -WindowStyle Hidden
 
-Write-Output "Waiting for installer to finish..."
-Start-Sleep -Seconds 5
+Write-Output "Waiting for Ollama installer to complete (including respawns)..."
 
-# Give Ollama time to launch its UI
-Start-Sleep -Seconds 5
+$goneCount = 0
+$requiredGone = 10
 
-# Automatically close Welcome Window - Try multiple times with retries
-$maxRetries = 10
-$retryCount = 0
+while ($true) {
+    # Get all candidate processes
+    $proc = Get-Process -ErrorAction SilentlyContinue | Where-Object {
+        $_.ProcessName -match '^(OllamaSetup|OllamaSetup\.tmp|Setup|Setup\.tmp|OllamaInstaller)$'
+    }
 
-function Stop-OllamaProcesses {
-    param([int]$retryNum = 0)
-    
-    Write-Output "Attempt $retryNum - Killing Ollama processes..."
-    
-    # Try different process name patterns
-    $processesToKill = @("ollama", "ollama app", "Ollama", "OllamaApp")
-    foreach ($name in $processesToKill) {
-        Get-Process -Name $name -ErrorAction SilentlyContinue | ForEach-Object {
-            Write-Output "Closing process: $($_.Name) (PID: $($_.Id))"
-            try {
-                Stop-Process -Id $_.Id -Force -ErrorAction Stop
-                Start-Sleep -Milliseconds 500
-            }
-            catch {
-                Write-Output "Failed to stop via Stop-Process, trying taskkill..."
-                & taskkill /F /PID $_.Id 2>$null
-            }
+    if ($proc) {
+        $goneCount = 0
+        foreach ($p in $proc) {
+            Write-Output "Ollama installer still running (PID $($p.Id), Name $($p.ProcessName))..."
         }
     }
-    
-    # Kill any remaining Ollama-related processes by filtering on process path
-    $ollamaProcesses = Get-Process -ErrorAction SilentlyContinue | Where-Object {
-        $_.Path -and ($_.Path -like "*ollama*" -or $_.Name -like "*ollama*")
-    }
-    foreach ($proc in $ollamaProcesses) {
-        Write-Output "Closing process by path: $($proc.Name) (PID: $($proc.Id))"
-        try {
-            Stop-Process -Id $proc.Id -Force -ErrorAction Stop
-            Start-Sleep -Milliseconds 500
-        }
-        catch {
-            Write-Output "Failed to stop via Stop-Process, trying taskkill..."
-            & taskkill /F /PID $proc.Id 2>$null
+    else {
+        $goneCount++
+        Write-Output "Installer not detected ($goneCount/$requiredGone)..."
+        if ($goneCount -ge $requiredGone) {
+            Write-Output "Ollama installer has fully finished."
+            break
         }
     }
-    
-    # Try using taskkill by name as well
-    & taskkill /F /IM "ollama.exe" 2>$null
-    & taskkill /F /IM "Ollama.exe" 2>$null
-    
-    # Check if Ollama service is running and stop it
+
+    Start-Sleep -Seconds 1
+}
+
+Write-Output "Closing Ollama app window..."
+$ollamaProcesses = Get-Process -ErrorAction SilentlyContinue | Where-Object {
+    $_.MainWindowTitle -like "Ollama" -or $_.ProcessName -like "ollama*"
+}
+
+foreach ($proc in $ollamaProcesses) {
     try {
-        $service = Get-Service -Name "ollama" -ErrorAction SilentlyContinue
-        if ($service -and $service.Status -eq 'Running') {
-            Write-Output "Stopping Ollama service..."
-            Stop-Service -Name "ollama" -Force -ErrorAction SilentlyContinue
+        $proc.CloseMainWindow() | Out-Null
+        Start-Sleep -Milliseconds 500
+        if (!$proc.HasExited) {
+            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            Write-Output "Force-closed Ollama process $($proc.ProcessName) (PID $($proc.Id))"
         }
     }
     catch {
-        # Service doesn't exist or can't be accessed
+        Write-Output "Error closing process $($proc.ProcessName): $_"
     }
 }
 
-while ($retryCount -lt $maxRetries) {
-    Stop-OllamaProcesses -retryNum $retryCount
-    
-    # Wait a bit and check if processes are gone
-    Start-Sleep -Seconds 2
-    
-    # Check if any Ollama processes still exist
-    $remainingProcesses = Get-Process -ErrorAction SilentlyContinue | Where-Object {
-        ($_.Path -and $_.Path -like "*ollama*") -or $_.Name -like "*ollama*"
-    }
-    
-    if ($remainingProcesses.Count -eq 0) {
-        Write-Output "All Ollama processes terminated successfully."
-        break
-    }
-    
-    $retryCount++
-    Write-Output "Retry $retryCount of $maxRetries - Found $($remainingProcesses.Count) remaining processes..."
-}
-
-Write-Output "Installation and cleanup complete."
+Write-Output "Ollama setup and cleanup complete."
+exit 0

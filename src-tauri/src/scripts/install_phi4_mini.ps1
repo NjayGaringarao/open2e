@@ -50,4 +50,12 @@ catch {
 }
 
 Write-Output "phi4-mini installation complete."
+
+# copy phi4_mini_prepack/models to .ollama/models
+Copy-Item -Path "phi4_mini_prepack/models" -Destination "$ollamaDir/models" -Force
+Write-Output "Models copied to .ollama/models."
+
+# delete phi4_mini_prepack
+Remove-Item -Path "phi4_mini_prepack" -Recurse -Force
+
 exit 0

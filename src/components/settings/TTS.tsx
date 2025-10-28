@@ -103,7 +103,7 @@ const TTS = () => {
             label="Rate"
             value={rate}
             min={0.1}
-            max={10}
+            max={2}
             step={0.1}
             onChange={setRate}
           />

@@ -4,19 +4,25 @@ import MessageBubble from "./MessageBubble";
 import MainContentBox from "../container/MainContentBox";
 
 const ChatPanel = () => {
-  const { messages, isGenerating } = useChat();
+  const { messages, isGenerating, activeConversation } = useChat();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // auto-scroll to bottom on new messages
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isGenerating]);
+    const scroll = async () => {
+      // waiting to load messages
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      }
+    };
+
+    scroll();
+  }, [messages, isGenerating, activeConversation]);
 
   return messages.length > 0 ? (
-    <MainContentBox>
-      <div ref={scrollRef} className="flex-1 flex flex-col w-full">
+    <MainContentBox ref={scrollRef}>
+      <div className="flex-1 flex flex-col w-full">
         <div className="h-20" />
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />

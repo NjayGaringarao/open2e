@@ -36,16 +36,6 @@ const LLMSource = () => {
     status === "ONLINE" || systemMemory >= RECOMMENDED_MEMORY;
 
   const handleReinstallDependencies = async () => {
-    if (status === "OFFLINE") {
-      await alert({
-        title: "No Internet Connection",
-        description:
-          "Please connect to the internet to reinstall LLM Dependency.",
-        mode: "ERROR",
-      });
-      return;
-    }
-
     if (systemMemory < RECOMMENDED_MEMORY) {
       await alert({
         title: "Insufficient System Memory",
@@ -58,7 +48,7 @@ const LLMSource = () => {
     const isConfirmed = await confirm({
       title: "Confirm Reinstall",
       description:
-        "This will consume an approximately 3.6 GB of data. Make sure you have an stable internet connection before proceeding. Do you want to Proceed?",
+        "This will reinstall ollama and phi4-mini. All existing models of your current ollama setup will be deleted. Do you want to Proceed?",
     });
 
     if (!isConfirmed) return;

@@ -7,6 +7,7 @@ import {
 import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
 import { initializeOllama } from "./setup";
+import { fetch } from "@tauri-apps/plugin-http";
 
 interface IEvaluate {
   question: string;
@@ -51,9 +52,7 @@ ANSWERS: ${answer}
 
     const res = await fetch("http://localhost:11434/api/chat", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
 

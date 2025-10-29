@@ -1,25 +1,37 @@
 import { Command } from "@tauri-apps/plugin-shell";
-import { resolveResource } from "@tauri-apps/api/path";
+import {
+  CLEAN_OLLAMA,
+  INITIALIZE_OLLAMA,
+  INSTALL_OLLAMA,
+  INSTALL_PHI4_MINI,
+} from "./scripts";
 
-/**
- * Helper function to run a PowerShell script with optional arguments
- */
-async function runPowerShellScript(scriptName: string, args: string[] = []) {
-  // Resolve the script path from bundled resources
-  const scriptPath = await resolveResource(`src/scripts/${scriptName}`);
+function toBase64Utf16Le(text: string): string {
+  const u16 = new Uint16Array(text.length);
+  for (let i = 0; i < text.length; i++) {
+    u16[i] = text.charCodeAt(i);
+  }
+  const bytes = new Uint8Array(u16.buffer);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  // btoa is available in the webview
+  return btoa(binary);
+}
 
-  // Create command with resolved path
+async function runPowerShellInline(script: string) {
+  const encoded = toBase64Utf16Le(script);
   const command = Command.create("run-powershell", [
+    "-NoProfile",
+    "-NonInteractive",
     "-ExecutionPolicy",
     "Bypass",
-    "-NoProfile",
     "-WindowStyle",
     "Hidden",
-    "-File",
-    scriptPath,
-    ...args,
+    "-EncodedCommand",
+    encoded,
   ]);
-
   return await command.execute();
 }
 
@@ -28,8 +40,7 @@ async function runPowerShellScript(scriptName: string, args: string[] = []) {
  */
 export const installOllama = async (): Promise<void> => {
   try {
-    // Pass installer path as argument to the script
-    const result = await runPowerShellScript("install_ollama.ps1");
+    const result = await runPowerShellInline(INSTALL_OLLAMA);
 
     if (result.code !== 0) {
       const errorMessage = `Installation failed with exit code ${result.code}`;
@@ -48,8 +59,7 @@ export const installOllama = async (): Promise<void> => {
  */
 export const installPhi4Mini = async (): Promise<void> => {
   try {
-    // Pass zip path as argument to the script
-    const result = await runPowerShellScript("install_phi4_mini.ps1");
+    const result = await runPowerShellInline(INSTALL_PHI4_MINI);
 
     if (result.code !== 0) {
       const errorMessage = `Phi4-mini installation failed with exit code ${result.code}`;
@@ -68,7 +78,7 @@ export const installPhi4Mini = async (): Promise<void> => {
  */
 export const initializeOllama = async (): Promise<void> => {
   try {
-    const result = await runPowerShellScript("initialize_ollama.ps1");
+    const result = await runPowerShellInline(INITIALIZE_OLLAMA);
 
     if (result.code !== 0) {
       const errorMessage = `Ollama initialization failed with exit code ${result.code}`;
@@ -87,7 +97,8 @@ export const initializeOllama = async (): Promise<void> => {
  */
 export const cleanOllama = async (): Promise<void> => {
   try {
-    const result = await runPowerShellScript("clean_ollama.ps1");
+    // Keep using file-based script for cleanup (can be elevated from installer if needed)
+    const result = await runPowerShellInline(CLEAN_OLLAMA);
 
     if (result.code !== 0) {
       const errorMessage = `Ollama cleanup failed with exit code ${result.code}`;

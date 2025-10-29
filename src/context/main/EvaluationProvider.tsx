@@ -132,9 +132,9 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       if (error || !result) {
         alert({
           title: "Evaluation Failed",
-          description: !result
-            ? "Evaluation Failed. Please try again."
-            : `${error}`,
+          description: `Evaluation Failed: ${
+            error ?? "There was an issue running evaluation."
+          }`,
           mode: "ERROR",
         });
         return null;

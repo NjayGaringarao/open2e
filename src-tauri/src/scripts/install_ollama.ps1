@@ -3,6 +3,26 @@
 $Host.UI.RawUI.WindowTitle = "Open2E Setup"
 [Console]::Title = "Open2E Setup"
 
+
+# Setting up variable
+$ollamaProcesses = Get-Process -ErrorAction SilentlyContinue | Where-Object {
+    $_.MainWindowTitle -like "Ollama" -or $_.ProcessName -like "ollama*"
+}
+foreach ($proc in $ollamaProcesses) {
+    try {
+        $proc.CloseMainWindow() | Out-Null
+        Start-Sleep -Milliseconds 500
+        if (!$proc.HasExited) {
+            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            Write-Output "Force-closed Ollama process $($proc.ProcessName) (PID $($proc.Id))"
+        }
+    }
+    catch {
+        Write-Output "Error closing process $($proc.ProcessName): $_"
+    }
+}
+[System.Environment]::SetEnvironmentVariable("OLLAMA_ORIGINS", "*", "User")
+
 # Check if Ollama is already installed
 $ollamaPath = Get-Command "ollama" -ErrorAction SilentlyContinue
 
@@ -15,7 +35,8 @@ if ($ollamaPath) {
 # Run the bundled installer with hidden window
 $installerPath = if ($args.Count -ge 1 -and $args[0]) {
     $args[0]
-} else {
+}
+else {
     Join-Path $env:ProgramData "Open2E\Resources\ollama\OllamaSetup.exe"
 }
 if (-not (Test-Path $installerPath)) {

@@ -7,7 +7,7 @@ const CONFIG = {
     "https://1.1.1.1/cdn-cgi/trace",
   ],
   timeout: 8000,
-  checkInterval: 10000,
+  checkInterval: 5000,
   initialDelay: 1000,
 };
 

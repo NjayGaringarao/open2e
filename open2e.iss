@@ -6,7 +6,8 @@
 
 #define MyAppName "Open2E"
 #define MyAppVersion "0.3.0"
-#define MyAppPublisher "Open2E"
+#define MyAppPublisher "Njay Garingarao"
+#define MyAppPublisherURL "https://github.com/NjayGaringarao"
 #define MyAppURL "https://open2e.vercel.app"
 #define MyAppExeName "Open2E.exe"
 
@@ -14,10 +15,9 @@
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-AppPublisherURL={#MyAppURL}
+AppPublisherURL={#MyAppPublisherURL}
 AppSupportURL={#MyAppURL}
-AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\\Open2E
+DefaultDirName={commonpf}\\Open2E
 DefaultGroupName=Open2E
 OutputDir=dist\\installer
 OutputBaseFilename=Open2E_Setup_{#MyAppVersion}
@@ -25,10 +25,10 @@ Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64compatible
 PrivilegesRequired=admin
-LicenseFile=EULA.md
+LicenseFile=EULA.txt
 SetupIconFile=src-tauri\icons\icon.ico
-WizardImageFile=src-tauri\icons\icon.png
-WizardSmallImageFile=src-tauri\icons\icon.png
+WizardImageFile=src-tauri\icons\128x128.png
+WizardSmallImageFile=src-tauri\icons\128x128.png
 UninstallDisplayIcon={app}\\{#MyAppExeName}
 
 [Languages]
@@ -42,22 +42,15 @@ Name: desktopicon; Description: "Create a &desktop icon"; Flags: unchecked
 ; App binaries (built by Tauri)
 Source: "src-tauri\\target\\release\\Open2E.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; PowerShell scripts (for repairs/uninstall assistance)
-Source: "src-tauri\\src\\scripts\\install_ollama.ps1"; DestDir: "{commonappdata}\\Open2E\\Resources\\scripts"; Flags: ignoreversion
-Source: "src-tauri\\src\\scripts\\install_phi4_mini.ps1"; DestDir: "{commonappdata}\\Open2E\\Resources\\scripts"; Flags: ignoreversion
-Source: "src-tauri\\src\\scripts\\initialize_ollama.ps1"; DestDir: "{commonappdata}\\Open2E\\Resources\\scripts"; Flags: ignoreversion
-Source: "src-tauri\\src\\scripts\\clean_ollama.ps1"; DestDir: "{commonappdata}\\Open2E\\Resources\\scripts"; Flags: ignoreversion
+Source: "src-tauri\\src\\scripts\\install_ollama.ps1"; DestDir: "{app}\\scripts"; Flags: ignoreversion
+Source: "src-tauri\\src\\scripts\\install_phi4_mini.ps1"; DestDir: "{app}\\scripts"; Flags: ignoreversion
 ; Local AI payloads (conditionally installed)
-Source: "src-tauri\\resources\\ollama\\OllamaSetup.exe"; DestDir: "{commonappdata}\\Open2E\\Resources\\ollama"; Flags: ignoreversion; Tasks: installlocalai
-Source: "src-tauri\\resources\\phi4_mini\\phi4_mini_prepack.zip"; DestDir: "{commonappdata}\\Open2E\\Resources\\phi4_mini"; Flags: ignoreversion; Tasks: installlocalai
+Source: "src-tauri\\resources\\ollama\\OllamaSetup.exe"; DestDir: "{app}\\ollama"; Flags: ignoreversion; Tasks: installlocalai
+Source: "src-tauri\\resources\\phi4_mini\\phi4_mini_prepack.zip"; DestDir: "{app}\\phi4_mini"; Flags: ignoreversion; Tasks: installlocalai
 ; Licenses
 Source: "LICENSE.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "src-tauri\\resources\\ollama\\LICENSE"; DestDir: "{app}\\licenses\\ollama"; Flags: ignoreversion
-Source: "src-tauri\\resources\\phi4_mini\\LICENSE"; DestDir: "{app}\\licenses\\phi4_mini"; Flags: ignoreversion
-
-[Dirs]
-Name: "{commonappdata}\\Open2E\\Resources\\ollama"; Flags: uninsalwaysuninstall
-Name: "{commonappdata}\\Open2E\\Resources\\phi4_mini"; Flags: uninsalwaysuninstall
-Name: "{commonappdata}\\Open2E\\Resources\\scripts"; Flags: uninsalwaysuninstall
+Source: "src-tauri\\resources\\ollama\\LICENSE"; DestDir: "{app}\\ollama"; Flags: ignoreversion
+Source: "src-tauri\\resources\\phi4_mini\\LICENSE"; DestDir: "{app}\\phi4_mini"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\\{#MyAppName}"; Filename: "{app}\\{#MyAppExeName}"; IconFilename: "{app}\\{#MyAppExeName}"
@@ -69,16 +62,12 @@ Name: "{autodesktop}\\{#MyAppName}"; Filename: "{app}\\{#MyAppExeName}"; IconFil
 [Run]
 ; Conditionally run dependency installers when task selected
 Filename: "powershell.exe"; \
-Parameters: "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File ""{commonappdata}\Open2E\Resources\scripts\install_ollama.ps1"" ""{commonappdata}\Open2E\Resources\ollama\OllamaSetup.exe"""; \
+Parameters: "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File ""{app}\scripts\install_ollama.ps1"" ""{app}\ollama\OllamaSetup.exe"""; \
 StatusMsg: "Installing Ollama..."; Flags: runhidden waituntilterminated; Tasks: installlocalai
 
 Filename: "powershell.exe"; \
-Parameters: "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File ""{commonappdata}\Open2E\Resources\scripts\install_phi4_mini.ps1"" ""{commonappdata}\Open2E\Resources\phi4_mini\phi4_mini_prepack.zip"""; \
+Parameters: "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File ""{app}\scripts\install_phi4_mini.ps1"" ""{app}\phi4_mini\phi4_mini_prepack.zip"""; \
 StatusMsg: "Installing phi4-mini (prepacked)..."; Flags: runhidden waituntilterminated; Tasks: installlocalai
-
-Filename: "powershell.exe"; \
-Parameters: "-ExecutionPolicy Bypass -NoProfile -WindowStyle Hidden -File ""{commonappdata}\Open2E\Resources\scripts\initialize_ollama.ps1"""; \
-StatusMsg: "Initializing Ollama service..."; Flags: runhidden waituntilterminated; Tasks: installlocalai
 
 
 ; Launch app after install

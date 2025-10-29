@@ -45,14 +45,6 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ],
-    "resources" : [
-       "src/scripts/install_ollama.ps1",
-       "src/scripts/install_phi4_mini.ps1",
-       "src/scripts/clean_ollama.ps1",
-       "src/scripts/initialize_ollama.ps1",
-       "resources/phi4_mini/LICENSE",
-       "resources/ollama/LICENSE"
     ]
   }
 }

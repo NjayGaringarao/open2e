@@ -3,6 +3,7 @@ import { Message } from "@/models";
 import { nanoid } from "nanoid";
 import { getChatContext } from "../context/chat";
 import { initializeOllama } from "./setup";
+import { fetch } from "@tauri-apps/plugin-http";
 
 export const chat = async (conversation: Message[]): Promise<Message> => {
   const now = new Date().toISOString();

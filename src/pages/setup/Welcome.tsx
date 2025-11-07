@@ -14,11 +14,12 @@ const Welcome = () => {
       nextLabel="Get Started"
     >
       <img src={icon.logo} alt="open2e" className="h-64 w-64" />
-      <h1 className="text-6xl mb-4 text-uGray">
+      <h1 className="text-6xl text-uGray">
         Welcome to <b className="text-primary">Open2E</b>
       </h1>
       <p className="text-lg text-uGrayLight">
-        You’re all set. Click Get Started to begin using Open2E.
+        Automated <u className="underline-offset-2">Open Ended Evaluation</u> of
+        responses for basic computer literacy.
       </p>
     </StepContainer>
   );

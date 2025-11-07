@@ -2,7 +2,7 @@
 ; - Shows EULA & LICENSE
 ; - Checks RAM and conditionally installs local AI (Ollama + phi4-mini)
 ; - Extracts resources to ProgramData and runs PowerShell scripts
-; - Writes registry flags for app to detect on first run
+; - Writes registry values for tracking optional installs
 
 #define MyAppName "Open2E"
 #define MyAppVersion "0.3.0"
@@ -75,10 +75,6 @@ Filename: "{app}\\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: n
 
 [InstallDelete]
 Type: filesandordirs; Name: "{commonappdata}\\Open2E\\Resources\\phi4_mini\\phi4_mini_prepack.tmp"
-
-[Registry]
-; Set completion and memory flags for the app
-Root: HKCU; Subkey: "Software\\Open2E"; ValueType: dword; ValueName: "SetupCompleted"; ValueData: "1"; Flags: uninsdeletekeyifempty
 
 [Code]
 
@@ -168,6 +164,5 @@ begin
     if WantLocalAI then LocalAIInstalled := 1 else LocalAIInstalled := 0;
     RegWriteDWordValue(HKCU, 'Software\\Open2E', 'LocalAIInstalled', LocalAIInstalled);
     RegWriteDWordValue(HKCU, 'Software\\Open2E', 'SystemMemoryGB', RamGB);
-    RegWriteDWordValue(HKCU, 'Software\\Open2E', 'SetupCompleted', 1);
   end;
 end;

@@ -29,15 +29,6 @@ This document explains how to build and operate the Windows installer powered by
   2. Run `install_ollama.ps1` and `install_phi4_mini.ps1`
   3. Run `initialize_ollama.ps1`
 
-## Registry flags written by installer
-
-- Key: `HKCU\Software\Open2E`
-  - `SetupCompleted` (DWORD): 1 after successful install
-  - `LocalAIInstalled` (DWORD): 1 if local AI was installed, else 0
-  - `SystemMemoryGB` (DWORD): detected RAM (approx GB)
-
-The app checks `SetupCompleted` to decide which window to show on first launch. The welcome screen sets `is_initialized` in the Tauri store to skip on future launches.
-
 ## Shared resource cache
 
 - Location: `C:\ProgramData\Open2E\Resources\`
@@ -79,7 +70,7 @@ npm run build:release
 - Running the installer again will:
   - Update `Open2E.exe` and scripts
   - Update Start Menu shortcut
-  - Refresh registry flags
+- Refresh registry values
   - If the "Install local AI" task is checked, scripts run again (idempotent):
     - Ollama service is stopped if running
     - Model files are copied/updated
@@ -93,13 +84,13 @@ npm run build:release
 - Removes Start Menu shortcuts (Open2E group and Uninstall entry)
 - Removes Desktop shortcut (if it was created)
 - Removes `C:\ProgramData\Open2E\Resources\` (scripts and payload folders)
-- Removes registry keys under `HKCU\Software\Open2E` (including SetupCompleted, LocalAIInstalled, SystemMemoryGB)
+- Removes registry keys under `HKCU\Software\Open2E` (including LocalAIInstalled, SystemMemoryGB)
 - Does not remove user data in `%USERPROFILE%` (e.g., `.ollama/models`)
 
 ## Verification checklist
 
 - After install:
-  - `HKCU\Software\Open2E\SetupCompleted = 1`
+  - `store.config` contains `setup_completed = true` once the welcome flow finishes
   - `LocalAIInstalled` matches the selected task
   - `SystemMemoryGB` is set
   - `C:\Program Files\Open2E\Open2E.exe` exists
@@ -149,7 +140,7 @@ EULA.md                                         ; End user license agreement (sh
 src-tauri/icons/icon.ico                        ; App icon (embedded in exe, used in installer)
 src-tauri/icons/icon.png                        ; Installer wizard images
 src-tauri/tauri.conf.json                       ; Tauri bundle config (no large payloads)
-src-tauri/src/commands/window.rs                ; Registry check for SetupCompleted
+src-tauri/src/commands/window.rs                ; Loads setup state from Tauri store
 src/pages/setup/{layout.tsx,Welcome.tsx}        ; Post-install welcome only
 src-tauri/src/scripts/*.ps1                     ; Install/initialize scripts
 src-tauri/resources/{ollama,phi4_mini}/...      ; Payloads used by installer

@@ -16,6 +16,7 @@ export const SetupProcedureProvider = ({
 
     try {
       configStore = await load("store.config", { autoSave: false });
+      await configStore.set("setup_completed", true);
       await configStore.set("is_initialized", true);
 
       const ttsConfig: TTSConfig = {

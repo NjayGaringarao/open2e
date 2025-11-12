@@ -6,7 +6,7 @@ import {
 } from "../context/evaluation";
 import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
-import { initializeOllama } from "./setup";
+import { initializeOllama, isLocalLLMInstalled } from "./utils";
 import { fetch } from "@tauri-apps/plugin-http";
 
 interface IEvaluate {
@@ -24,6 +24,11 @@ export const evaluate = async ({
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
+    const installed = await isLocalLLMInstalled();
+    if (!installed) {
+      throw new Error("Local LLM dependencies are not installed.");
+    }
+
     await initializeOllama();
 
     const userInput = `

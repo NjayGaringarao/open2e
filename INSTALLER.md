@@ -1,6 +1,6 @@
 # Open2E Installer (Inno Setup)
 
-This document explains how to build and operate the Windows installer powered by Inno Setup. It covers prerequisites, build steps, conditional local‑AI install, reinstall/repair, registry flags, and troubleshooting.
+This document explains how to build and operate the Windows installer powered by Inno Setup. It covers prerequisites, build steps, and troubleshooting.
 
 ## Prerequisites
 
@@ -13,29 +13,9 @@ This document explains how to build and operate the Windows installer powered by
 ## Installer contents
 
 - App binaries: `src-tauri/target/release/Open2E.exe`
-- Scripts: `src-tauri/src/scripts/*.ps1`
-- Icons: `src-tauri/icons/icon.ico`, `src-tauri/icons/icon.png` (for installer wedges/shortcuts)
-- Local AI payloads (large, optional):
-  - `src-tauri/resources/ollama/OllamaSetup.exe`
-  - `src-tauri/resources/phi4_mini/phi4_mini_prepack.zip`
-- Licenses: `LICENSE.md`, `EULA.md` (+ third‑party licenses under app/licenses/)
-
-## Conditional local‑AI installation
-
-- RAM check at install time (approx): if RAM ≥ 16 GB, task “Install local AI (Ollama + phi4‑mini)” is auto‑checked. If < 16 GB, it is unchecked.
-- The user can override the default by checking/unchecking the task.
-- If selected, the installer will:
-  1. Copy payloads to `C:\ProgramData\Open2E\Resources\...`
-  2. Run `install_ollama.ps1` and `install_phi4_mini.ps1`
-  3. Run `initialize_ollama.ps1`
-
-## Shared resource cache
-
-- Location: `C:\ProgramData\Open2E\Resources\`
-  - `ollama/` → bundled Ollama installer
-  - `phi4_mini/` → prepacked model zip (expanded by script into user’s `.ollama/models`)
-  - `scripts/` → PowerShell scripts
-- This location is used for first install and for later repairs/reinstalls.
+- Helper script: `src-tauri/src/scripts/set_ollama_variable.ps1`
+- Icons: `src-tauri/icons/icon.ico`, `src-tauri/icons/icon.png` (for installer UI and shortcuts)
+- Licenses: `LICENSE.md`, `EULA.txt` (+ any third‑party licenses under app/licenses/)
 
 ## Build steps
 
@@ -63,7 +43,7 @@ Or manually from PowerShell:
 npm run build:release
 ```
 
-- Output: `dist/installer/Open2E_Setup_0.3.0.exe` (filename includes version number)
+- Output: `dist/installer/Open2E_Setup_0.4.0.exe` (filename includes version number)
 
 ## Reinstall / Repair
 
@@ -71,45 +51,32 @@ npm run build:release
   - Update `Open2E.exe` and scripts
   - Update Start Menu shortcut
 - Refresh registry values
-  - If the "Install local AI" task is checked, scripts run again (idempotent):
-    - Ollama service is stopped if running
-    - Model files are copied/updated
-    - Ollama is initialized
-- If the user unchecks the task on repair, local AI is not reinstalled; `LocalAIInstalled` will reflect the task selection.
-- Desktop shortcut: Created if "Create desktop icon" task is checked, not affected by existing shortcut
+- Re-run `set_ollama_variable.ps1` to ensure the Ollama endpoint variable is set
+- Desktop shortcut: recreated if missing
 
 ## Uninstall
 
 - Removes `C:\Program Files\Open2E\` (app directory)
 - Removes Start Menu shortcuts (Open2E group and Uninstall entry)
 - Removes Desktop shortcut (if it was created)
-- Removes `C:\ProgramData\Open2E\Resources\` (scripts and payload folders)
-- Removes registry keys under `HKCU\Software\Open2E` (including LocalAIInstalled, SystemMemoryGB)
+- Removes `C:\ProgramData\Open2E\` if present
 - Does not remove user data in `%USERPROFILE%` (e.g., `.ollama/models`)
 
 ## Verification checklist
 
 - After install:
   - `store.config` contains `setup_completed = true` once the welcome flow finishes
-  - `LocalAIInstalled` matches the selected task
-  - `SystemMemoryGB` is set
   - `C:\Program Files\Open2E\Open2E.exe` exists
   - Start Menu shortcut created under `Open2E` group
-  - (Optional) Desktop shortcut if "Create desktop icon" task was checked
+  - Desktop shortcut appears (if not removed manually)
   - App appears in Windows Settings > Apps with proper icon
-  - If local AI was selected:
-    - Ollama service is installed and can start
-    - `.ollama/models` contains phi4‑mini blobs/manifests
 
 ## Troubleshooting
 
 - `iscc` not found: add Inno Setup to PATH or use its full path
-- Installer size too large: large payloads are now handled by Inno Setup; ensure they are not listed in `tauri.conf.json -> bundle.resources`
 - Script failures:
-  - Run PowerShell as admin and execute scripts manually from `C:\ProgramData\Open2E\Resources\scripts`
-  - Check temp logs: the `install_phi4_mini.ps1` writes logs under `%TEMP%\open2e_phi4_mini_install.log`
-- Ollama conflicts:
-  - Ensure no running `ollama*` processes; scripts attempt to stop/kill before copying
+  - Run PowerShell as admin and execute `"{app}\scripts\set_ollama_variable.ps1"` manually
+  - Confirm the variable value with `Get-Item Env:OLLAMA_HOST`
 
 ## Installer UI and icons
 
@@ -124,32 +91,23 @@ The installer displays branded UI elements:
 
 The executable's embedded icon comes from `src-tauri/icons/icon.ico` (set in `tauri.conf.json`).
 
-## Installer tasks
-
-Two optional tasks appear during installation:
-
-1. "Install local AI (Ollama + phi4-mini)" - Auto-checked if RAM ≥ 16 GB
-2. "Create a desktop icon" - Unchecked by default (user can opt-in)
-
 ## File map (key files)
 
 ```
 open2e.iss                                      ; Inno Setup script
 INSTALLER.md                                    ; This guide
-EULA.md                                         ; End user license agreement (shown in installer)
+EULA.txt                                        ; End user license agreement (shown in installer)
 src-tauri/icons/icon.ico                        ; App icon (embedded in exe, used in installer)
 src-tauri/icons/icon.png                        ; Installer wizard images
 src-tauri/tauri.conf.json                       ; Tauri bundle config (no large payloads)
 src-tauri/src/commands/window.rs                ; Loads setup state from Tauri store
 src/pages/setup/{layout.tsx,Welcome.tsx}        ; Post-install welcome only
-src-tauri/src/scripts/*.ps1                     ; Install/initialize scripts
-src-tauri/resources/{ollama,phi4_mini}/...      ; Payloads used by installer
+src-tauri/src/scripts/set_ollama_variable.ps1   ; Configures Ollama endpoint during install
 ```
 
 ## Notes
 
-- Current version: **0.3.0** (defined in `open2e.iss` as `MyAppVersion`)
-- The RAM check is a coarse estimate (based on OS‑reported memory). Users can always override the local AI task selection.
-- You can read `LocalAIInstalled` at runtime to adjust UI (optional).
+- Current version: **0.4.0** (defined in `open2e.iss` as `MyAppVersion`)
+- The installer no longer provisions local AI models; it only configures the Ollama endpoint variable.
 - All icons are sourced from the executable's embedded icon resource (`src-tauri/icons/icon.ico`). The installer wizard images use `.png` versions for better scaling.
-- The installer displays the EULA (`EULA.md`) during installation as per `LicenseFile` directive.
+- The installer displays the EULA (`EULA.txt`) during installation as per the `LicenseFile` directive.

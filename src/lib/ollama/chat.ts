@@ -2,7 +2,7 @@ import { EVALUATION_MODEL } from "./models";
 import { Message } from "@/models";
 import { nanoid } from "nanoid";
 import { getChatContext } from "../context/chat";
-import { initializeOllama } from "./setup";
+import { initializeOllama, isLocalLLMInstalled } from "./utils";
 import { fetch } from "@tauri-apps/plugin-http";
 
 export const chat = async (conversation: Message[]): Promise<Message> => {
@@ -10,6 +10,11 @@ export const chat = async (conversation: Message[]): Promise<Message> => {
 
   try {
     // optional: keep your existing initialization step
+    const installed = await isLocalLLMInstalled();
+    if (!installed) {
+      throw new Error("Local LLM dependencies are not installed.");
+    }
+
     await initializeOllama();
 
     const messages = [

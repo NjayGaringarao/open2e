@@ -8,19 +8,23 @@ import * as ollama from "@/lib/ollama";
 import { useDialog } from "@/context/dialog";
 import { add } from "@/database/evaluation";
 import { insertAIDetection } from "@/database/aiDetection";
-import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { LOCAL_MODEL, ONLINE_MODEL } from "@/constant/llmModel";
 import { useAnalyticsContext } from "./analytics/AnalyticsContext";
 import { useRubric } from "./rubric";
 import { Rubric } from "@/database/rubric";
 import { RECOMMENDED_MEMORY } from "@/constant/memory";
+import { useStatus, LLMStatus } from "./status";
 
 export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
-  const { status } = useConnectionStatus();
+  const { status: llmStatus } = useStatus();
   const { triggerRefresh } = useAnalyticsContext();
   const { systemMemory } = useSettings();
   const { alert } = useDialog();
   const { rubrics } = useRubric();
+  const isOnline = llmStatus === LLMStatus.ONLINE;
+  const canRunOffline = llmStatus === LLMStatus.OFFLINE_READY;
+  const insufficientMemory = llmStatus === LLMStatus.OFFLINE_LOW_RAM;
+  const missingDependencies = llmStatus === LLMStatus.OFFLINE_NOT_SETUP;
   const [isLoading, setIsLoading] = useState(false);
   const [articleList, setArticleList] = useState<Article[]>([]);
   const [question, setQuestion] = useState<Question>({
@@ -63,7 +67,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     };
 
     if (question.committed !== question.tracked || articleList.length === 0) {
-      if (status === "ONLINE") {
+      if (isOnline) {
         await fetchArticles();
       } else {
         setArticleList([
@@ -98,8 +102,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error || !result) {
-        // Use Offline evaluation instead
-        return evaluateOffline();
+        return null;
       }
 
       return result;
@@ -107,13 +110,28 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
 
     // Implementation of evaluation using ollama
     const evaluateOffline = async (): Promise<Result | null> => {
-      // Check system memory before proceeding
-      if (systemMemory < RECOMMENDED_MEMORY) {
-        alert({
-          title: "Evaluation Failed",
-          description:
-            "Not enough system memory for optimal performance. Please connect to the internet.",
-        });
+      if (!canRunOffline) {
+        if (insufficientMemory) {
+          alert({
+            title: "Evaluation Unavailable",
+            description: `Not enough system memory detected (${systemMemory}GB). Offline evaluation requires at least ${RECOMMENDED_MEMORY}GB or an internet connection.`,
+            mode: "ERROR",
+          });
+        } else if (missingDependencies) {
+          alert({
+            title: "Evaluation Unavailable",
+            description:
+              "Local AI dependencies are missing. Install Ollama and download the phi4-mini model, or reconnect to the internet.",
+            mode: "ERROR",
+          });
+        } else {
+          alert({
+            title: "Evaluation Unavailable",
+            description:
+              "Offline evaluation is not available right now. Please reconnect to the internet.",
+            mode: "ERROR",
+          });
+        }
         return null;
       }
       console.log(
@@ -143,8 +161,11 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       return result;
     };
 
-    if (status === "ONLINE") {
+    if (isOnline) {
       evaluation = await evaluateOnline();
+      if (!evaluation && canRunOffline) {
+        evaluation = await evaluateOffline();
+      }
     } else {
       evaluation = await evaluateOffline();
     }
@@ -193,7 +214,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
       answer: sheet.committedAnswer,
       score: sheet.score,
       justification: sheet.justification,
-      llm_model: status === "ONLINE" ? ONLINE_MODEL : LOCAL_MODEL,
+      llm_model: llmStatus === LLMStatus.ONLINE ? ONLINE_MODEL : LOCAL_MODEL,
       ai_detection_id: aiDetectionId,
       rubric_id: selectedRubric?.id || 1,
     });

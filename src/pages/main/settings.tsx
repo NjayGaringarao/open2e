@@ -2,7 +2,6 @@ import DropDown from "@/components/container/DropDown";
 import { SettingsIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
-import { LocalSetupProvider } from "@/context/setup/local";
 import TTS from "@/components/settings/TTS";
 import ThemeToggle from "@/components/settings/ThemeToggle";
 import MainContentBox from "@/components/container/MainContentBox";
@@ -48,9 +47,7 @@ export default function Settings() {
           }
           isDefaultOpen
         >
-          <LocalSetupProvider>
-            <LLMSource />
-          </LocalSetupProvider>
+          <LLMSource />
         </DropDown>
 
         <DropDown

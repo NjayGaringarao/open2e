@@ -35,11 +35,24 @@ This table shows which AI features are available based on the currently selected
 | **Available** (✔) | The feature is fully functional and ready to use. | **Green** indicates the feature is available. |
 | **Unavailable** (X) | The feature is not working, often due to a missing requirement (e.g., missing **Internet** for AI Detection on Local LLM). | **Red** indicates the feature is unavailable. |
 
+### Installing Ollama + phi4-mini (Windows)
+Follow these steps to enable offline AI:
+1. **Install Ollama**
+   * Open **PowerShell** as Administrator.
+   * Run: \`winget install Ollama.Ollama\`.
+   * After installation, restart Open2E if it is currently running.
+2. **Download the phi4-mini model**
+   * Open **PowerShell** and run: \`ollama pull phi4-mini\`.
+   * Wait for the download to finish (this may take several minutes).
+3. **Verify installation inside Open2E**
+   * Go to **Settings → LLM Source and Capability**.
+   * Confirm the status shows **Offline Ready**. If not, reinstall Ollama and phi4-mini.
+
 ### Troubleshooting
-* **Reinstall Local LLM**: If you encounter issues with a local model, click **Reinstall Local LLM** at the bottom to attempt to fix the local installation.
+* **Reinstall Local LLM**: If you encounter issues with a local model, reinstall Ollama and phi4-mini.
 * **Connectivity**: If using an Online LLM, ensure your device has a stable internet connection.
 
-> Note: Feature availability (Evaluation, AI Detection, AI Chat) can change instantly based on your chosen LLM and network status.
+> Note: Feature availability (Evaluation, AI Detection, AI Chat) can change instantly based on your network status, hardware, and software configuration  .
 
 ---
 ## Text to Speech

@@ -12,12 +12,12 @@ import {
 
 import * as openai from "@/lib/openai";
 import * as ollama from "@/lib/ollama";
-import { useConnectionStatus } from "@/hooks/useConnectionStatus";
 import { useSettings } from "@/context/main/settings";
 import { RECOMMENDED_MEMORY } from "@/constant/memory";
+import { useStatus, LLMStatus } from "@/context/main/status";
 
 export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
-  const { status } = useConnectionStatus();
+  const { status: llmStatus } = useStatus();
   const { systemMemory } = useSettings();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] =
@@ -123,26 +123,28 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 
     let replyFromLLM: Message | null = null;
 
-    if (status === "ONLINE") {
+    if (llmStatus === LLMStatus.ONLINE) {
       replyFromLLM = await openai.chat(messages);
-    } else {
-      // Check system memory before using ollama
-      if (systemMemory < RECOMMENDED_MEMORY) {
-        const now = new Date().toISOString();
-        const errorMessage: Message = {
-          id: nanoid(),
-          conversation_id: activeConversation.id,
-          role: "assistant",
-          status: "FAILED",
-          content: `Chat is unavailable. Your system requires at least ${RECOMMENDED_MEMORY}GB of memory for optimal offline performance. Please connect to the internet.`,
-          created_at: now,
-          updated_at: now,
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-        setIsGenerating(false);
-        return;
-      }
+    } else if (llmStatus === LLMStatus.OFFLINE_READY) {
       replyFromLLM = await ollama.chat(messages);
+    } else {
+      const now = new Date().toISOString();
+      const reason =
+        llmStatus === LLMStatus.OFFLINE_LOW_RAM
+          ? `Chat is unavailable. Your system requires at least ${RECOMMENDED_MEMORY}GB of memory (currently ${systemMemory}GB). Please connect to the internet to continue.`
+          : "Chat is unavailable. Install Ollama and the phi4-mini model or reconnect to the internet.";
+      const errorMessage: Message = {
+        id: nanoid(),
+        conversation_id: activeConversation.id,
+        role: "assistant",
+        status: "FAILED",
+        content: reason,
+        created_at: now,
+        updated_at: now,
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      setIsGenerating(false);
+      return;
     }
 
     if (replyFromLLM && lastMessage) {

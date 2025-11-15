@@ -23,6 +23,18 @@ const AnswerSheet = () => {
   const [isResultVisible, setIsResultVisible] = useState(false);
   const [color, setColor] = useState("bg-uGrayLight");
 
+  const mapScoreColor = (score: number, totalScore: number) => {
+    if (totalScore <= 0 || score == null) return "bg-uGrayLight";
+    const percentage = Math.max(0, Math.min(1, score / totalScore));
+
+    const bucket = Math.round(percentage * 10);
+
+    if (bucket >= 0 && bucket <= 10) {
+      return `bg-score-${bucket}`;
+    }
+    return "bg-uGrayLight";
+  };
+
   const handlePress = () => {
     if (sheet.score === null || isAnswerModified) evaluateSheet();
     else setIsResultVisible(true);
@@ -32,7 +44,7 @@ const AnswerSheet = () => {
     // Set color based on evaluation state
     setColor(
       sheet.score !== null && !isAnswerModified && sheet.committedAnswer !== ""
-        ? `bg-score-${sheet.score}`
+        ? mapScoreColor(sheet.score, selectedRubric?.total_score || 10)
         : "bg-uGrayLight"
     );
 

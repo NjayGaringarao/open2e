@@ -1,6 +1,6 @@
 [package]
 name = "Open2e"
-version = "0.4.1"
+version = "0.5.0"
 description = "A Tauri App"
 authors = ["NJ Garingarao <ninogaringarao13@gmail.com>", "AJ Marquez", "JP Marquez"]
 edition = "2021"

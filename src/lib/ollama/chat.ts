@@ -4,9 +4,29 @@ import { nanoid } from "nanoid";
 import { getChatContext } from "../context/chat";
 import { initializeOllama, isLocalLLMInstalled } from "./utils";
 import { fetch } from "@tauri-apps/plugin-http";
+import { ENVIRONMENT } from "@/constant/env";
+
+// Mock chat function (similar to backend's getMockChat)
+export const getMockChat = (conversation: Message[]): Message => {
+  const now = new Date().toISOString();
+  return {
+    id: nanoid(),
+    conversation_id: conversation[0]?.conversation_id || nanoid(),
+    role: "assistant",
+    status: "SUCCESS",
+    content: "This Response is for development purpose only.",
+    created_at: now,
+    updated_at: now,
+  };
+};
 
 export const chat = async (conversation: Message[]): Promise<Message> => {
   const now = new Date().toISOString();
+
+  // Development mode: return mock data
+  if (ENVIRONMENT !== "PRODUCTION") {
+    return getMockChat(conversation);
+  }
 
   try {
     // optional: keep your existing initialization step

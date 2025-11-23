@@ -8,6 +8,7 @@ import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
 import { initializeOllama, isLocalLLMInstalled } from "./utils";
 import { fetch } from "@tauri-apps/plugin-http";
+import { ENVIRONMENT } from "@/constant/env";
 
 interface IEvaluate {
   question: string;
@@ -16,12 +17,29 @@ interface IEvaluate {
   totalScore?: number;
 }
 
+// Mock evaluation function (similar to backend's mockEvaluation)
+export const mockEvaluation = (totalScore: number = 10): Result => {
+  return {
+    result: {
+      score: Math.floor(Math.random() * (totalScore + 1)),
+      justification: "This Response is for development purpose only.",
+    },
+    suggested_query: "computer literacy basics",
+    error: null,
+  };
+};
+
 export const evaluate = async ({
   question,
   answer,
   rubric,
   totalScore = 10,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
+  // Development mode: return mock data
+  if (ENVIRONMENT !== "PRODUCTION") {
+    return { result: mockEvaluation(totalScore) };
+  }
+
   try {
     // optional: keeps your existing Tauri command to ensure Ollama is running
     const installed = await isLocalLLMInstalled();

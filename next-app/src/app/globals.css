@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #e6a91d;
+  --background: #f7f7f8;
+  --secondary: rgba(0, 171, 191, 0.14);
+  --panel: #efeff1;
+  --uBlack: #121419;
+  --uGray: #3b3f4a;
+  --uGrayLight: #666a75;
+  --uGrayLightLight: #9aa0ad;
+  --uRed: #dc2626;
+  --uGreen: #22c55e;
+  --uBlue: #2563eb;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary);
+  --color-background: var(--background);
+  --color-secondary: var(--secondary);
+  --color-panel: var(--panel);
+  --color-uBlack: var(--uBlack);
+  --color-uGray: var(--uGray);
+  --color-uGrayLight: var(--uGrayLight);
+  --color-uGrayLightLight: var(--uGrayLightLight);
+  --color-uRed: var(--uRed);
+  --color-uGreen: var(--uGreen);
+  --color-uBlue: var(--uBlue);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #ffc131;
+    --background: #0d1117;
+    --secondary: rgba(1, 191, 212, 0.14);
+    --panel: #151b23;
+    --uBlack: #0a0f18;
+    --uGray: #eaeef4;
+    --uGrayLight: #ced1d8;
+    --uGrayLightLight: #5c6168;
+    --uRed: #ef4444;
+    --uGreen: #34d17c;
+    --uBlue: #60a5fa;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

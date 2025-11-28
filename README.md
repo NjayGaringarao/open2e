@@ -53,16 +53,18 @@ Open2E is a desktop application built with Tauri that provides automated evaluat
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/NjayGaringarao/open2e
 cd open2e
 ```
 
 ### Step 2: Install Dependencies
 
 ```bash
+# Navigate to the Tauri app directory
+cd tauri-app
+
 # Install Node.js dependencies
 npm install
-
 ```
 
 ### Step 3: Build and Run
@@ -72,7 +74,7 @@ npm install
 npm run tauri dev
 
 # Build for production
-npm run tauri build
+npm run build:installer
 ```
 
 ## Usage
@@ -129,54 +131,69 @@ You can update rubrics anytime to refine assessment standards, enabling flexible
 
 ```
 open2e/
-├── src/                          # Frontend source code
-│   ├── components/               # React components
-│   │   ├── analytics/           # Analytics dashboard components
-│   │   ├── chat/                # Chat system components
-│   │   ├── container/           # Container and modal components
-│   │   ├── evaluate/            # Evaluation components
-│   │   ├── history/             # Evaluation history components
-│   │   ├── rubric/              # Rubric management components
-│   │   ├── settings/            # Settings panel components
-│   │   ├── setup/               # Setup wizard components
-│   │   └── ui/                  # Reusable UI components
-│   ├── constant/                # Application constants
-│   │   ├── eula.ts             # End User License Agreement
-│   │   ├── helpContent/        # Help content components
-│   │   └── ...                 # Other constants
-│   ├── context/                 # React context providers
-│   │   ├── main/               # Main application context
-│   │   ├── setup/              # Setup wizard context
-│   │   └── speech/             # Speech recognition context
-│   ├── database/                # Database operations
-│   │   ├── analytics/          # Analytics data management
-│   │   └── ...                 # Database schemas and operations
-│   ├── hooks/                   # Custom React hooks
-│   ├── lib/                     # Utility libraries
-│   │   ├── ollama/             # Ollama integration
-│   │   ├── openai/             # OpenAI API integration
-│   │   └── sapling/            # Sapling AI integration
-│   ├── models/                  # TypeScript type definitions
-│   ├── pages/                   # Application pages
-│   │   ├── main/               # Main application pages
-│   │   └── setup/              # Setup wizard pages
-│   ├── types/                   # Type definitions
-│   └── utils/                   # Utility functions
-├── src-tauri/                   # Tauri backend (Rust)
-│   ├── src/                     # Rust source code
-│   │   ├── commands/           # Tauri commands
-│   │   ├── migrations/         # Database migrations
-│   │   └── scripts/            # PowerShell scripts
-│   ├── icons/                   # Application icons
-│   └── capabilities/           # Tauri capabilities
-├── public/                      # Static assets
-├── dist/                        # Build output
-├── EULA.md                      # End User License Agreement
-├── LICENSE.md                   # Project license
-└── package.json                 # Node.js dependencies
+├── tauri-app/                   # Tauri desktop application
+│   ├── src/                     # Frontend source code
+│   │   ├── components/          # React components
+│   │   │   ├── analytics/      # Analytics dashboard components
+│   │   │   ├── chat/           # Chat system components
+│   │   │   ├── container/      # Container and modal components
+│   │   │   ├── evaluate/       # Evaluation components
+│   │   │   ├── history/        # Evaluation history components
+│   │   │   ├── rubric/         # Rubric management components
+│   │   │   ├── settings/       # Settings panel components
+│   │   │   ├── setup/          # Setup wizard components
+│   │   │   └── ui/            # Reusable UI components
+│   │   ├── constant/           # Application constants
+│   │   │   ├── eula.ts        # End User License Agreement
+│   │   │   ├── helpContent/   # Help content components
+│   │   │   └── ...            # Other constants
+│   │   ├── context/            # React context providers
+│   │   │   ├── main/          # Main application context
+│   │   │   ├── setup/         # Setup wizard context
+│   │   │   └── speech/        # Speech recognition context
+│   │   ├── database/           # Database operations
+│   │   │   ├── analytics/     # Analytics data management
+│   │   │   └── ...            # Database schemas and operations
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── lib/                # Utility libraries
+│   │   │   ├── ollama/        # Ollama integration
+│   │   │   ├── openai/        # OpenAI API integration
+│   │   │   └── sapling/       # Sapling AI integration
+│   │   ├── models/             # TypeScript type definitions
+│   │   ├── pages/              # Application pages
+│   │   │   ├── main/          # Main application pages
+│   │   │   └── setup/         # Setup wizard pages
+│   │   ├── types/              # Type definitions
+│   │   └── utils/              # Utility functions
+│   ├── src-tauri/              # Tauri backend (Rust)
+│   │   ├── src/                # Rust source code
+│   │   │   ├── commands/      # Tauri commands
+│   │   │   ├── migrations/    # Database migrations
+│   │   │   └── scripts/       # PowerShell scripts
+│   │   ├── icons/              # Application icons
+│   │   └── capabilities/      # Tauri capabilities
+│   ├── public/                 # Static assets
+│   ├── dist/                   # Build output
+│   ├── EULA.txt                # End User License Agreement
+│   ├── package.json            # Node.js dependencies
+│   └── ...                     # Other Tauri app files
+├── next-app/                # Next.js web server
+│   ├── src/                    # Next.js source code
+│   │   ├── app/                # Next.js app directory
+│   │   │   ├── api/           # API routes
+│   │   │   └── ...            # Next.js pages
+│   │   ├── components/         # React components
+│   │   ├── lib/               # Utility libraries
+│   │   └── types/             # Type definitions
+│   ├── public/                # Static assets
+│   └── package.json           # Node.js dependencies
+├── LICENSE.md                  # Project license
+└── README.md                   # Project documentation
 ```
 
 ### Available Scripts
+
+Navigate to the `tauri-app` directory first, then run:
 
 ```bash
 npm run tauri dev          # Start development server

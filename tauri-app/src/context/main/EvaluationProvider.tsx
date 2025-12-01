@@ -241,6 +241,18 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     setSheet(DEFAULT_LEARNERSHEET);
   };
 
+  const clearResult = () => {
+    setSheet((prev) => ({
+      ...prev,
+      score: null,
+      justification: "",
+      committedAnswer: "",
+      detectedAI: undefined,
+      aiDetectionData: undefined,
+    }));
+    setArticleList([]);
+  };
+
   return (
     <EvaluationContext.Provider
       value={{
@@ -252,6 +264,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         evaluateSheet,
         saveSheet,
         clearSheet,
+        clearResult,
         articleList,
         selectedRubric,
         updateSelectedRubric: (rubric) => {

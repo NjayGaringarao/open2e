@@ -15,6 +15,7 @@ export interface EvaluationContextType {
   evaluateSheet: () => Promise<void>;
   saveSheet: () => Promise<void>;
   clearSheet: () => void;
+  clearResult: () => void;
   suggestedQuery?: string;
   isLoading: boolean;
   articleList: Article[];

@@ -7,7 +7,7 @@ import { cn } from "@/utils/style";
 import { Popover, PopoverPanel, Transition } from "@headlessui/react";
 
 const QuestionBox = () => {
-  const { question, updateQuestion, isLoading } = useEvaluation();
+  const { question, updateQuestion, isLoading, sheet } = useEvaluation();
   const [isFocus, setIsFocus] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
   const [suggestionList, setSuggestionList] = useState<Question[]>([]);
@@ -71,7 +71,7 @@ const QuestionBox = () => {
 
   return (
     <div className="relative">
-      <p className="text-uGrayLight text-xl mb-2 font-semibold">Question</p>
+      <p className="text-uGrayLight/80 text-base mb-2">Question</p>
 
       <Popover className="relative">
         <InputBox
@@ -80,7 +80,9 @@ const QuestionBox = () => {
           placeholder="Type the question here..."
           withVoiceInput
           inputClassName="px-4 py-3 text-base"
-          disabled={isLoading}
+          disabled={
+            isLoading || (sheet.score !== null && sheet.justification !== "")
+          }
           onFocus={() => setIsFocus(true)}
           onBlur={handleOnBlur}
         />

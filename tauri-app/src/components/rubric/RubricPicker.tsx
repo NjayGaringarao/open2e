@@ -10,20 +10,38 @@ import { ChevronDownIcon, CheckIcon } from "lucide-react";
 import clsx from "clsx";
 import { useRubric } from "@/context/main/rubric";
 import { cn } from "@/utils/style";
+import { parseContentToBrackets } from "@/utils/rubricUtils";
+import { useState, useEffect } from "react";
+import RubricCriteriaList from "./RubricCriteria";
 
 interface RubricPickerProps {
   selectedRubricId: number | null;
   onRubricSelect: (rubric: Rubric) => void;
   disabled?: boolean;
+  showScoreBlock?: boolean;
 }
 
 const RubricPicker = ({
   selectedRubricId,
   onRubricSelect,
   disabled = false,
+  showScoreBlock = false,
 }: RubricPickerProps) => {
   const { rubrics, loading } = useRubric();
   const selectedRubric = rubrics.find((r) => r.id === selectedRubricId);
+  const [brackets, setBrackets] = useState<any[]>([]);
+  const [note, setNote] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedRubric && showScoreBlock) {
+      const parsed = parseContentToBrackets(selectedRubric.content);
+      setBrackets(parsed.brackets);
+      setNote(parsed.note || "");
+    } else {
+      setBrackets([]);
+      setNote("");
+    }
+  }, [selectedRubric, showScoreBlock]);
 
   const handleRubricSelect = (rubric: Rubric) => {
     if (disabled) return;
@@ -43,7 +61,7 @@ const RubricPicker = ({
 
   return (
     <div className="w-full">
-      <p className="text-uGrayLight text-xl mb-2 font-semibold">Rubric</p>
+      <p className="text-uGrayLight/80 text-base mb-2">Rubric</p>
       <Listbox value={selectedRubric} onChange={handleRubricSelect}>
         <div className="relative">
           <ListboxButton
@@ -61,7 +79,9 @@ const RubricPicker = ({
             )}
           >
             <span className="text-left">
-              {selectedRubric ? selectedRubric.name : "Select a rubric"}
+              {selectedRubric
+                ? `${selectedRubric.name} - ${selectedRubric.total_score} points`
+                : "Select a rubric"}
             </span>
             <ChevronDownIcon className="w-5 h-5" />
           </ListboxButton>
@@ -121,6 +141,11 @@ const RubricPicker = ({
           </Transition>
         </div>
       </Listbox>
+      {showScoreBlock && selectedRubric && brackets.length > 0 && (
+        <div className="mt-4">
+          <RubricCriteriaList brackets={brackets} note={note} />
+        </div>
+      )}
     </div>
   );
 };

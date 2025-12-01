@@ -9,7 +9,7 @@ export default function Evaluate() {
   return (
     <div className="flex h-screen flex-row gap-6">
       {/* Main Content */}
-      <MainContentBox className="flex flex-col gap-8">
+      <MainContentBox className="flex flex-col gap-8 overflow-hidden">
         <div className="flex flex-row gap-4 py-8 items-center text-uGray text-4xl font-mono font-semibold">
           <ClipboardCheck className="h-10 w-10" />
           Open Ended Evaluation

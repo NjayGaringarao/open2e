@@ -99,10 +99,7 @@ const InputCard = ({
           )}
         </div>
 
-        <LoadingOverlay
-          isVisible={isEvaluating}
-          prompt={`Evaluating using GPT-4o/Phi4-mini`}
-        />
+        <LoadingOverlay isVisible={isEvaluating} />
       </div>
     </div>
   );

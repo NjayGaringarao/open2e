@@ -1,4 +1,4 @@
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useRef } from "react";
 import { EvaluationContext, Question } from "./EvaluationContext";
 import { Article, Result, SheetData } from "@/types/evaluation";
 import { DEFAULT_LEARNERSHEET } from "@/constant/default";
@@ -26,6 +26,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   const insufficientMemory = llmStatus === LLMStatus.OFFLINE_LOW_RAM;
   const missingDependencies = llmStatus === LLMStatus.OFFLINE_NOT_SETUP;
   const [isLoading, setIsLoading] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
   const [articleList, setArticleList] = useState<Article[]>([]);
   const [question, setQuestion] = useState<Question>({
     tracked: "",
@@ -33,6 +34,17 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
   });
   const [sheet, setSheet] = useState<SheetData>(DEFAULT_LEARNERSHEET);
   const [selectedRubric, setSelectedRubric] = useState<Rubric | null>(null);
+
+  // Cancellation state
+  const currentEvaluationIdRef = useRef<number>(0);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Get model name for display
+  const evaluationModelName = isOnline
+    ? "GPT-4o (Online)"
+    : canRunOffline
+    ? "Phi4-mini (Offline)"
+    : "GPT-4o/Phi4-mini";
 
   // Load default rubric on mount
   useEffect(() => {
@@ -81,13 +93,58 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const cancelEvaluation = () => {
+    // Abort any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+
+    // Increment evaluation ID to invalidate any late results
+    currentEvaluationIdRef.current += 1;
+
+    // Reset evaluation state
+    setIsEvaluating(false);
+    setIsLoading(false);
+
+    // Clear transient evaluation state (full reset)
+    setArticleList([]);
+    setSheet((prev) => ({
+      ...prev,
+      score: null,
+      justification: "",
+      committedAnswer: "",
+      detectedAI: undefined,
+      aiDetectionData: undefined,
+    }));
+  };
+
   const evaluateSheet = async () => {
+    // Auto-cancel previous evaluation if one is in progress
+    if (isEvaluating && abortControllerRef.current) {
+      cancelEvaluation();
+    }
+
+    // Create new evaluation ID and abort controller
+    const evaluationId = ++currentEvaluationIdRef.current;
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    setIsEvaluating(true);
     setIsLoading(true);
 
     let evaluation: Result | null = null;
 
     // Implementation of evaluation using openai
     const evaluateOnline = async (): Promise<Result | null> => {
+      // Check if cancelled
+      if (
+        abortController.signal.aborted ||
+        evaluationId !== currentEvaluationIdRef.current
+      ) {
+        return null;
+      }
+
       console.log(
         "Evaluating with rubric:",
         selectedRubric?.name,
@@ -99,7 +156,16 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
         totalScore: selectedRubric?.total_score || 10,
+        signal: abortController.signal,
       });
+
+      // Check if cancelled after request
+      if (
+        abortController.signal.aborted ||
+        evaluationId !== currentEvaluationIdRef.current
+      ) {
+        return null;
+      }
 
       if (error || !result) {
         return null;
@@ -110,7 +176,21 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
 
     // Implementation of evaluation using ollama
     const evaluateOffline = async (): Promise<Result | null> => {
+      // Check if cancelled
+      if (
+        abortController.signal.aborted ||
+        evaluationId !== currentEvaluationIdRef.current
+      ) {
+        return null;
+      }
+
       if (!canRunOffline) {
+        if (
+          abortController.signal.aborted ||
+          evaluationId !== currentEvaluationIdRef.current
+        ) {
+          return null;
+        }
         if (insufficientMemory) {
           alert({
             title: "Evaluation Unavailable",
@@ -134,6 +214,15 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         }
         return null;
       }
+
+      // Check if cancelled before starting evaluation
+      if (
+        abortController.signal.aborted ||
+        evaluationId !== currentEvaluationIdRef.current
+      ) {
+        return null;
+      }
+
       console.log(
         "Evaluating with rubric (Ollama):",
         selectedRubric?.name,
@@ -145,16 +234,27 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
         totalScore: selectedRubric?.total_score || 10,
+        signal: abortController.signal,
       });
 
+      // Check if cancelled after request
+      if (
+        abortController.signal.aborted ||
+        evaluationId !== currentEvaluationIdRef.current
+      ) {
+        return null;
+      }
+
       if (error || !result) {
-        alert({
-          title: "Evaluation Failed",
-          description: `Evaluation Failed: ${
-            error ?? "There was an issue running evaluation."
-          }`,
-          mode: "ERROR",
-        });
+        if (!abortController.signal.aborted) {
+          alert({
+            title: "Evaluation Failed",
+            description: `Evaluation Failed: ${
+              error ?? "There was an issue running evaluation."
+            }`,
+            mode: "ERROR",
+          });
+        }
         return null;
       }
 
@@ -163,15 +263,38 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
 
     if (isOnline) {
       evaluation = await evaluateOnline();
-      if (!evaluation && canRunOffline) {
+      // Check cancellation before fallback
+      if (
+        !evaluation &&
+        canRunOffline &&
+        !abortController.signal.aborted &&
+        evaluationId === currentEvaluationIdRef.current
+      ) {
         evaluation = await evaluateOffline();
       }
     } else {
       evaluation = await evaluateOffline();
     }
 
-    evaluation && (await loadArticles(evaluation.suggested_query));
+    // Check if this evaluation was cancelled (late result from previous evaluation)
+    if (
+      evaluationId !== currentEvaluationIdRef.current ||
+      abortController.signal.aborted
+    ) {
+      setIsEvaluating(false);
+      setIsLoading(false);
+      abortControllerRef.current = null;
+      return;
+    }
+
+    // Load articles if evaluation succeeded
+    if (evaluation) {
+      await loadArticles(evaluation.suggested_query);
+    }
+
+    setIsEvaluating(false);
     setIsLoading(false);
+    abortControllerRef.current = null;
 
     if (evaluation === null) return;
 
@@ -259,6 +382,9 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         question,
         updateQuestion: setQuestion,
         isLoading,
+        isEvaluating,
+        cancelEvaluation,
+        evaluationModelName,
         sheet,
         updateSheet: setSheet,
         evaluateSheet,

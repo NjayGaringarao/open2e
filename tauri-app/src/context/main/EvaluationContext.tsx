@@ -18,6 +18,9 @@ export interface EvaluationContextType {
   clearResult: () => void;
   suggestedQuery?: string;
   isLoading: boolean;
+  isEvaluating: boolean;
+  cancelEvaluation: () => void;
+  evaluationModelName: string;
   articleList: Article[];
   selectedRubric: Rubric | null;
   updateSelectedRubric: (rubric: Rubric | null) => void;

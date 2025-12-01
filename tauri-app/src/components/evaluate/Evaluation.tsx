@@ -7,7 +7,7 @@ import { useRef, useEffect } from "react";
 import "swiper/css";
 
 const Evaluation = () => {
-  const { sheet, isLoading } = useEvaluation();
+  const { sheet, isLoading, isEvaluating } = useEvaluation();
   const swiperRef = useRef<SwiperType | null>(null);
 
   // Check if evaluation result exists
@@ -34,7 +34,7 @@ const Evaluation = () => {
         speed={300}
       >
         <SwiperSlide>
-          <InputCard swiperRef={swiperRef} isEvaluating={isLoading} />
+          <InputCard swiperRef={swiperRef} isEvaluating={isEvaluating} />
         </SwiperSlide>
         {hasResult && (
           <SwiperSlide>

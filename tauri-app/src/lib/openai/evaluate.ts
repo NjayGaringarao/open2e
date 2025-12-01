@@ -7,6 +7,7 @@ interface IEvaluate {
   answer: string;
   rubric?: string;
   totalScore?: number;
+  signal?: AbortSignal;
 }
 
 export const evaluate = async ({
@@ -14,12 +15,14 @@ export const evaluate = async ({
   answer,
   rubric,
   totalScore = 10,
+  signal,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
     const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, answer, rubric, totalScore }),
+      signal,
     });
 
     if (!res.ok) {
@@ -28,6 +31,10 @@ export const evaluate = async ({
 
     return await res.json();
   } catch (error: any) {
+    // Don't report error if it was aborted
+    if (error.name === "AbortError" || signal?.aborted) {
+      return { result: null, error: "Cancelled" };
+    }
     console.log(error);
     return { result: null, error: error.message || "Network error" };
   }

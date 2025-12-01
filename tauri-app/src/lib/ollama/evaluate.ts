@@ -15,6 +15,7 @@ interface IEvaluate {
   answer: string;
   rubric?: string;
   totalScore?: number;
+  signal?: AbortSignal;
 }
 
 // Mock evaluation function (similar to backend's mockEvaluation)
@@ -34,9 +35,20 @@ export const evaluate = async ({
   answer,
   rubric,
   totalScore = 10,
+  signal,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
+  // Check if cancelled before starting
+  if (signal?.aborted) {
+    return { result: null, error: "Cancelled" };
+  }
+  
   // Development mode: return mock data
   if (ENVIRONMENT !== "PRODUCTION") {
+    // Simulate a small delay to allow cancellation
+    await new Promise(resolve => setTimeout(resolve, 100));
+    if (signal?.aborted) {
+      return { result: null, error: "Cancelled" };
+    }
     return { result: mockEvaluation(totalScore) };
   }
 
@@ -77,7 +89,13 @@ ANSWERS: ${answer}
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      signal,
     });
+
+    // Check if cancelled
+    if (signal?.aborted) {
+      return { result: null, error: "Cancelled" };
+    }
 
     if (!res.ok) {
       throw new Error(`Ollama error: ${res.status} ${res.statusText}`);
@@ -107,10 +125,19 @@ ANSWERS: ${answer}
       parsedContent = rawContent;
     }
 
+    // Check if cancelled before parsing
+    if (signal?.aborted) {
+      return { result: null, error: "Cancelled" };
+    }
+
     const evaluation = dynamicSchema.parse(parsedContent);
 
     return { result: evaluation };
   } catch (error: any) {
+    // Don't report error if it was aborted
+    if (error.name === "AbortError" || signal?.aborted) {
+      return { result: null, error: "Cancelled" };
+    }
     console.warn(error);
     return { result: null, error: error?.message ?? String(error) };
   }

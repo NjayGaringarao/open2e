@@ -40,7 +40,7 @@ Source: "src-tauri\\target\\release\\Open2E.exe"; DestDir: "{app}"; Flags: ignor
 Source: "src-tauri\\src\\scripts\\set_ollama_variable.ps1"; DestDir: "{app}\\scripts"; Flags: ignoreversion
 
 ; Licenses
-Source: "LICENSE.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\\LICENSE.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\\{#MyAppName}"; Filename: "{app}\\{#MyAppExeName}"; IconFilename: "{app}\\{#MyAppExeName}"

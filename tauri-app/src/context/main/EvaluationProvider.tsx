@@ -156,6 +156,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
         totalScore: selectedRubric?.total_score || 10,
+        rubricId: selectedRubric?.id,
         signal: abortController.signal,
       });
 
@@ -234,6 +235,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
         answer: sheet.trackedAnswer,
         rubric: selectedRubric?.content,
         totalScore: selectedRubric?.total_score || 10,
+        rubricId: selectedRubric?.id,
         signal: abortController.signal,
       });
 

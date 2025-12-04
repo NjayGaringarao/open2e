@@ -1,7 +1,7 @@
 "use server";
 
 import { NextRequest, NextResponse } from "next/server";
-import { evaluateV1, mockEvaluation } from "@/lib/openai/evaluate";
+import { evaluateV2, mockEvaluation } from "@/lib/openai/evaluate";
 import { ENVIRONMENT } from "@/constant/env";
 
 export async function POST(req: NextRequest) {
@@ -19,11 +19,13 @@ export async function POST(req: NextRequest) {
       answer,
       rubric,
       totalScore = 10,
+      examples,
     }: {
       question: string;
       answer: string;
       rubric: string;
       totalScore?: number;
+      examples?: Array<{ role: "user" | "assistant"; content: string }>;
     } = await req.json();
 
     if (!question || !answer || !rubric) {
@@ -33,11 +35,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { result, error } = await evaluateV1({
+    const { result, error } = await evaluateV2({
       question,
       answer,
       rubric,
       totalScore,
+      examples,
     });
 
     if (error) {

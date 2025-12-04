@@ -12,7 +12,7 @@ const RubricCriteria = ({ brackets, note }: RubricCriteriaProps) => {
     <>
       <div className="flex flex-col gap-1">
         <h3 className="text-base text-uGrayLight">Score Brackets</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4">
           {brackets
             .sort((a, b) => a.minScore - b.minScore)
             .map((bracket) => (

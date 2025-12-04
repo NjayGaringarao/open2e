@@ -9,12 +9,14 @@ import { EVALUATION_MODEL } from "./models";
 import { initializeOllama, isLocalLLMInstalled } from "./utils";
 import { fetch } from "@tauri-apps/plugin-http";
 import { ENVIRONMENT } from "@/constant/env";
+import { getRubricExamples } from "@/database/rubric_example";
 
 interface IEvaluate {
   question: string;
   answer: string;
   rubric?: string;
   totalScore?: number;
+  rubricId?: number;
   signal?: AbortSignal;
 }
 
@@ -35,6 +37,7 @@ export const evaluate = async ({
   answer,
   rubric,
   totalScore = 10,
+  rubricId,
   signal,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   // Check if cancelled before starting
@@ -68,13 +71,24 @@ ANSWERS: ${answer}
 
     const instruction = getEvaluationInstruction(rubric, totalScore);
     const dynamicSchema = createEvaluationResultSchema(totalScore);
-    // const dynamicExamples = createEvaluationExamples(totalScore);
+
+    // Fetch examples from database if rubricId is provided
+    let examples: Array<{ role: "user" | "assistant"; content: string }> = [];
+    if (rubricId) {
+      const { examples: dbExamples, error: examplesError } =
+        await getRubricExamples(rubricId);
+      if (!examplesError && dbExamples.length > 0) {
+        examples = dbExamples;
+      }
+    }
 
     const messages = [
       { role: "system", content: instruction },
-      // ...dynamicExamples,
+      ...examples,
       { role: "user", content: userInput },
     ];
+
+    console.log(messages);
 
     const body = {
       model: EVALUATION_MODEL,

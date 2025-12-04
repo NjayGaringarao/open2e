@@ -1,12 +1,15 @@
 import { Result } from "@/types/evaluation";
 import { fetch } from "@tauri-apps/plugin-http";
 import { OPEN2E_BACKEND } from "@/constant/hostname";
+import { getRubricExamples } from "@/database/rubric_example";
+import { EvaluationExample } from "@/lib/context/evaluation/examples";
 
 interface IEvaluate {
   question: string;
   answer: string;
   rubric?: string;
   totalScore?: number;
+  rubricId?: number;
   signal?: AbortSignal;
 }
 
@@ -15,13 +18,24 @@ export const evaluate = async ({
   answer,
   rubric,
   totalScore = 10,
+  rubricId,
   signal,
 }: IEvaluate): Promise<{ result: Result | null; error?: string }> => {
   try {
-    const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v1`, {
+    // Fetch examples from database if rubricId is provided
+    let examples: EvaluationExample[] | undefined = undefined;
+    if (rubricId) {
+      const { examples: dbExamples, error: examplesError } =
+        await getRubricExamples(rubricId);
+      if (!examplesError && dbExamples.length > 0) {
+        examples = dbExamples;
+      }
+    }
+
+    const res = await fetch(`${OPEN2E_BACKEND}/api/evaluate/v2`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, answer, rubric, totalScore }),
+      body: JSON.stringify({ question, answer, rubric, totalScore, examples }),
       signal,
     });
 

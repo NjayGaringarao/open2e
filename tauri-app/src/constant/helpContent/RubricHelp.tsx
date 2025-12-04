@@ -20,6 +20,7 @@ This screen provides a list of your scoring models. Each Item's full details can
 * **Total Score**: The total score of the rubric.
 * **Score Brackets**: Review the quality descriptions associated with each point range.
 * **Additional Notes**: Check for any specific instructional rules the AI must follow during evaluation.
+* **Examples**: View example question-answer pairs with their evaluation results. Examples help the AI understand how to apply the rubric consistently.
 
 ---
 ## Creating a New Rubric
@@ -30,14 +31,28 @@ Use this form to build a detailed scoring guide for the AI.
     * Click **+ Add Score Bracket** to define a range of points (e.g., 0-4 points, 5-7 points).
     * For each bracket, write a clear, detailed criteria of the expected answer quality to earn that score.
 3. **Additional Notes (Optional)**: Use this space for any special grading instructions for the AI, such as rules for proportional scoring.
-4. **Ensure Coverage**: The **Score Coverage** bar must reach **100% Complete**. This means you have defined descriptions for every possible point from 0 up to your Total Score.
-5. **Save**: Click **Save Rubric** once all ranges are covered.
+4. **Examples (Optional)**: Add example question-answer pairs to help the AI understand how to apply your rubric:
+    * Click **+ Add Example** to create a new example.
+    * For each example, provide:
+        - **Question**: The question that will be evaluated.
+        - **Answer**: The student's answer to be evaluated.
+        - **Score**: The score this answer should receive (0 to Total Score).
+        - **Justification**: Explain why this score is appropriate, why it cannot be higher, and why it cannot be lower (use bullet points).
+        - **Suggested Query**: A helpful search query related to the question.
+    * Examples help the AI learn your grading standards and provide more consistent evaluations.
+5. **Ensure Coverage**: The **Score Coverage** bar must reach **100% Complete**. This means you have defined descriptions for every possible point from 0 up to your Total Score.
+6. **Save**: Click **Save Rubric** once all ranges are covered.
 
-> Note: Detailed, specific score bracket descriptions lead to more accurate and reliable AI evaluations.
+> Note: Detailed, specific score bracket descriptions and examples lead to more accurate and reliable AI evaluations.
 
 ---
 ## Updating a Rubric
 Each item in the list can be edited by clicking the **edit icon**. This will open a form to edit the details of a rubric.
+* You can modify the rubric name, total score, score brackets, additional notes, and examples.
+* For examples, you can:
+    - **Add** new examples by clicking **+ Add Example**.
+    - **Edit** existing examples by clicking the edit icon on an example.
+    - **Delete** examples by clicking the delete icon on an example.
 * Updating a rubric will not update the rubric in any evaluations that have already used it.
 
 ---

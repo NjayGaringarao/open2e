@@ -2,7 +2,7 @@ import { Result } from "@/types/evaluation";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import {
   getEvaluationInstruction,
-  createEvaluationExamples,
+  // createEvaluationExamples,
 } from "../context/evaluation";
 import { createEvaluationResultSchema } from "../schema";
 import { EVALUATION_MODEL } from "./models";
@@ -41,11 +41,11 @@ export const evaluate = async ({
   if (signal?.aborted) {
     return { result: null, error: "Cancelled" };
   }
-  
+
   // Development mode: return mock data
   if (ENVIRONMENT !== "PRODUCTION") {
     // Simulate a small delay to allow cancellation
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     if (signal?.aborted) {
       return { result: null, error: "Cancelled" };
     }
@@ -68,11 +68,11 @@ ANSWERS: ${answer}
 
     const instruction = getEvaluationInstruction(rubric, totalScore);
     const dynamicSchema = createEvaluationResultSchema(totalScore);
-    const dynamicExamples = createEvaluationExamples(totalScore);
+    // const dynamicExamples = createEvaluationExamples(totalScore);
 
     const messages = [
       { role: "system", content: instruction },
-      ...dynamicExamples,
+      // ...dynamicExamples,
       { role: "user", content: userInput },
     ];
 

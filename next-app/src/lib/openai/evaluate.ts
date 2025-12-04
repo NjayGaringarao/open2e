@@ -3,7 +3,7 @@ import { getEvaluationInstruction } from "@/lib/context/instruction";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { createEvaluationResultSchema } from "@/lib/schema";
 import { EVALUATION_MODEL, OPENAI_API_KEY } from "@/constant/env";
-import { createEvaluationExamples } from "@/lib/context/examples";
+// import { createEvaluationExamples } from "@/lib/context/examples";
 import { EvaluationResult } from "@/types/evaluation";
 
 interface IEvaluateInput {
@@ -33,7 +33,7 @@ export async function evaluate({
 
   try {
     const dynamicSchema = createEvaluationResultSchema(totalScore);
-    const dynamicExamples = createEvaluationExamples(totalScore);
+    // const dynamicExamples = createEvaluationExamples(totalScore);
 
     const raw = await openai.chat.completions.create({
       model: EVALUATION_MODEL,
@@ -44,7 +44,7 @@ export async function evaluate({
           role: "system",
           content: getEvaluationInstruction(rubric, totalScore),
         },
-        ...dynamicExamples,
+        // ...dynamicExamples,
         { role: "user", content: input },
       ],
     });

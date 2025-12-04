@@ -29,8 +29,8 @@ const Evaluation = () => {
           swiperRef.current = swiper;
         }}
         className="w-full h-full"
-        resistance={true}
-        resistanceRatio={0.85}
+        allowTouchMove={false}
+        resistance={false}
         speed={300}
       >
         <SwiperSlide>

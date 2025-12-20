@@ -1,1 +1,1 @@
-export const RECOMMENDED_MEMORY = 8;
+export const RECOMMENDED_MEMORY = 6;

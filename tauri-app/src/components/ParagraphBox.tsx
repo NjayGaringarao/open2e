@@ -1,7 +1,6 @@
 "use client";
-import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
-import { Mic, X } from "lucide-react";
+import { X } from "lucide-react";
 import { InputHTMLAttributes } from "react";
 
 interface IParagraphBox extends InputHTMLAttributes<HTMLTextAreaElement> {
@@ -32,13 +31,7 @@ const ParagraphBox = ({
   handleClear = () => {},
   ...textAreaProp
 }: IParagraphBox) => {
-  const { listen } = useSpeech();
-
-  const handleVoiceInput = async () => {
-    const result = await listen();
-    const newValue = value.concat(" ").concat(result);
-    setValue(newValue);
-  };
+  
 
   return (
     <div className={clsx("relative flex flex-col", containerClassname)}>
@@ -63,7 +56,7 @@ const ParagraphBox = ({
           "outline-primary",
           "placeholder:italic",
           inputClassName,
-          (withVoiceInput || withClearButton) && "pr-12"
+          withClearButton && "pr-12"
         )}
         value={value ?? ""}
         onChange={(e) => setValue(e.target.value)}
@@ -73,7 +66,7 @@ const ParagraphBox = ({
       <div
         className={clsx(
           "absolute bottom-0 top-0 right-4 flex flex-col justify-center gap-2",
-          disabled || !(withVoiceInput || withClearButton)
+          disabled || !withClearButton
             ? "hidden"
             : "visible"
         )}
@@ -87,11 +80,6 @@ const ParagraphBox = ({
             }}
           >
             <X className="text-uGrayLight hover:text-primary h-6 w-6" />
-          </button>
-        )}
-        {withVoiceInput && (
-          <button onClick={handleVoiceInput}>
-            <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
           </button>
         )}
       </div>

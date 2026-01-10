@@ -19,7 +19,7 @@ Open2E is a desktop application built with Tauri that provides automated evaluat
 
 - Built-in chat interface for discussing computer literacy topics
 - Context-aware responses focused on educational content
-- Voice interaction capabilities with speech recognition
+ 
 
 ### 📊 **Analytics**
 
@@ -39,7 +39,7 @@ Open2E is a desktop application built with Tauri that provides automated evaluat
   - Online: OpenAI GPT-4o
   - Offline: Ollama with Phi-4 Mini model
 - **Database**: SQLite (local storage)
-- **Additional**: Speech recognition, Voice visualization, Markdown rendering
+- **Additional**: Markdown rendering
 
 ## Installation
 
@@ -101,14 +101,14 @@ npm run build:installer
 1. Go to the "Chat" tab
 2. Ask questions about computer literacy topics
 3. Get educational responses and explanations
-4. Use voice interaction for hands-free operation
+ 
 
 #### ⚙️ **Settings**
 
 - Configure Appearance
 - Backup and Restore
 - View LLM Source and concurrent capability
-- Adjust voice and speech settings
+ 
 
 ### Evaluation Rubric
 
@@ -150,7 +150,7 @@ open2e/
 │   │   ├── context/            # React context providers
 │   │   │   ├── main/          # Main application context
 │   │   │   ├── setup/         # Setup wizard context
-│   │   │   └── speech/        # Speech recognition context
+ 
 │   │   ├── database/           # Database operations
 │   │   │   ├── analytics/     # Analytics data management
 │   │   │   └── ...            # Database schemas and operations
@@ -238,10 +238,7 @@ The application uses two SQLite databases:
    - Check system memory (16GB required is required for offline mode)
    - Restart the application to reinitialize Ollama
 
-3. **Voice Features Not Working**
-   - Ensure microphone permissions are granted
-   - Check browser/application microphone access
-   - Verify speech recognition is enabled in Windows
+ 
 
 ### Getting Help
 

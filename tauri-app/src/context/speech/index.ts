@@ -1,3 +1,2 @@
-export * from "./SpeechContext";
-export * from "./SpeechProvider";
-export * from "./useSpeech";
+// Speech functionality removed. Intentionally left blank.
+export {};

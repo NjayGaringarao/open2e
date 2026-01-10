@@ -3,11 +3,9 @@ import clsx from "clsx";
 import { nanoid } from "nanoid";
 import ArticleItem from "./ArticleItem";
 import SemiCircleProgress from "./SemiCircleProgress";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   ArrowRight,
-  Volume2,
-  VolumeOff,
   Save,
   Eye,
   Trash2,
@@ -15,7 +13,6 @@ import {
 import Button from "../Button";
 import Markdown from "../Markdown";
 import { useNavigate } from "react-router";
-import { useSpeech } from "@/context/speech";
 import { useChat } from "@/context/main/chat";
 import { detectAI } from "@/lib/sapling/detection";
 import { useConnectionStatus } from "@/hooks/useConnectionStatus";
@@ -28,7 +25,6 @@ interface OutputCardProps {
 const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
   // All hooks must be called first, before any conditional returns
   const navigate = useNavigate();
-  const { talk, ask, cancelTalk, cancelAsk } = useSpeech();
   const { sendMessage } = useChat();
   const {
     sheet,
@@ -42,11 +38,10 @@ const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
   } = useEvaluation();
 
   const { status: connectionStatus } = useConnectionStatus();
-  const [isSpeeching, setIsSpeeching] = useState(false);
+  
 
   // Now define helper functions that use the hooks' values
   const createConversation = async () => {
-    cancelInteract();
     await navigate("/chat", {});
     await sendMessage(
       `Hello, Lets discuss about the topics related to this question: "${question.tracked}"`,
@@ -68,36 +63,10 @@ const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
     }
   };
 
-  const interact = async () => {
-    if (sheet.justification) {
-      setIsSpeeching(true);
-      await talk(
-        `You've got the score of ${sheet.score} out of ${selectedRubric?.total_score}. It is because: `.concat(
-          sheet.justification
-        )
-      );
-
-      const isCreateConversation = await ask(
-        "Are you interested about this topic? Please answer in Yes or No."
-      );
-      setIsSpeeching(false);
-
-      if (isCreateConversation) createConversation();
-    }
-  };
-
-  const cancelInteract = () => {
-    setIsSpeeching(false);
-    cancelAsk();
-    cancelTalk();
-  };
+  // Speech interaction removed
 
   // useEffect must be called before any conditional returns
-  useEffect(() => {
-    interact();
-
-    return () => cancelInteract();
-  }, []);
+  // Removed effect that auto-started speech interaction
 
   // Helper function for token highlighting
   const getTokenHighlightStyle = (probability: number) => {
@@ -211,13 +180,7 @@ const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
                     )}
                   >
                     <p className="font-semibold text-lg">Justification</p>
-                    <Button
-                      onClick={isSpeeching ? cancelInteract : interact}
-                      secondary
-                      className="p-0"
-                    >
-                      {isSpeeching ? <VolumeOff /> : <Volume2 />}
-                    </Button>
+                    {/* Speech controls removed */}
                   </div>
                   <div className="px-4">
                     <Markdown text={sheet.justification} />

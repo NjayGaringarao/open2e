@@ -5,7 +5,7 @@ const ConfigHelp = () => {
 
 ---
 ## Getting Started
-This page allows you to customize the appearance, backup and restore your data, set up text-to-speech, and view the current LLM source and capability for the entire application.
+This page allows you to customize the appearance, backup and restore your data, and view the current LLM source and capability for the entire application.
 
 ---
 ## Appearance
@@ -55,14 +55,7 @@ Follow these steps to enable offline AI:
 > Note: Feature availability (Evaluation, AI Detection, AI Chat) can change instantly based on your network status, hardware, and software configuration  .
 
 ---
-## Text to Speech
-This section controls the audio output settings used throughout the application.
-
-1. **Voice Selection**: Use the dropdown menu (e.g., **Microsoft David - English (United States) (en-US)**) to select a different voice.
-2. **Adjust Controls**:
-    * **Rate**: Controls the speed of the speech.
-    * **Pitch**: Adjusts the tone or frequency of the voice.
-    * **Volume**: Sets the loudness of the audio output.
+ 
 
 `;
   return (

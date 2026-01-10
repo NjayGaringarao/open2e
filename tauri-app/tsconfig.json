@@ -25,5 +25,8 @@
     }
   },
   "include": ["src"],
+  "exclude": [
+    "src/context/speech"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

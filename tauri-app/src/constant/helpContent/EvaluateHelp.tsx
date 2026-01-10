@@ -6,8 +6,8 @@ const EvaluateHelp = () => {
 ---
 ## Getting Started
 1. **Select Rubric**: Choose a rubric from the dropdown in the Input card
-2. **Enter Question**: Type or use voice input to add the question you want to evaluate
-3. **Enter Answer**: Type or use voice input to add the student's answer
+2. **Enter Question**: Type the question you want to evaluate
+3. **Enter Answer**: Type the student's answer
 4. **Evaluate**: Click the "Evaluate" button in the Input card header when all fields are filled
 
 ---
@@ -43,7 +43,6 @@ The evaluation interface uses a **horizontal carousel** with two cards:
 
 ### Justification
 - Detailed explanation of the score is displayed next to the score badge
-- Use the volume button to hear the justification read aloud
 - Scroll to view the full justification text
 
 ### AI Detection
@@ -92,8 +91,6 @@ The evaluation interface uses a **horizontal carousel** with two cards:
 
 ---
 ## Additional Features
-- **Voice Input**: Use the microphone icon to input questions and answers via speech
-- **Text-to-Speech**: Click the volume icon to hear the justification read aloud
 - **Continue to Chat**: Click "Continue to Chat" to discuss the topic further with the AI assistant
 
 > **Note**: AI is not perfect and makes mistakes. Please review evaluation results carefully and use your judgment.

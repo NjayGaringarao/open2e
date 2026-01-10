@@ -2,7 +2,6 @@ import DropDown from "@/components/container/DropDown";
 import { SettingsIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import LLMSource from "@/components/settings/LLMSource";
-import TTS from "@/components/settings/TTS";
 import ThemeToggle from "@/components/settings/ThemeToggle";
 import MainContentBox from "@/components/container/MainContentBox";
 import ConfigHelp from "@/constant/helpContent/ConfigHelp";
@@ -50,14 +49,7 @@ export default function Settings() {
           <LLMSource />
         </DropDown>
 
-        <DropDown
-          headerElement={
-            <p className="text-uGray text-xl font-semibold">Text to Speech</p>
-          }
-          isDefaultOpen
-        >
-          <TTS />
-        </DropDown>
+        {/* Text to Speech settings removed */}
       </MainContentBox>
 
       {/* This is the sidebar for usage information */}

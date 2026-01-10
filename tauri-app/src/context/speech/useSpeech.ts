@@ -1,9 +1,4 @@
-import { useContext } from "react";
-import { SpeechContext } from "./SpeechContext";
-
+// Speech functionality removed. Hook is deprecated.
 export const useSpeech = () => {
-  const context = useContext(SpeechContext);
-  if (!context)
-    throw new Error("useSpeech must be used within a SpeechProvider");
-  return context;
+  throw new Error("Speech functionality has been removed from this app.");
 };

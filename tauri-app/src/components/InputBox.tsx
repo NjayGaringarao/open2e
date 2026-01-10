@@ -1,7 +1,6 @@
 "use client";
-import { useSpeech } from "@/context/speech";
 import clsx from "clsx";
-import { Eye, EyeClosed, Mic } from "lucide-react";
+import { Eye, EyeClosed } from "lucide-react";
 import { InputHTMLAttributes, useEffect, useState } from "react";
 
 interface IInputBox extends InputHTMLAttributes<HTMLInputElement> {
@@ -28,13 +27,7 @@ const InputBox = ({
   ...inputProp
 }: IInputBox) => {
   const [isHidden, setIsHidden] = useState(false);
-  const { listen } = useSpeech();
-
-  const handleVoiceInput = async () => {
-    const result = await listen();
-    const newValue = value.concat(" ").concat(result);
-    setValue(newValue);
-  };
+  
 
   useEffect(() => {
     if (isPassword) setIsHidden(true);
@@ -64,24 +57,13 @@ const InputBox = ({
             "outline-primary",
             "placeholder:italic",
             inputClassName,
-            withVoiceInput || isPassword ? "pr-12" : ""
+            isPassword ? "pr-12" : ""
           )}
           value={value ?? ""}
           onChange={(e) => setValue(e.target.value)}
           {...inputProp}
         />
-        {withVoiceInput && !isPassword && (
-          <div
-            className={clsx(
-              "absolute bottom-0 top-0 right-4 flex flex-col justify-center",
-              inputProp.disabled ? "hidden" : "visible"
-            )}
-          >
-            <button onClick={handleVoiceInput}>
-              <Mic className="text-uGrayLight hover:text-primary h-6 w-6" />
-            </button>
-          </div>
-        )}
+        {/* Voice input removed */}
         {isPassword && (
           <div
             className={clsx(

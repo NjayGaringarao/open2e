@@ -10,7 +10,9 @@ export interface ChatContextType {
   removeConversation: (convo: Conversation) => Promise<void>;
   updateConversation: (convo: Conversation) => Promise<void>;
   sendMessage: (content: string, fromOtherPage?: boolean) => Promise<void>;
+  enqueueAssistantMessage: (content: string, fromOtherPage?: boolean) => Promise<void>;
   updateActiveConversation: (convo: Conversation | null) => Promise<void>;
+  setFirstReplySuffix: (suffix: string | null) => void;
 }
 
 export const ChatContext = createContext<ChatContextType | null>(null);

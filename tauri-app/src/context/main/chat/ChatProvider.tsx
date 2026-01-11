@@ -25,6 +25,7 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [firstReplySuffix, setFirstReplySuffixState] = useState<string | null>(null);
 
   // Auto-load existing conversations on mount
   useEffect(() => {
@@ -108,6 +109,34 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     await addMessageDB(newMessage);
   };
 
+  const enqueueAssistantMessage = async (
+    content: string,
+    fromOtherPage: boolean = false
+  ) => {
+    let conversation = activeConversation;
+    const now = new Date().toISOString();
+
+    if (!content.trim()) return;
+
+    if (!conversation || fromOtherPage) {
+      conversation = await startConversation();
+      if (!conversation) return;
+    }
+
+    const newMessage: Message = {
+      id: nanoid(),
+      conversation_id: conversation.id,
+      role: "assistant",
+      content,
+      status: "SUCCESS",
+      created_at: now,
+      updated_at: now,
+    };
+
+    setMessages((prev) => [...prev, newMessage]);
+    await addMessageDB(newMessage);
+  };
+
   const generateReply = async () => {
     if (!activeConversation) return;
 
@@ -138,11 +167,12 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         conversation_id: activeConversation.id,
         role: "assistant",
         status: "FAILED",
-        content: reason,
+        content: firstReplySuffix ? `${reason}\n\n${firstReplySuffix}` : reason,
         created_at: now,
         updated_at: now,
       };
       setMessages((prev) => [...prev, errorMessage]);
+      if (firstReplySuffix) setFirstReplySuffixState(null);
       setIsGenerating(false);
       return;
     }
@@ -152,6 +182,15 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         ...lastMessage,
         status: "SUCCESS",
       };
+
+      // Append one-time suffix to the first assistant reply, if provided
+      if (firstReplySuffix) {
+        replyFromLLM = {
+          ...replyFromLLM,
+          content: `${replyFromLLM.content}\n\n${firstReplySuffix}`,
+        };
+        setFirstReplySuffixState(null);
+      }
 
       // Optimistically update the state
       setMessages((prev): Message[] => [
@@ -214,9 +253,11 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
         isLoading,
         isGenerating,
         sendMessage,
+        enqueueAssistantMessage,
         removeConversation,
         updateConversation,
         updateActiveConversation,
+        setFirstReplySuffix: (suffix: string | null) => setFirstReplySuffixState(suffix),
       }}
     >
       {children}

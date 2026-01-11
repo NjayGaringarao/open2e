@@ -8,9 +8,10 @@ import "highlight.js/styles/github.css"; // optional: keep or swap theme
 interface IMarkdown {
   text?: string;
   className?: string;
+  onLinkClick?: (href: string) => boolean | void;
 }
 
-const Markdown = ({ text = "", className = "" }: IMarkdown) => {
+const Markdown = ({ text = "", className = "", onLinkClick }: IMarkdown) => {
   const { colorMode } = useColorMode();
 
   // Check if we should force white text (for chat bubbles)
@@ -26,8 +27,15 @@ const Markdown = ({ text = "", className = "" }: IMarkdown) => {
         components={{
           a: ({ href, children }) => (
             <button
-              onClick={() => href && openUrl(href).catch(console.error)}
-              className="text-primary underline underline-offset-2 hover:opacity-90 p-0 m-0"
+              onClick={() => {
+                if (!href) return;
+                if (onLinkClick) {
+                  const handled = onLinkClick(href);
+                  if (handled) return;
+                }
+                openUrl(href).catch(console.error);
+              }}
+              className="text-background underline underline-offset-2 hover:opacity-90 p-0 m-0"
             >
               {children}
             </button>

@@ -69,7 +69,7 @@ export const EvaluationProvider = ({ children }: { children: ReactNode }) => {
           {
             title: "Failed to Search",
             subtitle:
-              "Click this to directly open your browser for suggested query",
+              "Click to view suggested search results (opens in-app preview)",
             url: url,
           },
         ]);

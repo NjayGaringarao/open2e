@@ -9,9 +9,10 @@ import { useColorMode } from "@/components/ui/color-mode";
 interface Props {
   message?: Message;
   onRetry?: (message: Message) => void; // Optional retry handler
+  onHrefSelect?: (href: string) => void;
 }
 
-const MessageBubble = ({ message, onRetry }: Props) => {
+const MessageBubble = ({ message, onRetry, onHrefSelect }: Props) => {
   const { colorMode } = useColorMode();
 
   if (!message) {
@@ -85,6 +86,13 @@ const MessageBubble = ({ message, onRetry }: Props) => {
                   ? "ai-response-dark"
                   : "text-black"
               }
+              onLinkClick={(href) => {
+                if (href.startsWith("http://") || href.startsWith("https://")) {
+                  onHrefSelect && onHrefSelect(href);
+                  return true;
+                }
+                return false;
+              }}
             />
           </div>
         </div>

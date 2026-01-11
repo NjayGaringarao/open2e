@@ -1,7 +1,7 @@
 import { useEvaluation } from "@/context/main/useEvaluation";
 import clsx from "clsx";
-import { nanoid } from "nanoid";
-import ArticleItem from "./ArticleItem";
+// import { nanoid } from "nanoid";
+// import ArticleItem from "./ArticleItem";
 import SemiCircleProgress from "./SemiCircleProgress";
 import { useEffect } from "react";
 import {
@@ -25,7 +25,7 @@ interface OutputCardProps {
 const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
   // All hooks must be called first, before any conditional returns
   const navigate = useNavigate();
-  const { sendMessage } = useChat();
+  const { sendMessage, setFirstReplySuffix } = useChat();
   const {
     sheet,
     selectedRubric,
@@ -42,6 +42,16 @@ const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
 
   // Now define helper functions that use the hooks' values
   const createConversation = async () => {
+    // Build a clickable list of article titles for the bot's first reply
+    if (articleList && articleList.length > 0) {
+      const sanitize = (s: string) => s.replace(/\]/g, "\\]");
+      const list = articleList
+        .map((a) => `- [${sanitize(a.title)}](${a.url})`)
+        .join("\n");
+      setFirstReplySuffix(
+        `Here are some articles you can explore:\n\n${list}`
+      );
+    }
     await navigate("/chat", {});
     await sendMessage(
       `Hello, Lets discuss about the topics related to this question: "${question.tracked}"`,
@@ -256,19 +266,7 @@ const OutputCard = ({ swiperRef, onViewInput }: OutputCardProps) => {
           </div>
         )}
 
-        {/* Article List */}
-        {articleList.length > 0 && (
-          <div className="flex flex-col gap-4">
-            <p className="text-xl font-semibold text-uGrayLight">
-              Explore Further
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {articleList.map((article) => (
-                <ArticleItem key={nanoid()} article={article} />
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Recommended articles are now shown in Chat via a modal. */}
 
         <div
           className={clsx(

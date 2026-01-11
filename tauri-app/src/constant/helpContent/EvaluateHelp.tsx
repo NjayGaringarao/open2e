@@ -21,10 +21,11 @@ The evaluation interface uses a **horizontal carousel** with two cards:
 
 ### Output Card
 - Automatically appears after evaluation completes
-- Contains: Score display, Justification, AI Detection, and Recommended articles
+- Contains: Score display, Justification, and AI Detection
 - **Save Button**: Save the evaluation to history (appears when not saved)
 - **Delete Button**: Clear the evaluation result and return to Input card
 - **View Input Button**: Navigate back to the Input card
+\n- **Chat Handoff**: Use "Continue to Chat" to discuss results with the AI. The first assistant message includes Recommended Articles as clickable links.
 
 ---
 ## Evaluation Process
@@ -55,14 +56,16 @@ The evaluation interface uses a **horizontal carousel** with two cards:
 - **Note**: AI detection is not perfect and may have false positives/negatives
 
 ### Recommended Articles
-- Articles related to the topic appear below the results
-- Click any article to open it in your browser
+- Articles related to the topic are presented in the chat's first assistant message
+- Click any article title to open an in-app preview modal (iframe)
+- From the preview, you can choose "Open in browser" if desired
 
 ---
 ## Navigation
 - **Swipe or Scroll**: Use horizontal swipe gestures or scroll to move between Input and Output cards
 - **View Result Button**: In Input card header (when result exists) - navigates to Output card
 - **View Input Button**: In Output card header - navigates back to Input card
+\n- **Continue to Chat**: In Output card footer - opens Chat and shows Recommended Articles inline in the assistant's first message. Clicking a link opens the in-app preview.
 
 ---
 ## Managing Evaluations
@@ -91,7 +94,7 @@ The evaluation interface uses a **horizontal carousel** with two cards:
 
 ---
 ## Additional Features
-- **Continue to Chat**: Click "Continue to Chat" to discuss the topic further with the AI assistant
+- **Continue to Chat**: Discuss the topic with the AI assistant. Recommended Articles are included as clickable links in the first assistant reply and open in an in-app preview modal.
 
 > **Note**: AI is not perfect and makes mistakes. Please review evaluation results carefully and use your judgment.
 

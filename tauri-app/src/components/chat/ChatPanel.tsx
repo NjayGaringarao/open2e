@@ -3,7 +3,7 @@ import { useChat } from "@/context/main/chat/useChat";
 import MessageBubble from "./MessageBubble";
 import MainContentBox from "../container/MainContentBox";
 
-const ChatPanel = () => {
+const ChatPanel = ({ onHrefSelect }: { onHrefSelect?: (href: string) => void }) => {
   const { messages, isGenerating, activeConversation } = useChat();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,7 @@ const ChatPanel = () => {
       <div className="flex-1 flex flex-col w-full">
         <div className="h-20" />
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg.id} message={msg} onHrefSelect={onHrefSelect} />
         ))}
         {!!isGenerating && <MessageBubble key="holder" />}
         <div className="h-20" />

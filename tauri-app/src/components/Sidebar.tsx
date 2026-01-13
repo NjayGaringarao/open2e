@@ -15,8 +15,14 @@ import {
   LucideProps,
   ListTodo,
   History,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import { useScreenSize } from "../hooks/useScreenSIze";
+import { useSettings } from "@/context/main/settings";
+import BaseModal from "@/components/container/BaseModal";
+import InputBox from "@/components/InputBox";
+import Button from "@/components/Button";
 
 type Tab = {
   name: string;
@@ -30,8 +36,18 @@ export default function Sidebar() {
   const screenSize = useScreenSize();
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    isAdminLoggedIn,
+    loginAdmin,
+    logoutAdmin,
+    adminPasswordHash,
+  } = useSettings();
   const [expanded, setExpanded] = useState(false);
   const [tabList, setTabList] = useState<Tab[]>([]);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const effectiveAdmin = isAdminLoggedIn || !adminPasswordHash;
 
   useEffect(() => {
     setTabList([
@@ -42,9 +58,13 @@ export default function Sidebar() {
       { name: "Rubrics", path: "/rubrics", icon: ListTodo },
       { name: "Configuration", path: "/settings", icon: Settings },
     ]);
-
-    window.history.replaceState({}, "", "/home");
   }, []);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      window.history.replaceState({}, "", effectiveAdmin ? "/home" : "/evaluate");
+    }
+  }, [effectiveAdmin]);
 
   return (
     <aside
@@ -69,7 +89,11 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-col space-y-2">
-        {tabList.map(({ name, path, icon: Icon }) => {
+        {(tabList.filter(({ path }) =>
+          effectiveAdmin
+            ? ["/home", "/history", "/chat", "/rubrics", "/settings"].includes(path)
+            : ["/evaluate", "/chat"].includes(path)
+        )).map(({ name, path, icon: Icon }) => {
           const active = location.pathname === path;
           return (
             <button
@@ -98,7 +122,119 @@ export default function Sidebar() {
             </button>
           );
         })}
+        {adminPasswordHash && (
+        <div className={clsx("pt-2 mt-2 border-t border-uGrayLight/30")}></div>
+        )}
+        {adminPasswordHash && (
+        <button
+          onClick={async () => {
+            if (isAdminLoggedIn) {
+              logoutAdmin();
+              // If on evaluator-only page after logout, send to /evaluate
+              if (["/home", "/history", "/rubrics", "/settings"].includes(location.pathname)) {
+                navigate("/evaluate");
+              }
+              return;
+            }
+            setShowAdminModal(true);
+          }}
+          className={clsx(
+            "flex items-center gap-3 rounded transition group hover:bg-secondary/60",
+            "px-2 py-2",
+            "mt-2"
+          )}
+        >
+          {(isAdminLoggedIn ? (
+            <LogOut className="w-7 h-7 text-uGray" />
+          ) : (
+            <LogIn className="w-7 h-7 text-uGray" />
+          ))}
+          {(expanded || screenSize === "extralarge") && (
+            <p className="overflow-hidden ease-in-out ml-1 text-uGray">
+              {isAdminLoggedIn ? "Logout Evaluator" : "Login as Evaluator"}
+            </p>
+          )}
+        </button>
+        )}
       </nav>
+
+      {/* Admin Login Modal */}
+      <BaseModal
+        isOpen={showAdminModal}
+        onClose={() => {
+          setShowAdminModal(false);
+          setAdminPasswordInput("");
+          setLoginError(null);
+        }}
+        title="Evaluator Login"
+      >
+        <div className="p-6 space-y-4">
+          {!adminPasswordHash ? (
+            <div className="space-y-4">
+              <p className="text-uGrayLight text-sm">
+                No evaluator password is set. Go to Configuration → Access Control to create one.
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  title="Go to Configuration"
+                  onClick={() => {
+                    setShowAdminModal(false);
+                    navigate("/settings");
+                  }}
+                />
+                <Button
+                  title="Cancel"
+                  secondary
+                  onClick={() => {
+                    setShowAdminModal(false);
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <InputBox
+                title="Password"
+                placeholder="Enter admin password"
+                value={adminPasswordInput}
+                setValue={(v) => setAdminPasswordInput(v)}
+                isPassword
+                inputClassName="px-3 py-2"
+              />
+              {loginError && (
+                <p className="text-red-500 text-sm">{loginError}</p>
+              )}
+              <div className="flex gap-2">
+                <Button
+                  title="Login"
+                  onClick={async () => {
+                    setLoginError(null);
+                    if (!adminPasswordInput) {
+                      setLoginError("Please enter a password");
+                      return;
+                    }
+                    const ok = await loginAdmin(adminPasswordInput);
+                    if (ok) {
+                      setShowAdminModal(false);
+                      setAdminPasswordInput("");
+                      navigate("/home");
+                    } else {
+                      setLoginError("Incorrect password");
+                    }
+                  }}
+                />
+                <Button
+                  title="Cancel"
+                  secondary
+                  onClick={() => {
+                    setShowAdminModal(false);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </BaseModal>
     </aside>
   );
 }

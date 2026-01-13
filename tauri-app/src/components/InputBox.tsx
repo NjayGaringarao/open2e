@@ -46,7 +46,7 @@ const InputBox = ({
         </div>
       )}
 
-      <div className="flex-1">
+      <div className="flex-1 relative">
         <input
           type={isHidden ? "password" : "text"}
           className={clsx(

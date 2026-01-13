@@ -7,9 +7,12 @@ import Chat from "./chat";
 import Rubrics from "./rubrics";
 import History from "./history";
 import { ReactNode, useEffect, useState } from "react";
+import { useSettings } from "@/context/main/settings";
 
 export default function Layout() {
   const location = useLocation();
+  const { isAdminLoggedIn, adminPasswordHash } = useSettings();
+  const effectiveAdmin = isAdminLoggedIn || !adminPasswordHash;
   const [pageComponents, setPageComponents] = useState<
     Record<string, ReactNode>
   >({});
@@ -32,15 +35,25 @@ export default function Layout() {
       <Sidebar />
 
       <main className="flex-1 overflow-auto relative">
-        {Object.entries(pageComponents).map(([path, element]) => (
-          <div
-            key={path}
-            className={location.pathname === path ? "block" : "hidden"}
-          >
-            {element}
+        {/* Guard: if student navigates to restricted pages, show Evaluate instead
+            When no admin password is set, bypass UAC and show evaluator pages */}
+        {!effectiveAdmin && ["/home", "/history", "/rubrics", "/settings"].includes(location.pathname) ? (
+          <div className="block">
+            <Evaluate />
           </div>
-        ))}
-        {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
+        ) : (
+          <>
+            {Object.entries(pageComponents).map(([path, element]) => (
+              <div
+                key={path}
+                className={location.pathname === path ? "block" : "hidden"}
+              >
+                {element}
+              </div>
+            ))}
+            {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
+          </>
+        )}
       </main>
     </div>
   );

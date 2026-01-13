@@ -7,8 +7,10 @@ import MainContentBox from "@/components/container/MainContentBox";
 import ConfigHelp from "@/constant/helpContent/ConfigHelp";
 import { HelpPanel } from "@/components/HelpPanel";
 import BackupRestore from "@/components/settings/BackupRestore";
+import AccessControl from "@/components/settings/AccessControl";
 
 export default function Settings() {
+
   return (
     <div className="flex flex-row h-screen">
       {/* This is the main content area of the page */}
@@ -17,6 +19,15 @@ export default function Settings() {
           <SettingsIcon className="h-10 w-10" />
           Configuration
         </div>
+
+                <DropDown
+          headerElement={
+            <p className="text-uGray text-xl font-semibold">Access Control</p>
+          }
+          isDefaultOpen
+        >
+          <AccessControl />
+        </DropDown>
 
         <DropDown
           headerElement={
@@ -49,7 +60,7 @@ export default function Settings() {
           <LLMSource />
         </DropDown>
 
-        {/* Text to Speech settings removed */}
+
       </MainContentBox>
 
       {/* This is the sidebar for usage information */}

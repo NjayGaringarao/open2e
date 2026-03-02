@@ -37,7 +37,10 @@ export default function Layout() {
       <main className="flex-1 overflow-auto relative">
         {/* Guard: if student navigates to restricted pages, show Evaluate instead
             When no admin password is set, bypass UAC and show evaluator pages */}
-        {!effectiveAdmin && ["/home", "/history", "/rubrics", "/settings"].includes(location.pathname) ? (
+        {!effectiveAdmin &&
+        ["/home", "/history", "/rubrics", "/settings"].includes(
+          location.pathname,
+        ) ? (
           <div className="block">
             <Evaluate />
           </div>
@@ -51,7 +54,9 @@ export default function Layout() {
                 {element}
               </div>
             ))}
-            {!Object.keys(pageComponents).includes(location.pathname) && <Home />}
+            {!Object.keys(pageComponents).includes(location.pathname) && (
+              <Home />
+            )}
           </>
         )}
       </main>

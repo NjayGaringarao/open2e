@@ -4,7 +4,7 @@
 ; - Runs PowerShell helper to set Ollama environment variable
 
 #define MyAppName "Open2E"
-#define MyAppVersion "0.5.0"
+#define MyAppVersion "0.6.0"
 #define MyAppPublisher "Njay Garingarao"
 #define MyAppPublisherURL "https://github.com/NjayGaringarao"
 #define MyAppURL "https://open2e.vercel.app"

@@ -62,9 +62,9 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (location.pathname === "/") {
-      window.history.replaceState({}, "", effectiveAdmin ? "/home" : "/evaluate");
+      navigate(effectiveAdmin ? "/home" : "/evaluate", { replace: true });
     }
-  }, [effectiveAdmin]);
+  }, [effectiveAdmin, location.pathname, navigate]);
 
   return (
     <aside

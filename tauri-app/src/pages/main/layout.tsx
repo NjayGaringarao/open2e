@@ -29,7 +29,7 @@ export default function Layout() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-background text-uGrayLight relative">
+    <div className="flex h-screen bg-background text-uGrayLight relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none bg-radial-glow" />
       <div className="absolute inset-0 opacity-[0.06] [background-size:24px_24px] bg-grid" />
       <Sidebar />
@@ -55,7 +55,7 @@ export default function Layout() {
               </div>
             ))}
             {!Object.keys(pageComponents).includes(location.pathname) && (
-              <Home />
+              effectiveAdmin ? <Home /> : <Evaluate />
             )}
           </>
         )}

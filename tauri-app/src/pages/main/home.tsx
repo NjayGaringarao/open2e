@@ -2,8 +2,11 @@ import { AnalyticsDashboard } from "@/components/analytics/AnalyticsDashboard";
 import { Link } from "react-router";
 import { ClipboardCheck, MessageSquareText, Settings } from "lucide-react";
 import { cn } from "@/utils/style";
+import { useSettings } from "@/context/main/settings";
 
 export default function Home() {
+  const { adminPasswordHash } = useSettings();
+  const showWelcome = !adminPasswordHash;
   const quickActions = [
     {
       title: "Start Evaluation",
@@ -60,81 +63,82 @@ export default function Home() {
 
         <div className="flex flex-1 flex-col w-full h-full p-6 overflow-y-auto relative z-10">
           <div className="w-full max-w-7xl mx-auto">
-            {/* Welcome Section */}
-            <div className="h-screen flex flex-col justify-center">
-              <div className="text-center mb-12">
-                <div className="relative inline-block mb-6">
-                  <h1
-                    className={cn(
-                      "text-5xl font-bold ",
-                      "bg-gradient-to-r from-uGray via-uGrayLight to-uGray bg-clip-text text-transparent mb-4"
-                    )}
-                  >
-                    Welcome to Open2E
-                  </h1>
-                  <div
-                    className={cn(
-                      "absolute -inset-1 ",
-                      "bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-75"
-                    )}
-                  />
+            {showWelcome && (
+              <div className="h-screen flex flex-col justify-center">
+                <div className="text-center mb-12">
+                  <div className="relative inline-block mb-6">
+                    <h1
+                      className={cn(
+                        "text-5xl font-bold ",
+                        "bg-gradient-to-r from-uGray via-uGrayLight to-uGray bg-clip-text text-transparent mb-4"
+                      )}
+                    >
+                      Welcome to Open2E
+                    </h1>
+                    <div
+                      className={cn(
+                        "absolute -inset-1 ",
+                        "bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-lg blur opacity-75"
+                      )}
+                    />
+                  </div>
+                  <p className="text-xl text-uGrayLight max-w-3xl mx-auto leading-relaxed">
+                    AI-powered evaluation and analytics for open ended questions
+                    related to computer literacy with extra features.
+                  </p>
                 </div>
-                <p className="text-xl text-uGrayLight max-w-3xl mx-auto leading-relaxed">
-                  AI-powered evaluation and analytics for open ended questions
-                  related to computer literacy with extra features.
-                </p>
-              </div>
 
-              {/* Quick Actions Grid */}
-              <div className="flex justify-center mb-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
-                  {quickActions.map((action, index) => (
-                    <Link key={index} to={action.path}>
-                      <div
-                        className={cn(
-                          "group relative rounded-2xl p-8 h-full",
-                          "bg-gradient-to-br",
-                          "border border-transparent ",
-                          "hover:border-opacity-50 ",
-                          "transition-all duration-500 hover:scale-105 ",
-                          "cursor-pointer backdrop-blur-sm shadow-xl hover:shadow-2xl",
-                          action.bgGradient
-                        )}
-                      >
-                        {/* Gradient Border Effect */}
+                {/* Quick Actions Grid */}
+                <div className="flex justify-center mb-12">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
+                    {quickActions.map((action, index) => (
+                      <Link key={index} to={action.path}>
                         <div
                           className={cn(
-                            "absolute inset-0",
+                            "group relative rounded-2xl p-8 h-full",
                             "bg-gradient-to-br",
-                            action.borderGradient,
-                            "rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
-                          )}
-                        />
-
-                        <div
-                          className={cn(
-                            "w-16 h-16 rounded-xl",
-                            "bg-gradient-to-br",
-                            action.color,
-                            "flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
+                            "border border-transparent ",
+                            "hover:border-opacity-50 ",
+                            "transition-all duration-500 hover:scale-105 ",
+                            "cursor-pointer backdrop-blur-sm shadow-xl hover:shadow-2xl",
+                            action.bgGradient
                           )}
                         >
-                          <div className={cn("text-white p-3 rounded-lg")}>
-                            {action.icon}
+                          {/* Gradient Border Effect */}
+                          <div
+                            className={cn(
+                              "absolute inset-0",
+                              "bg-gradient-to-br",
+                              action.borderGradient,
+                              "rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
+                            )}
+                          />
+
+                          <div
+                            className={cn(
+                              "w-16 h-16 rounded-xl",
+                              "bg-gradient-to-br",
+                              action.color,
+                              "flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg"
+                            )}
+                          >
+                            <div className={cn("text-white p-3 rounded-lg")}>
+                              {action.icon}
+                            </div>
                           </div>
+                          <h3 className="text-xl font-bold text-uGray mb-3">
+                            {action.title}
+                          </h3>
+                          <p className="text-uGrayLight leading-relaxed">
+                            {action.description}
+                          </p>
                         </div>
-                        <h3 className="text-xl font-bold text-uGray mb-3">
-                          {action.title}
-                        </h3>
-                        <p className="text-uGrayLight leading-relaxed">
-                          {action.description}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Analytics Dashboard */}
             <div className="relative min-h-screen flex flex-col">

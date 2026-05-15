@@ -47,7 +47,7 @@ const InputCard = ({
   };
 
   return (
-    <div className="flex flex-col border border-primary/80 rounded-lg h-full overflow-hidden">
+    <div className="relative flex flex-col border border-primary/80 rounded-lg h-full overflow-hidden">
       <div className="w-full bg-uGray p-4 flex flex-row justify-between items-center">
         <p className="text-background font-semibold text-xl">Input</p>
         <div className="flex flex-row gap-2">
@@ -70,7 +70,7 @@ const InputCard = ({
           )}
         </div>
       </div>
-      <div className="relative w-full flex flex-col gap-8 p-4 flex-1 overflow-auto">
+      <div className="w-full flex flex-col gap-8 p-4 flex-1 overflow-auto">
         <div
           className={clsx(
             "flex flex-col gap-8 flex-1",
@@ -98,9 +98,8 @@ const InputCard = ({
             />
           )}
         </div>
-
-        <LoadingOverlay isVisible={isEvaluating} />
       </div>
+      <LoadingOverlay isVisible={isEvaluating} />
     </div>
   );
 };
